@@ -23,5 +23,3 @@ while True:
     print(err.args[0])
 
   time.sleep(2.0)
-    
-    
