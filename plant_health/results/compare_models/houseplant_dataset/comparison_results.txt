@@ -1,0 +1,36 @@
+Comparison of Models:
+
+Dataset: houseplant_dataset
+ResNet18 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.92      0.95      0.93       216
+           1       0.89      0.83      0.86       106
+
+    accuracy                           0.91       322
+   macro avg       0.90      0.89      0.90       322
+weighted avg       0.91      0.91      0.91       322
+
+
+ResNet50 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.91      0.89      0.90       216
+           1       0.79      0.83      0.81       106
+
+    accuracy                           0.87       322
+   macro avg       0.85      0.86      0.85       322
+weighted avg       0.87      0.87      0.87       322
+
+
+MobileNetV2 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.94      0.95      0.95       216
+           1       0.90      0.88      0.89       106
+
+    accuracy                           0.93       322
+   macro avg       0.92      0.92      0.92       322
+weighted avg       0.93      0.93      0.93       322
+
+

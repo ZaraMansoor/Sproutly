@@ -1,0 +1,36 @@
+Comparison of Models:
+
+Dataset: plantdoc_dataset
+ResNet18 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.93      0.92      0.92        85
+           1       0.96      0.97      0.96       173
+
+    accuracy                           0.95       258
+   macro avg       0.94      0.94      0.94       258
+weighted avg       0.95      0.95      0.95       258
+
+
+ResNet50 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.88      0.88      0.88        85
+           1       0.94      0.94      0.94       173
+
+    accuracy                           0.92       258
+   macro avg       0.91      0.91      0.91       258
+weighted avg       0.92      0.92      0.92       258
+
+
+MobileNetV2 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.90      0.89      0.90        85
+           1       0.95      0.95      0.95       173
+
+    accuracy                           0.93       258
+   macro avg       0.93      0.92      0.93       258
+weighted avg       0.93      0.93      0.93       258
+
+

@@ -1,1 +1,7 @@
 .env
+plant_health/datasets/HousePlants
+plant_health/datasets/HousePlants2
+plant_health/datasets/PlantDoc
+__pycache__/
+*.pth
+*.pkl
