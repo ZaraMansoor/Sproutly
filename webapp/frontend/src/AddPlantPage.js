@@ -15,6 +15,8 @@ const AddPlantPage = () => {
     const [plantName, setPlantName] = React.useState('');
     const [plantSpecies, setPlantSpecies] = React.useState('');
 
+    // TODO: add add plant logic later
+
     let navigate = useNavigate();
 
     return (
@@ -24,13 +26,15 @@ const AddPlantPage = () => {
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Plant Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter plant name" />
+                    <Form.Control type="text" placeholder="Enter plant name" 
+                                onChange={(e) => setPlantName(e.target.value)}
+                                required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     {/* TODO: add actual species data later, make it dropdown */}
                     <Form.Label>Species</Form.Label>
                     <Form.Control type="text" placeholder="Enter species" 
-                                onChange={(e) => setPlantName(e.target.value)}
+                                onChange={(e) => setPlantSpecies(e.target.value)}
                                 required />
                 </Form.Group>
                 <Button variant="primary" type="submit">

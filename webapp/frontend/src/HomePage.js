@@ -3,6 +3,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Tab, Tabs } from 'react-bootstrap';
+import socket from './socket';
 
 const HomePage = () => {
 
@@ -13,14 +14,26 @@ const HomePage = () => {
     ]);
 
     // TODO: add actual sensor data later
-    const sensorData = {
-        temperature: 25,
-        humidity: 50,
-        light: 100,
-        soil_moisture: 75,
-        ph: 7.5,
-        nutrients: 50
-    };
+    // const sensorData = {
+    //     temperature: 25,
+    //     humidity: 50,
+    //     light: 100,
+    //     soil_moisture: 75,
+    //     ph: 7.5,
+    //     nutrients: 50
+    // };
+
+    const [sensorData, setSensorData] = React.useState({});
+
+    React.useEffect(() => {
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            setSensorData(data);
+        };
+
+        return () => socket.close();
+    }, []);
+    
 
     const [selectedPlant, setSelectedPlant] = React.useState(plants[0]);  // default
     const [currView, setCurrView] = React.useState('home'); // default
