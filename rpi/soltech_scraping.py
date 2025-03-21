@@ -127,6 +127,17 @@ def main():
 
   print(plant_info)
 
+  url = f"https://soiltesting.cahnr.uconn.edu/plant-ph-preferences/"
+  print(url)
+
+  response = requests.get(url)
+  
+  if response.status_code != 200:
+    print(response.status_code, " Failed to retrieve the page.")
+    return
+  
+  soup = BeautifulSoup(response.content, "html.parser")
+  # print(soup.prettify())
     
 if __name__ == "__main__":
   main()
