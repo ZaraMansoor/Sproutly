@@ -90,8 +90,8 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 # initialize PiCamera2 for video streaming
 picam2 = Picamera2()
 config = picam2.create_video_configuration(main={'size': RESOLUTION})
-config["controls"]["FrameDurationLimits"] = (int(1e6 / FRAME_RATE), int(1e6 / FRAME_RATE))
 picam2.configure(config)
+picam2.set_controls({"FrameRate": FRAME_RATE})
 picam2.start()
 
 # create an instance to store streaming frame
