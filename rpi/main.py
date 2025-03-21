@@ -15,6 +15,7 @@ MQTT_SERVER = "broker.emqx.io"  # use your broker address
 MQTT_PORT = 1883
 MQTT_KEEPALIVE_INTERVAL = 60
 MQTT_TOPIC = "django/mqtt"  # topic to send data to
+CONTROL_TOPIC = "django/control" # topic to receive control commands from web app
 
 #DHT11 sensor
 
@@ -24,12 +25,25 @@ dht_device = adafruit_dht.DHT11(board.D4)
 def on_connect(client, userdata, flags, rc):
   if rc == 0:
     print("Connected successfully to MQTT broker.")
+    client.subscribe(CONTROL_TOPIC)
   else:
     print(f"Failed to connect to MQTT broker. Return code {rc}")
+
+# callback for receiving control messages
+def on_message(client, userdata, msg):
+  print(f"Received control message: {msg.payload.decode()}")
+  control_command = json.loads(msg.payload.decode())
+
+ # if control_command["command"] == "water": # TODO: implement
+
 
 # initialize MQTT client
 client = mqtt.Client()
 client.on_connect = on_connect
+client.on_message = on_message
+
+client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
+client.loop_start()
 
 while True:
   try:
