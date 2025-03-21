@@ -5,3 +5,4 @@ plant_health/datasets/PlantDoc
 __pycache__/
 *.pth
 *.pkl
+.DS_Store
