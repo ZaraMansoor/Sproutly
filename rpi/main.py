@@ -14,7 +14,7 @@ import json
 MQTT_SERVER = "broker.emqx.io"  # use your broker address
 MQTT_PORT = 1883
 MQTT_KEEPALIVE_INTERVAL = 60
-MQTT_TOPIC = "django/mqtt"  # topic to send data to
+MQTT_TOPIC = "django/sproutly/mqtt"  # topic to send data to
 CONTROL_TOPIC = "django/control" # topic to receive control commands from web app
 
 #DHT11 sensor
