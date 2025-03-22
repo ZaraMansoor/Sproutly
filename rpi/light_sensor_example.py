@@ -2,7 +2,7 @@ import time
 import sys
 import os
 
-libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
+libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib', 'waveshare_TSL2591')
 if os.path.exists(libdir):
   sys.path.append(libdir)
 
