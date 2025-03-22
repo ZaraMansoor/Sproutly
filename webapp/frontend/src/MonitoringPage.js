@@ -17,6 +17,8 @@ const MonitoringPage = () => {
     const selectPlant = (plant) => {
         setSelectedPlant(plant);
     }
+
+    const RPI_IP_ADDRESS = "172.26.192.48";
     
     let navigate = useNavigate();
 
@@ -43,9 +45,11 @@ const MonitoringPage = () => {
                     <Card className="shadow-sm">
                         <Card.Body>
                             <h2 className="mb-3">{selectedPlant.name} Live Feed</h2>
-
-                            {/* TODO: add live video feed */}
-
+                            <img src={`http://${RPI_IP_ADDRESS}:8000/stream.mjpg`} 
+                                alt="Live Camera" 
+                                width="640" 
+                                height="480"
+                            />
                         </Card.Body>
                     </Card>
                 </div>)}
