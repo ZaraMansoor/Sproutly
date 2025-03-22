@@ -65,6 +65,15 @@ def main():
 
   plant_info["scientific_name"] = scientific_name
 
+  # map of light_description: [light_t0, light_duration]
+  light_map = {
+    'Full Sun (Bright Direct Light) & High Light (Bright Indirect Light)': [6, 14],
+    'High Light (Bright Indirect Light)': [7, 12], 
+    'High Light (Bright Indirect Light); Low Light Tolerant': [8, 10],
+    'Medium Light (Medium Indirect Light) to High Light (Bright Indirect Light)': [9, 8],
+    'Medium Light (Medium Indirect Light) to High Light (Bright Indirect Light); Low Light Tolerant': [9, 6]
+  }
+
   light = "n/a"
   light_tag = soup.find("strong", string=lambda text: text and "Light Requirement" in text)
   if light_tag:
@@ -74,7 +83,9 @@ def main():
       if len(strong_tags) > 1:
         light = strong_tags[1].text.strip()
 
-  plant_info["light"] = light
+  plant_info["light_description"] = light
+  plant_info["light_t0"] = light_map[light][0]
+  plant_info["light_duration"] = light_map[light][1]
 
   water = "n/a"
   water_tag = soup.find("strong", string=lambda text: text and "Quick Tip" in text)
@@ -127,6 +138,7 @@ def main():
 
   print(plant_info)
 
+  # reference for plant pH level
   url = f"https://soiltesting.cahnr.uconn.edu/plant-ph-preferences/"
   print(url)
 
