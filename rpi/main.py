@@ -9,17 +9,22 @@ import adafruit_dht
 import board
 import paho.mqtt.client as mqtt
 import json
+from datetime import datetime, timedelta
+from plant_health.main import health_check
 
 # MQTT configuration
 MQTT_SERVER = "broker.emqx.io"  # use your broker address
 MQTT_PORT = 1883
 MQTT_KEEPALIVE_INTERVAL = 60
 MQTT_TOPIC = "django/sproutly/mqtt"  # topic to send data to
+HEALTH_TOPIC = "django/sproutly/health"
 CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands from web app
 
-#DHT11 sensor
+# check plant health once a day
+last_health_check_time = datetime.now() - timedelta(days=1)
 
-dht_device = adafruit_dht.DHT11(board.D17)
+#DHT11 sensor
+dht_device = adafruit_dht.DHT11(board.D4)
 
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
@@ -36,6 +41,26 @@ def on_message(client, userdata, msg):
 
  # if control_command["command"] == "water": # TODO: implement
 
+  if control_command["command"] == "get_plant_health_check":
+    send_plant_health(client)
+
+def send_plant_health(client):
+  global last_health_check_time
+  try:
+    health_status = health_check()
+    
+    payload = json.dumps({
+        "type": "plant_health",
+        "status": health_status
+    })
+    
+    client.publish(HEALTH_TOPIC, payload)
+    print("Published plant health status:", payload)
+
+    last_health_check_time = datetime.now()
+
+  except Exception as e:
+    print(f"Error in health check: {e}")
 
 # initialize MQTT client
 client = mqtt.Client()
@@ -64,7 +89,11 @@ while True:
 
     # publish the data to the MQTT topic
     client.publish(MQTT_TOPIC, payload)
-    
+
+    # check if 24 hours have passed since last health check
+    if datetime.now() - last_health_check_time >= timedelta(days=1):
+      send_plant_health(client)
+
   except RuntimeError as err:
     print(err.args[0])
 

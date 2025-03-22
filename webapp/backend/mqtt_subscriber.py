@@ -4,11 +4,13 @@ import json
 MQTT_SERVER = "broker.emqx.io"
 MQTT_PORT = 1883
 MQTT_TOPIC = "django/sproutly/mqtt"
+HEALTH_TOPIC = "django/sproutly/health"
 MQTT_KEEPALIVE = 60
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT Broker")
     client.subscribe(MQTT_TOPIC)
+    client.subscribe(HEALTH_TOPIC)
 
 def on_message(client, userdata, msg):
     try:
