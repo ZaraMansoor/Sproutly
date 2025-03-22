@@ -25,21 +25,24 @@ def health_check():
     image = Image.open(image_stream)
     image = transform(image).unsqueeze(0)
 
-    # load model
-    with open("results/model.pkl", "rb") as f:
-        model = pickle.load(f)
+    # TODO: add model to directory
+    # # load model
+    # with open("results/model.pkl", "rb") as f:
+    #     model = pickle.load(f)
 
-    # evaluate image
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.eval()
-    model.to(device)
-    with torch.no_grad():
-        image = image.to(device)
+    # # evaluate image
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # model.eval()
+    # model.to(device)
+    # with torch.no_grad():
+    #     image = image.to(device)
 
-        outputs = model(image)
-        _, pred = torch.max(outputs, 1)
+    #     outputs = model(image)
+    #     _, pred = torch.max(outputs, 1)
 
-    pred = pred.cpu().numpy()
-    health_status = "Healthy" if pred == 0 else "Unhelathy"
+    # pred = pred.cpu().numpy()
+    # health_status = "Healthy" if pred == 0 else "Unhelathy"
 
-    return health_status
+    # return health_status
+
+    return "Healthy"

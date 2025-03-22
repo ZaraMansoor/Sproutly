@@ -41,6 +41,8 @@ def on_message(client, userdata, msg):
     raw_payload = msg.payload.decode()
     print(f"Received control message: {raw_payload}")
     control_command = json.loads(raw_payload)
+    if control_command["command"] == "get_plant_health_check":
+      send_plant_health(client)
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
     print("Invalid JSON received:", raw_payload)
