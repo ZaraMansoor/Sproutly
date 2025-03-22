@@ -36,13 +36,14 @@ def on_connect(client, userdata, flags, rc):
 
 # callback for receiving control messages
 def on_message(client, userdata, msg):
-  print(f"Received control message: {msg.payload.decode()}")
-  control_command = json.loads(msg.payload.decode())
-
- # if control_command["command"] == "water": # TODO: implement
-
-  if control_command["command"] == "get_plant_health_check":
-    send_plant_health(client)
+  print(f"msg.topics: {msg.topic}")
+  try:
+    raw_payload = msg.payload.decode()
+    print(f"Received control message: {raw_payload}")
+    control_command = json.loads(raw_payload)
+  except json.JSONDecodeError as e:
+    print("JSON Decode Error:", e)
+    print("Invalid JSON received:", raw_payload)
 
 def send_plant_health(client):
   global last_health_check_time
