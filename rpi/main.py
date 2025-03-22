@@ -19,7 +19,7 @@ CONTROL_TOPIC = "django/control" # topic to receive control commands from web ap
 
 #DHT11 sensor
 
-dht_device = adafruit_dht.DHT11(board.D4)
+dht_device = adafruit_dht.DHT11(board.D17)
 
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
