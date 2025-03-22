@@ -24,7 +24,7 @@ CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands fr
 last_health_check_time = datetime.now() - timedelta(days=1)
 
 #DHT11 sensor
-dht_device = adafruit_dht.DHT11(board.D4)
+dht_device = adafruit_dht.DHT11(board.D17)
 
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
