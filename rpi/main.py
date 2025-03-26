@@ -9,8 +9,17 @@ import adafruit_dht
 import board
 import paho.mqtt.client as mqtt
 import json
+import sys
+import os
+import logging
 from datetime import datetime, timedelta
 from plant_health.main import health_check
+
+libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
+if os.path.exists(libdir):
+  sys.path.append(libdir)
+
+from waveshare_TSL2591 import TSL2591
 
 # MQTT configuration
 MQTT_SERVER = "broker.emqx.io"  # use your broker address
@@ -23,8 +32,14 @@ CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands fr
 # check plant health once a day
 last_health_check_time = datetime.now() - timedelta(days=1)
 
-#DHT11 sensor
+# DHT11 sensor
 dht_device = adafruit_dht.DHT11(board.D17)
+
+# light sensor
+logging.basicConfig(level=logging.INFO)
+
+light_sensor = TSL2591.TSL2591()
+light_sensor.SET_InterruptThreshold(0xff00, 0x0010)
 
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
@@ -78,14 +93,16 @@ while True:
     temperature_c = dht_device.temperature
     temperature_f = temperature_c * (9 / 5) + 32
     humidity = dht_device.humidity
+    lux = light_sensor.Lux
 
-    print("Temp:{:.1f} C / {:.1f} F    Humidity: {}%".format(temperature_c, temperature_f, humidity))
+    print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
 
     # create a JSON object with the temperature and humidity
     data = {
       "temperature_c": temperature_c,
       "temperature_f": temperature_f,
-      "humidity": humidity
+      "humidity": humidity,
+      "lux": lux
     }
 
     payload = json.dumps(data)
@@ -99,5 +116,10 @@ while True:
 
   except RuntimeError as err:
     print(err.args[0])
+
+  except KeyboardInterrupt:    
+    logging.info("ctrl + c:")
+    light_sensor.Disable()
+    exit()
 
   time.sleep(2.0)
