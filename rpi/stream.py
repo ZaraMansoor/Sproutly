@@ -124,6 +124,8 @@ def adjust_camera_settings():
     # capture and image and estimate the light level
     frame = picam2.capture_array('main')
     brightness = np.mean(frame) 
+    a = 'day' if (brightness > LIGHT_THRESHOLD) else 'night'
+    print(brightness, ())
 
     settings = DAY_SETTINGS if (brightness > LIGHT_THRESHOLD) else NIGHT_SETTINGS
     picam2.set_controls(settings)
@@ -131,6 +133,7 @@ def adjust_camera_settings():
 # continuously capture JPEG frames and update the streaming output
 def capture_frames():
     while True:
+        adjust_camera_settings()
         frame = picam2.capture_array('main')
         img = Image.fromarray(frame).convert('RGB')
         with io.BytesIO() as buf:
