@@ -38,6 +38,10 @@ dht_device = adafruit_dht.DHT11(board.D17)
 # light sensor
 logging.basicConfig(level=logging.INFO)
 
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+print("GPIO is working!")
+
 light_sensor = TSL2591.TSL2591()
 light_sensor.SET_InterruptThreshold(0xff00, 0x0010)
 
