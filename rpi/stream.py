@@ -24,7 +24,7 @@ JPEG_QUALITY = 90 # (1 - 100)
 DAY_SETTINGS = {
     "FrameRate": 30,           # higher frame rate
     "ExposureTime": 10000,     # short exposure time (10ms)
-    "ISO": 100,                # low ISO to avoid noise in bright light
+    # "ISO": 100,                # low ISO to avoid noise in bright light
     "AnalogueGain": 1.0,       # low analog gain
     "AwbMode": "auto",         # automatic white balance
 }
@@ -33,7 +33,7 @@ DAY_SETTINGS = {
 NIGHT_SETTINGS = {
     "FrameRate": 15,           # lower frame rate for better low-light performance
     "ExposureTime": 30000,     # longer exposure time (30ms)
-    "ISO": 800,                # higher ISO to capture more light
+    # "ISO": 800,                # higher ISO to capture more light
     "AnalogueGain": 2.0,       # increase analog gain to brighten image in low light
     "AwbMode": "incandescent", # adjust white balance for artificial light (or "fluorescent")
 }
