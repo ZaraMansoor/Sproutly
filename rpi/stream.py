@@ -26,7 +26,7 @@ DAY_SETTINGS = {
     "ExposureTime": 10000,     # short exposure time (10ms)
     # "ISO": 100,                # low ISO to avoid noise in bright light
     "AnalogueGain": 1.0,       # low analog gain
-    "AwbMode": "auto",         # automatic white balance
+    # "AwbMode": "auto",         # automatic white balance
 }
 
 # define nighttime (low light) settings
@@ -35,7 +35,7 @@ NIGHT_SETTINGS = {
     "ExposureTime": 30000,     # longer exposure time (30ms)
     # "ISO": 800,                # higher ISO to capture more light
     "AnalogueGain": 2.0,       # increase analog gain to brighten image in low light
-    "AwbMode": "incandescent", # adjust white balance for artificial light (or "fluorescent")
+    # "AwbMode": "incandescent", # adjust white balance for artificial light (or "fluorescent")
 }
 
 LIGHT_THRESHOLD = 100
@@ -111,6 +111,11 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 # initialize PiCamera2 for video streaming
 picam2 = Picamera2()
 config = picam2.create_video_configuration(main={'size': RESOLUTION})
+
+print("Available Controls:")
+for control, value in picam2.camera_controls.items():
+    print(f"{control}: {value}")
+
 picam2.configure(config)
 picam2.set_controls({"FrameRate": FRAME_RATE})
 picam2.start()
