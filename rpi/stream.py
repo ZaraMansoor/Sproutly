@@ -22,23 +22,21 @@ JPEG_QUALITY = 90 # (1 - 100)
 
 # define daytime (bright light) settings
 DAY_SETTINGS = {
-    "FrameRate": 30,           # higher frame rate
-    "ExposureTime": 10000,     # short exposure time (10ms)
-    # "ISO": 100,                # low ISO to avoid noise in bright light
-    "AnalogueGain": 1.0,       # low analog gain
-    # "AwbMode": "auto",         # automatic white balance
+    "AeEnable": True,          # Auto exposure enabled
+    "FrameRate": 30,           # Higher frame rate
+    "AnalogueGain": 1.0,       # Low analog gain
 }
 
 # define nighttime (low light) settings
 NIGHT_SETTINGS = {
-    "FrameRate": 15,           # lower frame rate for better low-light performance
-    "ExposureTime": 30000,     # longer exposure time (30ms)
-    # "ISO": 800,                # higher ISO to capture more light
-    "AnalogueGain": 2.0,       # increase analog gain to brighten image in low light
-    # "AwbMode": "incandescent", # adjust white balance for artificial light (or "fluorescent")
+    "AeEnable": False,         # Disable auto exposure
+    "FrameRate": 15,           # Lower frame rate for better low-light performance
+    "ExposureTime": 30000,     # Longer exposure time (30ms)
+    "AnalogueGain": 2.0,       # Increase analog gain
 }
 
 LIGHT_THRESHOLD = 100
+BRIGHTNESS_SAMPLES = 10
 
 # HTML page for the web interface
 PAGE='''\
@@ -125,15 +123,31 @@ output = StreamingOutput()
 
 # adjust camera settings based on light levels 
 # (to support day and night conditions)
+brightness_history = []
+current_mode = "day"
+
 def adjust_camera_settings():
+    global current_mode
+
     # capture and image and estimate the light level
     frame = picam2.capture_array('main')
     brightness = np.mean(frame) 
-    a = 'day' if (brightness > LIGHT_THRESHOLD) else 'night'
-    print(brightness, a)
 
-    settings = DAY_SETTINGS if (brightness > LIGHT_THRESHOLD) else NIGHT_SETTINGS
-    picam2.set_controls(settings)
+    brightness_history.append(brightness)
+    if len(brightness_history) > BRIGHTNESS_SAMPLES:
+        brightness_history.pop(0)
+
+    avg_brightness = np.mean(brightness_history)
+
+    if current_mode == "day" and avg_brightness < LIGHT_THRESHOLD - 10:
+        current_mode = "night"
+        picam2.set_controls(NIGHT_SETTINGS)
+        print(f"Switched to NIGHT mode | Avg Brightness: {avg_brightness:.2f}")
+
+    elif current_mode == "night" and avg_brightness > LIGHT_THRESHOLD + 10:
+        current_mode = "day"
+        picam2.set_controls(DAY_SETTINGS)
+        print(f"Switched to DAY mode | Avg Brightness: {avg_brightness:.2f}")
 
 # continuously capture JPEG frames and update the streaming output
 def capture_frames():
