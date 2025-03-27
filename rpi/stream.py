@@ -125,7 +125,7 @@ def adjust_camera_settings():
     frame = picam2.capture_array('main')
     brightness = np.mean(frame) 
     a = 'day' if (brightness > LIGHT_THRESHOLD) else 'night'
-    print(brightness, ())
+    print(brightness, a)
 
     settings = DAY_SETTINGS if (brightness > LIGHT_THRESHOLD) else NIGHT_SETTINGS
     picam2.set_controls(settings)
