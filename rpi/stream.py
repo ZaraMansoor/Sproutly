@@ -13,11 +13,32 @@ from http import server
 from threading import Condition
 from picamera2 import Picamera2
 from PIL import Image
+import numpy as np
 
 # adjustable settings
-RESOLUTION = (1920, 1080)
+RESOLUTION = (3280, 2464)
 FRAME_RATE = 30
 JPEG_QUALITY = 90 # (1 - 100)
+
+# define daytime (bright light) settings
+DAY_SETTINGS = {
+    "FrameRate": 30,           # higher frame rate
+    "ExposureTime": 10000,     # short exposure time (10ms)
+    "ISO": 100,                # low ISO to avoid noise in bright light
+    "AnalogueGain": 1.0,       # low analog gain
+    "AwbMode": "auto",         # automatic white balance
+}
+
+# define nighttime (low light) settings
+NIGHT_SETTINGS = {
+    "FrameRate": 15,           # lower frame rate for better low-light performance
+    "ExposureTime": 30000,     # longer exposure time (30ms)
+    "ISO": 800,                # higher ISO to capture more light
+    "AnalogueGain": 2.0,       # increase analog gain to brighten image in low light
+    "AwbMode": "incandescent", # adjust white balance for artificial light (or "fluorescent")
+}
+
+LIGHT_THRESHOLD = 100
 
 # HTML page for the web interface
 PAGE='''\
@@ -89,17 +110,23 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 # initialize PiCamera2 for video streaming
 picam2 = Picamera2()
-
-camera_modes = picam2.sensor_modes 
-print(camera_modes)
-
-config = picam2.create_video_configuration(main={'size': (3280, 2464)})
+config = picam2.create_video_configuration(main={'size': RESOLUTION})
 picam2.configure(config)
 picam2.set_controls({"FrameRate": FRAME_RATE})
 picam2.start()
 
 # create an instance to store streaming frame
 output = StreamingOutput()
+
+# adjust camera settings based on light levels 
+# (to support day and night conditions)
+def adjust_camera_settings():
+    # capture and image and estimate the light level
+    frame = picam2.capture_array('main')
+    brightness = np.mean(frame) 
+
+    settings = DAY_SETTINGS if (brightness > LIGHT_THRESHOLD) else NIGHT_SETTINGS
+    picam2.set_controls(settings)
 
 # continuously capture JPEG frames and update the streaming output
 def capture_frames():
