@@ -4,6 +4,9 @@ Uses PiCamera2 to capture frames and serve them as an MJPEG stream.
 
 Original Documentation: https://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
 Modified to work on Raspberry Pi 5 with adjustable resolution, frame rate, and quality.
+
+Jana Armouti
+jarmouti
 '''
 
 import io
