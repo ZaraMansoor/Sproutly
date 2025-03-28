@@ -7,7 +7,10 @@ from sproutly.models import WebscrapedPlant
 from soltech_scraping import webscrape_plant
 
 MQTT_SERVER = "broker.emqx.io"
+MQTT_PORT = 1883
 CONTROL_TOPIC = "django/sproutly/control"
+MQTT_KEEPALIVE = 60
+
 
 @csrf_exempt
 def send_control_command(request):
@@ -24,7 +27,8 @@ def send_control_command(request):
         print(f"publishing to {CONTROL_TOPIC}: {json.dumps(message)}")
 
         client = mqtt.Client()
-        client.connect(MQTT_SERVER, 1883)
+        client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)
+        client.loop_start()
         client.publish(CONTROL_TOPIC, json.dumps(message))
         client.disconnect()
 
