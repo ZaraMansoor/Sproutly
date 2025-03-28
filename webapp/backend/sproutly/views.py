@@ -16,9 +16,16 @@ def send_control_command(request):
         control_command = data.get("command")
         actuator = data.get("actuator")
 
+        message = {
+            "command": control_command,
+            "actuator": actuator
+        }
+
+        print(f"publishing to {CONTROL_TOPIC}: {json.dumps(message)}")
+
         client = mqtt.Client()
         client.connect(MQTT_SERVER, 1883)
-        client.publish(CONTROL_TOPIC, json.dumps(control_command))
+        client.publish(CONTROL_TOPIC, json.dumps(message))
         client.disconnect()
 
         return JsonResponse({"status": "Command Sent", "command": control_command, "actuator": actuator})
