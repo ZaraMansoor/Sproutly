@@ -2,15 +2,9 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 const AddPlantPage = () => {
-
-    // TODO: add actual plant data later
-    const [plants, setPlants] = React.useState([
-        { id: 1, name: 'Basil', species: 'Basil', health_status: 'Healthy' },
-        { id: 2, name: 'Toma', species: 'Tomato', health_status: 'Unhealthy' },
-    ]);
 
     const [plantName, setPlantName] = React.useState('');
     const [plantSpecies, setPlantSpecies] = React.useState('');
@@ -39,9 +33,23 @@ const AddPlantPage = () => {
             return;
         }
 
+        const userPlantResponse = await fetch("http://localhost:8000/add-user-plant/",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: plantName, species: plantSpecies }),
+            }
+        );
+
+        const userPlantResult = await userPlantResponse.json();
+        if (userPlantResult.status === "Error") {
+            alert("Failed to add your new plant.");
+            return;
+        }
+
         const plantIndex = selectedPlant.index;
 
-        const response = await fetch("http://localhost:8000/scrape-plant/",
+        const scrapeResponse = await fetch("http://localhost:8000/scrape-plant/",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -49,10 +57,10 @@ const AddPlantPage = () => {
             }
         );
 
-        const result = await response.json();
-        if (result.status === "Success") {
+        const scrapeResult = await scrapeResponse.json();
+        if (scrapeResult.status === "Success") {
             alert("Successfully added your new plant!");
-        } else if (result.status === "Error") {
+        } else if (scrapeResult.status === "Error") {
             alert("Failed to add your new plant.");
         }
     };

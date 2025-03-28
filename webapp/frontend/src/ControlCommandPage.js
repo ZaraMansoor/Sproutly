@@ -2,20 +2,33 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Tab, Tabs } from 'react-bootstrap';
 
 const ControlCommandPage = () => {
 
-    // TODO: add actual plant data later
-    const [plants, setPlants] = React.useState([
-        { id: 1, name: 'Basil', species: 'Basil', health_status: 'Healthy' },
-        { id: 2, name: 'Toma', species: 'Tomato', health_status: 'Unhealthy' },
-    ]);
+    const [plants, setPlants] = React.useState([]);
+            
+        React.useEffect(() => {
+            fetch("http://localhost:8000/get-user-plants/")
+                .then(result => result.json())
+                .then(data => {
+                    setPlants(data);
+                })
+                .catch(e => console.error("Failed to fetch user plants", e));
+        }, []);
+    
+    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
 
-    const [plantName, setPlantName] = React.useState('');
-    const [plantSpecies, setPlantSpecies] = React.useState('');
+    React.useEffect(() => {
+        if (!selectedPlant) {
+            setSelectedPlant(plants[0]);
+        }
+    }, [plants]);
 
-    // TODO: add plant logic later
+    const selectPlant = (plant) => {
+        setSelectedPlant(plant);
+    }
+        
 
     let navigate = useNavigate();
 
@@ -44,8 +57,21 @@ const ControlCommandPage = () => {
     // TODO: add on/off command logic later
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <Tabs activeKey={selectedPlant ? selectedPlant.id.toString() : null} onSelect={(key) => {
+                const plant = plants.find(p => p.id.toString() === key);
+                if (plant) selectPlant(plant);
+            }} className="flex-grow-1">
+            {plants.map((plant) => (
+            <Tab
+                key={plant.id}
+                eventKey={plant.id.toString()}
+                title={plant.name}
+            />
+            ))}
+            </Tabs>
+          </div>
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-            
             <Form>
                 <Form.Check 
                     type="switch"

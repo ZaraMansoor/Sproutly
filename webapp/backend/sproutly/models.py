@@ -2,12 +2,12 @@ from django.db import models
 from django.utils import timezone
 
 class Plant(models.Model):
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='plant_images/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    health_status = models.CharField(max_length=100)
+    # image = models.ImageField(upload_to='plant_images/', blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
+    health_status = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f'Plant(name={self.name}, species={self.species}, health_status="{self.health_status}")'

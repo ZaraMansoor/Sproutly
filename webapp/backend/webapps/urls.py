@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from sproutly.views import send_control_command, get_plant_species, get_webscraped_plant_data
+from sproutly.views import send_control_command, get_plant_species, get_webscraped_plant_data, add_user_plant, get_user_plants
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('send-command/', send_control_command),
+    path('get-user-plants/', get_user_plants),
+    path('add-user-plant/', add_user_plant),
     path("plant-species/", get_plant_species),
     path("scrape-plant/", get_webscraped_plant_data),
 ]

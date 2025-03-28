@@ -7,11 +7,17 @@ import socket from './socket';
 
 const HomePage = () => {
 
-    // TODO: add actual plant data later
-    const [plants, setPlants] = React.useState([
-        { id: 1, name: 'Basil', species: 'Basil', health_status: 'Healthy' },
-        { id: 2, name: 'Toma', species: 'Tomato', health_status: 'Unhealthy' },
-    ]);
+    const [plants, setPlants] = React.useState([]);
+    
+    React.useEffect(() => {
+        fetch("http://localhost:8000/get-user-plants/")
+            .then(result => result.json())
+            .then(data => {
+                setPlants(data);
+            })
+            .catch(e => console.error("Failed to fetch user plants", e));
+    }, []);
+
 
     // TODO: add actual sensor data later
     // const sensorData = {
@@ -35,9 +41,14 @@ const HomePage = () => {
     }, []);
     
 
-    const [selectedPlant, setSelectedPlant] = React.useState(plants[0]);  // default
+    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
     const [currView, setCurrView] = React.useState('home'); // default
 
+    React.useEffect(() => {
+        if (!selectedPlant) {
+            setSelectedPlant(plants[0]);
+        }
+    }, [plants]);
 
     const selectPlant = (plant) => {
         setSelectedPlant(plant);
@@ -47,6 +58,13 @@ const HomePage = () => {
     let navigate = useNavigate();
 
     const renderView = () => {
+        if (!selectedPlant) {
+            return (
+                <div>
+                    <h2>Loading...</h2>
+                </div>
+            )
+        }
         if (currView === 'home') {
             return renderHomeView();
         } else if (currView === 'schedule') {

@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from sproutly.models import WebscrapedPlant
+from sproutly.models import WebscrapedPlant, Plant
 from soltech_scraping import webscrape_plant
 import time
 
@@ -37,6 +37,36 @@ def send_control_command(request):
         return JsonResponse({"status": "Command Sent", "command": control_command, "actuator": actuator})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def get_user_plants(request):
+    try:
+        plants = Plant.objects.all().values("id", "name", "species", "image_url", "health_status")
+        return JsonResponse(list(plants), safe=False)
+    except Exception as e:
+        return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+
+
+
+@csrf_exempt
+def add_user_plant(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            img_url = WebscrapedPlant.objects.get(name=data["species"]).image_url
+
+            new_plant = Plant(
+                name = data["name"],
+                species = data["species"],
+                image_url = img_url,
+            )
+            new_plant.save()
+            return JsonResponse({"status": "Success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+        
+    return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
 
 
 @csrf_exempt
@@ -82,4 +112,4 @@ def get_webscraped_plant_data(request):
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
 
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
