@@ -5,8 +5,8 @@ Zara Mansoor (zmansoor)
 Reference for dht11: https://pimylifeup.com/raspberry-pi-dht11-sensor/
 '''
 import time
-import adafruit_dht
-import board
+# import adafruit_dht
+# import board
 import paho.mqtt.client as mqtt
 import json
 import sys
@@ -33,7 +33,7 @@ CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands fr
 last_health_check_time = datetime.now() - timedelta(days=1)
 
 # DHT11 sensor
-dht_device = adafruit_dht.DHT11(board.D17)
+# dht_device = adafruit_dht.DHT11(board.D17)
 
 # # light sensor
 # logging.basicConfig(level=logging.INFO)
@@ -94,6 +94,7 @@ client.loop_start()
 
 while True:
   try:
+    '''
     temperature_c = dht_device.temperature
     temperature_f = temperature_c * (9 / 5) + 32
     humidity = dht_device.humidity
@@ -114,7 +115,7 @@ while True:
 
     # publish the data to the MQTT topic
     client.publish(MQTT_TOPIC, payload)
-
+    '''
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
       send_plant_health(client)

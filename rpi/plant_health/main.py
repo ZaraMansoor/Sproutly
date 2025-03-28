@@ -27,7 +27,8 @@ def health_check():
     image = transform(image).unsqueeze(0)
 
     # load model
-    model_path = "results/model.pth"
+    model = 
+    model_path = "plant_health/results/model.pth"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     try:
