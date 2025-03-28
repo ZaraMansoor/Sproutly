@@ -97,7 +97,7 @@ while True:
     temperature_c = dht_device.temperature
     temperature_f = temperature_c * (9 / 5) + 32
     humidity = dht_device.humidity
-    lux = light_sensor.Lux
+    # lux = light_sensor.Lux
 
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
 
@@ -106,7 +106,7 @@ while True:
       "temperature_c": temperature_c,
       "temperature_f": temperature_f,
       "humidity": humidity,
-      "lux": lux
+      # "lux": lux
     }
 
     payload = json.dumps(data)
@@ -121,9 +121,9 @@ while True:
   except RuntimeError as err:
     print(err.args[0])
 
-  except KeyboardInterrupt:    
-    logging.info("ctrl + c:")
-    light_sensor.Disable()
-    exit()
+  # except KeyboardInterrupt:    
+  #   logging.info("ctrl + c:")
+  # light_sensor.Disable()
+  #   exit()
 
   time.sleep(2.0)
