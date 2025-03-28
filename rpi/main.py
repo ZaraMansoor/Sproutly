@@ -99,7 +99,8 @@ while True:
     humidity = dht_device.humidity
     # lux = light_sensor.Lux
 
-    print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
+    print("Temp:{:.1f} C / {:.1f} F Humidity: {}%".format(temperature_c, temperature_f, humidity))
+    # print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
 
     # create a JSON object with the temperature and humidity
     data = {
