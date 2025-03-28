@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from sproutly.models import WebscrapedPlant
 from soltech_scraping import webscrape_plant
+import time
 
 MQTT_SERVER = "broker.emqx.io"
 MQTT_PORT = 1883
@@ -30,6 +31,7 @@ def send_control_command(request):
         client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)
         client.loop_start()
         client.publish(CONTROL_TOPIC, json.dumps(message))
+        time.sleep(1)
         client.disconnect()
 
         return JsonResponse({"status": "Command Sent", "command": control_command, "actuator": actuator})
