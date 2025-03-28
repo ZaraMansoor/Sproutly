@@ -1,14 +1,15 @@
 import io
-import pickle
-from picamera2 import Picamera2
+import time
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
+from picamera2 import Picamera2
 
 def health_check():
     # capture image 
     picam2 = Picamera2()
     picam2.start()
+    time.sleep(2)
 
     image_stream = io.BytesIO()
     picam2.capture_file(image_stream, format="jpeg")
@@ -25,24 +26,26 @@ def health_check():
     image = Image.open(image_stream)
     image = transform(image).unsqueeze(0)
 
-    # TODO: add model to directory
-    # # load model
-    # with open("results/model.pkl", "rb") as f:
-    #     model = pickle.load(f)
+    # load model
+    model_path = "results/model.pth"
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # # evaluate image
-    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # model.eval()
-    # model.to(device)
-    # with torch.no_grad():
-    #     image = image.to(device)
+    try:
+        model = torch.load(model_path, map_location=device)
+        model.eval()
+        model.to(device)
 
-    #     outputs = model(image)
-    #     _, pred = torch.max(outputs, 1)
+        # evaluate image
+        with torch.no_grad():
+            image = image.to(device)
+            outputs = model(image)
+            _, pred = torch.max(outputs, 1)
 
-    # pred = pred.cpu().numpy()
-    # health_status = "Healthy" if pred == 0 else "Unhelathy"
+        pred = pred.cpu().numpy()[0]
+        health_status = "Healthy" if pred == 0 else "Unhealthy"
 
-    # return health_status
+    except FileNotFoundError:
+        print(f"Error: Model file '{model_path}' not found. Returning default status.")
+        health_status = "Unknown"
 
-    return "Healthy"
+    return health_status
