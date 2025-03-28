@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './HomePage';
 import MonitoringPage from './MonitoringPage';
 import AddPlantPage from './AddPlantPage';
+import ControlCommandPage from './ControlCommandPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/monitoring" element={<MonitoringPage />} />
             <Route path="/add-plant" element={<AddPlantPage />} />
+            <Route path="/control-command" element={<ControlCommandPage />} />
           </Routes>
         </div>
       </div>

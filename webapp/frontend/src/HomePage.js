@@ -66,6 +66,7 @@ const HomePage = () => {
                 <button onClick={() => navigate('/monitoring')}>Live Camera</button>
                 <button onClick={() => navigate('/add-plant')}>Add Plant</button>
                 <button onClick={() => setCurrView('schedule')}>Set Up Auto Control</button>
+                <button onClick={() => navigate('/control-command')}>Turn On/Off Actuators</button>
                 
                 <p>Temperature: {sensorData.temperature}°C</p>
                 <p>Humidity: {sensorData.humidity}%</p>
