@@ -1,5 +1,13 @@
 import paho.mqtt.client as mqtt
 import json
+import os
+import django
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
+django.setup()
+
+from sproutly.models import SensorData
+
 
 MQTT_SERVER = "broker.emqx.io"
 MQTT_PORT = 1883
@@ -20,14 +28,20 @@ def on_message(client, userdata, msg):
         data = json.loads(raw_payload) 
         print("Received Sensor Data:", data)
 
+        # save sensor data to mysql db
+        SensorData.objects.create(
+            temperature_c = data["temperature_c"],
+            temperature_f = data["temperature_f"],
+            humidity = data["humidity"],
+            # TODO: add more sensors later
+        )
+
     except json.JSONDecodeError as e:
         print("JSON Decode Error:", e)
         print("Invalid JSON received:", raw_payload)
         
     # data = json.loads(msg.payload.decode())
     # print("Received Sensor Data:", data)
-
-    # TODO: save data to database
 
 
 client = mqtt.Client()

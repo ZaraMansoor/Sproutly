@@ -8,7 +8,6 @@ class Plant(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     health_status = models.CharField(max_length=100)
-    # TODO: add more sensor data 
 
     def __str__(self):
         return f'Plant(name={self.name}, species={self.species}, health_status="{self.health_status}")'
@@ -40,10 +39,14 @@ class AutoSchedule(models.Model):
     
 
 class SensorData(models.Model):
-    plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='sensor_data')
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='sensor_data', null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    temperature_c = models.FloatField(null=True, blank=True) # degree celsius
+    temperature_f = models.FloatField(null=True, blank=True) # degree fahrenheit
+    humidity = models.IntegerField(null=True, blank=True) # %
 
     def __str__(self):
-        return f"Sensor data for {self.plant.name}"
+        return f"Sensor data for {self.plant.name}: temperature_c={self.temperature_c}, temperature_f={self.temperature_f}, humidity={self.humidity}"
 
 
 class WebscrapedPlant(models.Model):

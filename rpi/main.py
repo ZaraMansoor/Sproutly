@@ -55,7 +55,6 @@ def on_connect(client, userdata, flags, rc):
 
 # callback for receiving control messages
 def on_message(client, userdata, msg):
-  print("on message working?????")
   print(f"msg.topics: {msg.topic}")
   try:
     raw_payload = msg.payload.decode()
