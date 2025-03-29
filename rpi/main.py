@@ -71,7 +71,7 @@ def on_message(client, userdata, msg):
     if control_command["command"] == "on":
       if control_command["actuator"] == "heater":
         heater_relay.off()
-     if control_command["command"] == "off":
+    if control_command["command"] == "off":
       if control_command["actuator"] == "heater":
         heater_relay.on()
 
