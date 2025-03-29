@@ -2,6 +2,7 @@ import io
 import time
 import torch
 import torchvision.transforms as transforms
+import matplotlib.pyplot as plt
 from PIL import Image
 from picamera2 import Picamera2
 from torchvision import models
@@ -34,6 +35,13 @@ def health_check():
     image_stream = io.BytesIO()
     picam2.capture_file(image_stream, format="jpeg")
     image_stream.seek(0)
+
+    image = Image.open(image_stream)
+
+    plt.imshow(image)
+    plt.axis('off')
+    plt.title("Captured Image")
+    plt.show()
 
     # resize to 224x224 - expected input size for models, ImageNet normalization
     transform = transforms.Compose([
