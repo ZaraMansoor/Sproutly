@@ -44,6 +44,11 @@ HEATER_RELAY_PIN = 23
 heater_relay = OutputDevice(HEATER_RELAY_PIN)
 heater_relay.on()
 
+# water pump
+WATER_PUMP_RELAY_PIN = 18
+water_pump_relay = OutputDevice(WATER_PUMP_RELAY_PIN)
+water_pump_relay.on()
+
 # # light sensor
 # logging.basicConfig(level=logging.INFO)
 
@@ -75,10 +80,16 @@ def on_message(client, userdata, msg):
       if control_command["actuator"] == "heater":
         print("heater on")
         heater_relay.off()
+      if control_command["actuator"] == "water_pump":
+        print("water pump on")
+        water_pump_relay.off()
     if control_command["command"] == "off":
       if control_command["actuator"] == "heater":
         print("heater off")
         heater_relay.on()
+      if control_command["actuator"] == "water_pump":
+        print("water pump off")
+        water_pump_relay.on()
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
