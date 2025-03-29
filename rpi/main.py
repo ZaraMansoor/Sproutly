@@ -30,6 +30,9 @@ MQTT_TOPIC = "django/sproutly/mqtt"  # topic to send data to
 HEALTH_TOPIC = "django/sproutly/health"
 CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands from web app
 
+# check sensor data once a minute
+last_sensor_send_time = datetime.now() - timedelta(minutes=1)
+
 # check plant health once a day
 last_health_check_time = datetime.now() - timedelta(days=1)
 
