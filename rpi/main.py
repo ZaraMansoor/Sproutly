@@ -39,7 +39,7 @@ dht_device = adafruit_dht.DHT11(board.D17)
 # heater 
 HEATER_RELAY_PIN = 23
 heater_relay = OutputDevice(HEATER_RELAY_PIN)
-relay.on()
+heater_relay.on()
 
 # # light sensor
 # logging.basicConfig(level=logging.INFO)
