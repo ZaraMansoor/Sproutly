@@ -3,15 +3,25 @@ This is file to control the heater from the RPi GPIO 23
 
 Zara Mansoor (zmansoor)
 '''
-import time
 from gpiozero import OutputDevice
+import time
 
-relay = OutputDevice(23)  # GPIO pin 23
+RELAY_PIN = 23
+relay = OutputDevice(RELAY_PIN)
 
-relay.on()
-print("Heater is ON")
+while True:
+  user_input = input("on or off? ").strip().lower()
 
-time.sleep(2)
-
-relay.off()
-print("Heater is OFF")
+  if user_input == 'on':
+    relay.on()
+    print("Heater is ON")
+  elif user_input == 'off':
+    relay.off()
+    print("Heater is OFF")
+  elif user_input == 'exit':
+    print("Exiting program...")
+    break
+  else:
+    print("Invalid input. Please type 'ON', 'OFF', or 'exit'.")
+  
+  time.sleep(1)
