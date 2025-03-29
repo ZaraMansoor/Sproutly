@@ -5,8 +5,8 @@ Zara Mansoor (zmansoor)
 Reference for dht11: https://pimylifeup.com/raspberry-pi-dht11-sensor/
 '''
 import time
-# import adafruit_dht
-# import board
+import adafruit_dht
+import board
 import paho.mqtt.client as mqtt
 import json
 import sys
@@ -33,7 +33,7 @@ CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands fr
 last_health_check_time = datetime.now() - timedelta(days=1)
 
 # DHT11 sensor
-# dht_device = adafruit_dht.DHT11(board.D17)
+dht_device = adafruit_dht.DHT11(board.D17)
 
 # # light sensor
 # logging.basicConfig(level=logging.INFO)
