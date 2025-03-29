@@ -25,11 +25,11 @@ def identify_plant():
     image_stream = io.BytesIO()
     picam2.capture_file(image_stream, format="jpeg")
     image_stream.seek(0)
-
+    '''
     image = Image.open(image_stream)
     plt.imshow(image)
     plt.axis('off')
-    plt.show()
+    plt.show()'''
 
     files = [
         ('images', ('image.jpg', image_stream, 'image/jpeg'))
