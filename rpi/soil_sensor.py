@@ -1,37 +1,34 @@
-import minimalmodbus
-import time
+from pymodbus.client.serial import ModbusSerialClient
 
-# Configure the RS485 Modbus connection
-sensor = minimalmodbus.Instrument('/dev/ttyUSB0', 1)  # Adjust port and device address (default 0x01)
-sensor.serial.baudrate = 9600
-sensor.serial.bytesize = 8
-sensor.serial.parity = minimalmodbus.serial.PARITY_NONE
-sensor.serial.stopbits = 1
-sensor.serial.timeout = 1  # 1 second timeout
+# Configure Modbus RTU client
+client = ModbusSerialClient(
+    method="rtu",
+    port="/dev/ttyUSB0",
+    baudrate=9600,
+    stopbits=1,
+    parity='N',
+    bytesize=8,
+    timeout=1
+)
 
-def read_soil_data():
-  while True:
-    try:
-      ph = sensor.read_register(0x06, 2)  # Read PH (unit: 0.01 pH)
-      moisture = sensor.read_register(0x12, 1)  # Read Moisture (unit: 0.1 %RH)
-      temp = sensor.read_register(0x13, 1)  # Read Temperature (unit: 0.1°C)
-      conductivity = sensor.read_register(0x15, 0)  # Read Conductivity (unit: µS/cm)
-      nitrogen = sensor.read_register(0x1E, 0)  # Read Nitrogen (unit: mg/kg)
-      phosphorus = sensor.read_register(0x1F, 0)  # Read Phosphorus (unit: mg/kg)
-      potassium = sensor.read_register(0x20, 0)  # Read Potassium (unit: mg/kg)
+if client.connect():
+    # Read registers (start=18, count=2)
+    response = client.read_holding_registers(address=18, count=2, unit=1)
+    
+    if response.isError():
+        print("Error reading sensor data")
+    else:
+        humidity = response.registers[0] / 10.0  # Convert to %RH
+        temperature_raw = response.registers[1]
+        
+        # Convert temperature (handle negative values)
+        if temperature_raw > 32767:
+            temperature_raw -= 65536
+        temperature = temperature_raw / 10.0  # Convert to °C
+        
+        print(f"Soil Humidity: {humidity:.1f}% RH")
+        print(f"Soil Temperature: {temperature:.1f}°C")
 
-      print(f"Soil Data:\n"
-        f"PH: {ph / 100:.2f}\n"
-        f"Moisture: {moisture / 10:.1f}%\n"
-        f"Temperature: {temp / 10:.1f}°C\n"
-        f"Conductivity: {conductivity} µS/cm\n"
-        f"Nitrogen: {nitrogen} mg/kg\n"
-        f"Phosphorus: {phosphorus} mg/kg\n"
-        f"Potassium: {potassium} mg/kg")
-    except Exception as e:
-      print("Error reading sensor data:", e)
-
-    time.sleep(2.0)
-
-# Run the function
-read_soil_data()
+    client.close()
+else:
+    print("Failed to connect to sensor")
