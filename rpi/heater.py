@@ -8,6 +8,7 @@ import time
 
 RELAY_PIN = 23
 relay = OutputDevice(RELAY_PIN)
+relay.off()
 
 while True:
   user_input = input("on or off? ").strip().lower()

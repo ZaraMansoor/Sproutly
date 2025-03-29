@@ -14,6 +14,7 @@ import os
 import logging
 from datetime import datetime, timedelta
 from plant_health.main import health_check
+from gpiozero import OutputDevice
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -34,6 +35,11 @@ last_health_check_time = datetime.now() - timedelta(days=1)
 
 # DHT11 sensor
 dht_device = adafruit_dht.DHT11(board.D17)
+
+# heater 
+HEATER_RELAY_PIN = 23
+heater_relay = OutputDevice(HEATER_RELAY_PIN)
+relay.on()
 
 # # light sensor
 # logging.basicConfig(level=logging.INFO)
@@ -62,6 +68,13 @@ def on_message(client, userdata, msg):
     control_command = json.loads(raw_payload)
     if control_command["command"] == "get_plant_health_check":
       send_plant_health(client)
+    if control_command["command"] == "on":
+      if control_command["actuator"] == "heater":
+        heater_relay.off()
+     if control_command["command"] == "off":
+      if control_command["actuator"] == "heater":
+        heater_relay.on()
+
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
     print("Invalid JSON received:", raw_payload)
