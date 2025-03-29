@@ -70,9 +70,11 @@ def on_message(client, userdata, msg):
       send_plant_health(client)
     if control_command["command"] == "on":
       if control_command["actuator"] == "heater":
+        print("heater on")
         heater_relay.off()
     if control_command["command"] == "off":
       if control_command["actuator"] == "heater":
+        print("heater off")
         heater_relay.on()
 
   except json.JSONDecodeError as e:
