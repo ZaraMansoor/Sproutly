@@ -9,8 +9,8 @@ from gpiozero import OutputDevice
 from time import sleep
 
 class Relay(OutputDevice):
-    def __init__(self, pin, active_high):
-        super(Relay, self).__init__(pin, active_high)
+    def __init__(self, pin, active_high=False):
+        super().__init__(pin, active_high=active_high)
 
 # using GPIO pin 12
 light = Relay(12, active_high=False)
