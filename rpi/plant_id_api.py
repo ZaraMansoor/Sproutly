@@ -10,6 +10,8 @@ import json
 import io
 from pprint import pprint
 from picamera2 import Picamera2
+from PIL import Image
+import matplotlib.pyplot as plt
 
 API_KEY = "2b10KGTzAgqcb5baVQciCheRU"  # Set your API_KEY here
 PROJECT = "all"  # try "weurope" or "canada"
@@ -23,6 +25,11 @@ def identify_plant():
     image_stream = io.BytesIO()
     picam2.capture_file(image_stream, format="jpeg")
     image_stream.seek(0)
+    '''
+    image = Image.open(image_stream)
+    plt.imshow(image)
+    plt.axis('off')
+    plt.show()'''
 
     files = [
         ('images', ('image.jpg', image_stream, 'image/jpeg'))
