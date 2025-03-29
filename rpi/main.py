@@ -81,6 +81,30 @@ def on_message(client, userdata, msg):
     print("JSON Decode Error:", e)
     print("Invalid JSON received:", raw_payload)
 
+
+def send_sensor_data(client, temperature_c, temperature_f, humidity):
+  global last_sensor_send_time
+  try:
+    # create a JSON object with the temperature and humidity
+    data = {
+      "temperature_c": temperature_c,
+      "temperature_f": temperature_f,
+      "humidity": humidity,
+      # "lux": lux
+    }
+
+    payload = json.dumps(data)
+
+    # publish the data to the MQTT topic
+    client.publish(MQTT_TOPIC, payload)
+    print("Published sensor data:", payload)
+
+    last_sensor_send_time = datetime.now()
+
+  except Exception as e:
+    print(f"Error in sending sensor data: {e}")
+
+
 def send_plant_health(client):
   global last_health_check_time
   try:
@@ -118,18 +142,9 @@ while True:
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}%".format(temperature_c, temperature_f, humidity))
     # print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
 
-    # create a JSON object with the temperature and humidity
-    data = {
-      "temperature_c": temperature_c,
-      "temperature_f": temperature_f,
-      "humidity": humidity,
-      # "lux": lux
-    }
-
-    payload = json.dumps(data)
-
-    # publish the data to the MQTT topic
-    client.publish(MQTT_TOPIC, payload)
+    # check if 1 minute has passed since last sensor data was sent
+    if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
+      send_sensor_data(client, temperature_c, temperature_f, humidity)
     
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
