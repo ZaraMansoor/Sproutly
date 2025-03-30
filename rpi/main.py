@@ -15,6 +15,7 @@ import logging
 from datetime import datetime, timedelta
 from plant_health.main import health_check
 from gpiozero import OutputDevice
+import serial
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -38,6 +39,10 @@ last_health_check_time = datetime.now() - timedelta(days=1)
 
 # DHT11 sensor
 dht_device = adafruit_dht.DHT11(board.D17)
+
+# soil moisture sensor
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+ser.reset_input_buffer()
 
 # heater 
 HEATER_RELAY_PIN = 23
@@ -104,6 +109,7 @@ def send_sensor_data(client, temperature_c, temperature_f, humidity):
       "temperature_c": temperature_c,
       "temperature_f": temperature_f,
       "humidity": humidity,
+      "soil_moisture": soil_moisture,
       # "lux": lux
     }
 
@@ -152,13 +158,15 @@ while True:
     temperature_f = temperature_c * (9 / 5) + 32
     humidity = dht_device.humidity
     # lux = light_sensor.Lux
+    if ser.in_waiting > 0:
+      soil_moisture = ser.readline().decode('utf-8').rstrip()
 
-    print("Temp:{:.1f} C / {:.1f} F Humidity: {}%".format(temperature_c, temperature_f, humidity))
+    print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}%".format(temperature_c, temperature_f, humidity, soil_moisture))
     # print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
 
     # check if 1 minute has passed since last sensor data was sent
     if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
-      send_sensor_data(client, temperature_c, temperature_f, humidity)
+      send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture)
     
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
