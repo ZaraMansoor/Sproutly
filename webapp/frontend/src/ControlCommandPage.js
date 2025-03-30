@@ -1,3 +1,10 @@
+/**
+ * References for React and Bootstrap:
+ * https://react.dev/reference/react
+ * https://react-bootstrap.netlify.app/docs/forms/checks-radios/
+ * https://dev.to/collegewap/how-to-work-with-checkboxes-in-react-44bc
+ */
+
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -54,7 +61,6 @@ const ControlCommandPage = () => {
         }
     }
 
-    // TODO: add on/off command logic later
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
           <div className="d-flex justify-content-between align-items-center mb-4">
@@ -79,7 +85,9 @@ const ControlCommandPage = () => {
                     label="Water Pump"
                     checked={waterPump}
                     onChange={(e) => {
-                        sendCommand({command: "on", actuator: "water_pump"});
+                        const waterPumpState = e.target.checked;
+                        setWaterPump(waterPumpState);
+                        sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                     }}
                     
                 />
@@ -89,7 +97,9 @@ const ControlCommandPage = () => {
                     label="Mister"
                     checked={mister}
                     onChange={(e) => {
-                        sendCommand({command: "on", actuator: "mister"});
+                        const misterState = e.target.checked;
+                        setMister(misterState);
+                        sendCommand({command: misterState ? "on" : "off", actuator: "mister"});
                     }}
                 />
                 <Form.Check 
@@ -98,7 +108,9 @@ const ControlCommandPage = () => {
                     label="Lights"
                     checked={lights}
                     onChange={(e) => {
-                        sendCommand({command: "on", actuator: "lights"});
+                        const lightsState = e.target.checked;
+                        setLights(lightsState);
+                        sendCommand({command: lightsState ? "on" : "off", actuator: "lights"});
                     }}
                 />
                 <Form.Check 
@@ -107,7 +119,9 @@ const ControlCommandPage = () => {
                     label="Heater"
                     checked={heater}
                     onChange={(e) => {
-                        sendCommand({command: "on", actuator: "heater"});
+                        const heaterState = e.target.checked;
+                        setHeater(heaterState);
+                        sendCommand({command: heaterState ? "on" : "off", actuator: "heater"});
                     }}
                 />
                 <Form.Check 
@@ -116,7 +130,9 @@ const ControlCommandPage = () => {
                     label="Nutrient Dispenser"
                     checked={nutrientDispenser}
                     onChange={(e) => {
-                        sendCommand({command: "on", actuator: "nutrient_dispenser"});
+                        const nutrientDispenserState = e.target.checked;
+                        setNutrientDispenser(nutrientDispenserState);
+                        sendCommand({command: nutrientDispenserState ? "on" : "off", actuator: "nutrient_dispenser"});
                     }}
                 />
             </Form>
