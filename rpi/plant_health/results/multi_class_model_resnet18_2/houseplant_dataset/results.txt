@@ -1,0 +1,54 @@
+Dataset: houseplant_dataset
+Training Details:
+- Epochs: 50
+- Device: cpu
+- Learning Rate: 0.001
+- Batch Size: 32
+- Number of Classes: 10
+- Classes: ['healthy', 'bacterial spot', 'dehydration', 'mineral deficiency', 'sunburn', 'late blight', 'leaf curl', 'overwatering', 'rust', 'powdery mildew']
+- Validation Set: Used
+
+ResNet18 Evaluation Results:
+                    precision    recall  f1-score   support
+
+           healthy       0.91      0.99      0.94       216
+    bacterial spot       1.00      0.89      0.94         9
+       dehydration       0.92      0.69      0.79        16
+mineral deficiency       0.80      0.67      0.73         6
+           sunburn       0.85      0.68      0.76        25
+       late blight       1.00      0.57      0.73         7
+         leaf curl       1.00      1.00      1.00        13
+      overwatering       0.80      0.57      0.67         7
+              rust       0.75      0.56      0.64        16
+    powdery mildew       0.88      1.00      0.93         7
+
+          accuracy                           0.90       322
+         macro avg       0.89      0.76      0.81       322
+      weighted avg       0.90      0.90      0.89       322
+
+Confusion Matrix:
+                    healthy  bacterial spot  dehydration  mineral deficiency  sunburn  late blight  leaf curl  overwatering  rust  powdery mildew
+healthy                 213               0            0                   0        0            0          0             1     2               0
+bacterial spot            0               8            0                   0        0            0          0             0     0               1
+dehydration               3               0           11                   0        2            0          0             0     0               0
+mineral deficiency        2               0            0                   4        0            0          0             0     0               0
+sunburn                   6               0            1                   0       17            0          0             0     1               0
+late blight               2               0            0                   1        0            4          0             0     0               0
+leaf curl                 0               0            0                   0        0            0         13             0     0               0
+overwatering              2               0            0                   0        1            0          0             4     0               0
+rust                      7               0            0                   0        0            0          0             0     9               0
+powdery mildew            0               0            0                   0        0            0          0             0     0               7
+
+TPR, FPR, FNR, TNR:
+                         TPR       FPR       FNR       TNR
+healthy             0.986111  0.207547  0.013889  0.792453
+bacterial spot      0.888889  0.000000  0.111111  1.000000
+dehydration         0.687500  0.003268  0.312500  0.996732
+mineral deficiency  0.666667  0.003165  0.333333  0.996835
+sunburn             0.680000  0.010101  0.320000  0.989899
+late blight         0.571429  0.000000  0.428571  1.000000
+leaf curl           1.000000  0.000000  0.000000  1.000000
+overwatering        0.571429  0.003175  0.428571  0.996825
+rust                0.562500  0.009804  0.437500  0.990196
+powdery mildew      1.000000  0.003175  0.000000  0.996825
+

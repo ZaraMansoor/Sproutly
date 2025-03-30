@@ -82,24 +82,24 @@ def compare_models():
               ]
     trained_models = []
 
-    # # train models
-    # for model_name, model in models:
-    #     print(f'Training {model_name}...')
-    #     output_dir = os.path.join(args.output, args.dataset, model_name)
-    #     print(output_dir)
-    #     trained_models.append((model_name, train_model(model, device, output_dir, train_loader, val_loader, epochs=args.epochs, lr=args.lr)))
-
-    # load already trained models
+    # train models
     for model_name, model in models:
-        print(f'Loading {model_name}...')
-        model_path = os.path.join(args.output, args.dataset, model_name, 'best.pth')
-        if os.path.exists(model_path):
-            model.load_state_dict(torch.load(model_path, map_location=device))
-            model.to(device)
-            model.eval()
-            trained_models.append((model_name, model))
-        else:
-            print(f'Warning: Model file {model_path} not found. Skipping {model_name}.')
+        print(f'Training {model_name}...')
+        output_dir = os.path.join(args.output, args.dataset, model_name)
+        print(output_dir)
+        trained_models.append((model_name, train_model(model, device, output_dir, train_loader, val_loader, epochs=args.epochs, lr=args.lr)))
+
+    # # load already trained models
+    # for model_name, model in models:
+    #     print(f'Loading {model_name}...')
+    #     model_path = os.path.join(args.output, args.dataset, model_name, 'best.pth')
+    #     if os.path.exists(model_path):
+    #         model.load_state_dict(torch.load(model_path, map_location=device))
+    #         model.to(device)
+    #         model.eval()
+    #         trained_models.append((model_name, model))
+    #     else:
+    #         print(f'Warning: Model file {model_path} not found. Skipping {model_name}.')
 
     # evaluate models
     fname = 'results.txt' if len(models) == 1 else 'comparison_results.txt'
