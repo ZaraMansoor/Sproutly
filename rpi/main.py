@@ -151,7 +151,7 @@ while True:
     humidity = dht_device.humidity
     if ser.in_waiting > 0:
       try:
-        soil_moisture = ser.readline().decode('utf-8').strip()
+        line = ser.readline().decode('utf-8').strip()
         values = line.split(',')
         if len(values) == 2:
           soil_moisture = float(values[0])
