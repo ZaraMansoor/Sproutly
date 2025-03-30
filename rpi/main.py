@@ -159,7 +159,7 @@ while True:
     humidity = dht_device.humidity
     # lux = light_sensor.Lux
     if ser.in_waiting > 0:
-      soil_moisture = ser.readline().decode('utf-8').rstrip()
+      soil_moisture = ser.readline().decode('utf-8').strip()
 
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}%".format(temperature_c, temperature_f, humidity, soil_moisture))
     # print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
