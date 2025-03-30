@@ -41,10 +41,11 @@ last_health_check_time = datetime.now() - timedelta(days=1)
 # DHT11 sensor
 dht_device = adafruit_dht.DHT11(board.D17)
 
-# soil moisture sensor
+# soil moisture and light sensor data from arduino
 ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
 ser.reset_input_buffer()
 soil_moisture = 0.0
+lux = 0
 
 # heater 
 HEATER_RELAY_PIN = 23
@@ -55,16 +56,6 @@ heater_relay.on()
 WATER_PUMP_RELAY_PIN = 18
 water_pump_relay = OutputDevice(WATER_PUMP_RELAY_PIN)
 water_pump_relay.on()
-
-# # light sensor
-# logging.basicConfig(level=logging.INFO)
-
-# import RPi.GPIO as GPIO
-# GPIO.setmode(GPIO.BCM)
-# print("GPIO is working!")
-
-# light_sensor = TSL2591.TSL2591()
-# light_sensor.SET_InterruptThreshold(0xff00, 0x0010)
 
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
@@ -103,7 +94,7 @@ def on_message(client, userdata, msg):
     print("Invalid JSON received:", raw_payload)
 
 
-def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture):
+def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture, lux):
   global last_sensor_send_time
   try:
     # create a JSON object with the temperature and humidity
@@ -112,7 +103,7 @@ def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moistu
       "temperature_f": temperature_f,
       "humidity": humidity,
       "soil_moisture": soil_moisture,
-      # "lux": lux
+      "lux": lux
     }
 
     payload = json.dumps(data)
@@ -159,16 +150,18 @@ while True:
     temperature_c = dht_device.temperature
     temperature_f = temperature_c * (9 / 5) + 32
     humidity = dht_device.humidity
-    # lux = light_sensor.Lux
     if ser.in_waiting > 0:
       soil_moisture = ser.readline().decode('utf-8').strip()
+      values = line.split(',')
+        if len(values) == 2:
+          soil_moisture = float(values[0])
+          lux = int(values[1])
 
-    print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}%".format(temperature_c, temperature_f, humidity, soil_moisture))
-    # print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Lux: {}".format(temperature_c, temperature_f, humidity, lux))
+    print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}% Light: {} lux".format(temperature_c, temperature_f, humidity, soil_moisture, lux))
 
     # check if 1 minute has passed since last sensor data was sent
     if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
-      send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture)
+      send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture, lux)
     
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
@@ -176,10 +169,5 @@ while True:
 
   except RuntimeError as err:
     print(err.args[0])
-
-  # except KeyboardInterrupt:    
-  #   logging.info("ctrl + c:")
-  # light_sensor.Disable()
-  #   exit()
 
   time.sleep(2.0)
