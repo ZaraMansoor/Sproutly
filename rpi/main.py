@@ -42,7 +42,7 @@ last_health_check_time = datetime.now() - timedelta(days=1)
 dht_device = adafruit_dht.DHT11(board.D17)
 
 # soil moisture and light sensor data from arduino
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 ser.reset_input_buffer()
 soil_moisture = 0.0
 lux = 0
