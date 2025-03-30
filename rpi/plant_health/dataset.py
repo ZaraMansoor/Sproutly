@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 # image dataset
 class ImageDataset(Dataset):
-    def __init__(self, dataset_path, transform=None, greyscale=False):
+    def __init__(self, dataset_path, transform=None, greyscale=False, multi_class_labels=None):
         '''
         Args:
             dataset_path (str): Path to the pickle file containing the dataset.
@@ -23,6 +23,7 @@ class ImageDataset(Dataset):
         self.dataset = dataset
         self.transform = transform
         self.greyscale = greyscale
+        self.multi_class_labels = multi_class_labels
 
     def __len__(self):
         return len(self.dataset)
@@ -45,9 +46,19 @@ class ImageDataset(Dataset):
             image = image.convert('L')
             image = image.convert('RGB')
 
-        # convert the health label to a binary class (healthy/unhealthy)
-        # 0 : healthy and 1 : unhealthy
-        health_class = 0 if sample['health_class'] == 'healthy' else 1  
+        if not self.multi_class_labels:
+            # convert the health label to a binary class (healthy/unhealthy)
+            # 0 : healthy and 1 : unhealthy
+            health_class = 0 if sample['health_class'] == 'healthy' else 1  
+        else:
+            # convert the health labels to indices
+            if sample['health_class'] == 'healthy':
+                health_class = self.multi_class_labels.index('healthy')
+                print(health_class, 'healthy')
+            else:
+                label = sample['health_labels'].split(', ')[0]
+                health_class = self.multi_class_labels.index(label)
+                print(health_class, label)
 
         # apply transformations if provided
         if self.transform:
