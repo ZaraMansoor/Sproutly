@@ -146,16 +146,18 @@ client.loop_start()
 
 while True:
   try:
-    
     temperature_c = dht_device.temperature
     temperature_f = temperature_c * (9 / 5) + 32
     humidity = dht_device.humidity
     if ser.in_waiting > 0:
-      soil_moisture = ser.readline().decode('utf-8').strip()
-      values = line.split(',')
-      if len(values) == 2:
-        soil_moisture = float(values[0])
-        lux = int(values[1])
+      try:
+        soil_moisture = ser.readline().decode('utf-8').strip()
+        values = line.split(',')
+        if len(values) == 2:
+          soil_moisture = float(values[0])
+          lux = int(values[1])
+      except ValueError: 
+        print(f"Invalid data received")
 
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}% Light: {} lux".format(temperature_c, temperature_f, humidity, soil_moisture, lux))
 
