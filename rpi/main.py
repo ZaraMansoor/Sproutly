@@ -102,7 +102,7 @@ def on_message(client, userdata, msg):
     print("Invalid JSON received:", raw_payload)
 
 
-def send_sensor_data(client, temperature_c, temperature_f, humidity):
+def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture):
   global last_sensor_send_time
   try:
     # create a JSON object with the temperature and humidity
