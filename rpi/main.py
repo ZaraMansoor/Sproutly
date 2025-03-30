@@ -57,6 +57,11 @@ WATER_PUMP_RELAY_PIN = 18
 water_pump_relay = OutputDevice(WATER_PUMP_RELAY_PIN)
 water_pump_relay.on()
 
+# LED light
+LED_RELAY_PIN = 24
+led_relay = OutputDevice(LED_RELAY_PIN)
+led_relay.on()
+
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
   if rc == 0:
@@ -81,6 +86,9 @@ def on_message(client, userdata, msg):
       if control_command["actuator"] == "water_pump":
         print("water pump on")
         water_pump_relay.off()
+      if control_command["actuator"] == "lights":
+        print("led on")
+        led_relay.off()
     if control_command["command"] == "off":
       if control_command["actuator"] == "heater":
         print("heater off")
@@ -88,6 +96,9 @@ def on_message(client, userdata, msg):
       if control_command["actuator"] == "water_pump":
         print("water pump off")
         water_pump_relay.on()
+      if control_command["actuator"] == "lights":
+        print("led off")
+        led_relay.on()
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
