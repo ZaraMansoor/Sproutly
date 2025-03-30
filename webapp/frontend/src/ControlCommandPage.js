@@ -45,8 +45,7 @@ const ControlCommandPage = () => {
     const [heater, setHeater] = React.useState(false);
     const [nutrientDispenser, setNutrientDispenser] = React.useState(false);
 
-    // TODO: add updating actuator on/off state from rpi logic later
-
+    
     const sendCommand = async (commandData) => {
         try {
             const response = await fetch("http://localhost:8000/send-command/",

@@ -3,6 +3,7 @@ This is a file to get the input sensor data
 Zara Mansoor (zmansoor)
 
 Reference for dht11: https://pimylifeup.com/raspberry-pi-dht11-sensor/
+Reference for MQTT: https://www.emqx.com/en/blog/how-to-use-mqtt-in-django
 '''
 import time
 import adafruit_dht

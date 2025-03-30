@@ -1,3 +1,10 @@
+/**
+ * References:
+ * https://react-bootstrap.netlify.app/docs/components/cards
+ * https://react-bootstrap.netlify.app/docs/components/tabs
+ * https://react-bootstrap.netlify.app/docs/components/buttons
+ */
+
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';

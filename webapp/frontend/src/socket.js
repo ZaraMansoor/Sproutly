@@ -1,4 +1,7 @@
-
+/**
+ * References:
+ * https://websocket-client.readthedocs.io/en/latest/examples.html
+ */
 const socket = new WebSocket('ws://localhost:8000/ws/sproutly/');
 
 socket.onopen = () => {

@@ -1,3 +1,7 @@
+'''
+References for Channels: https://channels.readthedocs.io/en/stable/topics/consumers.html
+'''
+
 import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer

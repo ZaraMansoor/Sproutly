@@ -1,3 +1,9 @@
+'''
+References: 
+https://www.emqx.com/en/blog/how-to-use-mqtt-in-django
+https://channels.readthedocs.io/en/stable/topics/channel_layers.html#
+'''
+
 import paho.mqtt.client as mqtt
 import json
 import os

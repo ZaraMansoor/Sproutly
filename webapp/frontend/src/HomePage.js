@@ -1,3 +1,10 @@
+/**
+ * References:
+ * https://react.dev/learn
+ * https://react-chartjs-2.js.org/examples/line-chart
+ * https://react-bootstrap.netlify.app/docs/components/tabs
+ */
+
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
