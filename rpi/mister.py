@@ -16,3 +16,4 @@ def turn_off():
 turn_on()
 time.sleep(10)
 turn_off()
+time.sleep(10)
