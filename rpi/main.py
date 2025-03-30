@@ -43,6 +43,7 @@ dht_device = adafruit_dht.DHT11(board.D17)
 # soil moisture sensor
 ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
 ser.reset_input_buffer()
+soil_moisture = 0.0
 
 # heater 
 HEATER_RELAY_PIN = 23
