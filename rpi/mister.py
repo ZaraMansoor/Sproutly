@@ -14,5 +14,5 @@ def turn_off():
     print("Mister OFF")
 
 turn_on()
-time.sleep(5)
+time.sleep(10)
 turn_off()

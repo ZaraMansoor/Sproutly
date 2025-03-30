@@ -1,0 +1,63 @@
+Comparison of Models:
+
+Dataset: plantdoc_dataset
+ResNet18 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.93      0.92      0.92        85
+           1       0.96      0.97      0.96       173
+
+    accuracy                           0.95       258
+   macro avg       0.94      0.94      0.94       258
+weighted avg       0.95      0.95      0.95       258
+
+Confusion Matrix:
+                  Predicted Healthy  Predicted Unhealthy
+Actual Healthy                   78                    7
+Actual Unhealthy                  6                  167
+
+True Positive Rate (TPR): 0.9653
+True Negative Rate (TNR): 0.9176
+False Positive Rate (FPR): 0.0824
+False Negative Rate (FNR): 0.0347
+
+ResNet50 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.88      0.88      0.88        85
+           1       0.94      0.94      0.94       173
+
+    accuracy                           0.92       258
+   macro avg       0.91      0.91      0.91       258
+weighted avg       0.92      0.92      0.92       258
+
+Confusion Matrix:
+                  Predicted Healthy  Predicted Unhealthy
+Actual Healthy                   75                   10
+Actual Unhealthy                 10                  163
+
+True Positive Rate (TPR): 0.9422
+True Negative Rate (TNR): 0.8824
+False Positive Rate (FPR): 0.1176
+False Negative Rate (FNR): 0.0578
+
+MobileNetV2 Evaluation Results:
+              precision    recall  f1-score   support
+
+           0       0.90      0.89      0.90        85
+           1       0.95      0.95      0.95       173
+
+    accuracy                           0.93       258
+   macro avg       0.93      0.92      0.93       258
+weighted avg       0.93      0.93      0.93       258
+
+Confusion Matrix:
+                  Predicted Healthy  Predicted Unhealthy
+Actual Healthy                   76                    9
+Actual Unhealthy                  8                  165
+
+True Positive Rate (TPR): 0.9538
+True Negative Rate (TNR): 0.8941
+False Positive Rate (FPR): 0.1059
+False Negative Rate (FNR): 0.0462
+

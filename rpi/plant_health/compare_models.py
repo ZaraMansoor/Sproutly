@@ -7,7 +7,8 @@ from dataset import ImageDataset, split_dataset
 from train import train_model
 from evaluate import evaluate_model
 import argparse
-from sklearn.metrics import classification_report
+import pandas as pd
+from sklearn.metrics import classification_report, confusion_matrix
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'torch.cuda.is_available(): {torch.cuda.is_available()}')
@@ -73,16 +74,53 @@ def compare_models():
         print(output_dir)
         trained_models.append((model_name, train_model(model, device, output_dir, train_loader, val_loader, epochs=args.epochs, lr=args.lr)))
 
+    # load already trained models
+    for model_name, model in models:
+        print(f'Loading {model_name}...')
+        model_path = os.path.join(args.output, args.dataset, model_name, 'best.pth')
+        if os.path.exists(model_path):
+            model.load_state_dict(torch.load(model_path, map_location=device))
+            model.to(device)
+            model.eval()
+            trained_models.append((model_name, model))
+        else:
+            print(f'Warning: Model file {model_path} not found. Skipping {model_name}.')
+
     # evaluate models
-    with open(os.path.join(args.output, args.dataset, 'comparison_results.txt'), 'w') as f:
+    with open(os.path.join(args.output, args.dataset, 'comparison_results_2.txt'), 'w') as f:
         f.write(f"Comparison of Models:\n\n")
         f.write(f"Dataset: {args.dataset}\n")
         for model_name, trained_model in trained_models:
             print(f'Evaluating {model_name}...')
             labels, preds = evaluate_model(trained_model, device, test_loader)
             classification_rep = classification_report(labels, preds)
-            f.write(f"{model_name} Evaluation Results:\n{classification_rep}\n\n")
+
+            # format confusion matrix with labels
+            conf_matrix = confusion_matrix(labels, preds)
+            conf_matrix_df = pd.DataFrame(conf_matrix, 
+                                        index=["Actual Healthy", "Actual Unhealthy"], 
+                                        columns=["Predicted Healthy", "Predicted Unhealthy"])
+
+            # calculate metrics
+            tn, fp, fn, tp = conf_matrix.ravel()
+            tpr = tp / (tp + fn)
+            tnr = tn / (tn + fp)
+            fpr = fp / (fp + tn)
+            fnr = fn / (fn + tp)
+
+            f.write(f"{model_name} Evaluation Results:\n{classification_rep}\n")
+            f.write(f"Confusion Matrix:\n{conf_matrix_df.to_string()}\n\n")
+            f.write(f"True Positive Rate (TPR): {tpr:.4f}\n")
+            f.write(f"True Negative Rate (TNR): {tnr:.4f}\n")
+            f.write(f"False Positive Rate (FPR): {fpr:.4f}\n")
+            f.write(f"False Negative Rate (FNR): {fnr:.4f}\n\n")
+
             print(classification_rep)
+            print(f"Confusion Matrix for {model_name}:\n{conf_matrix_df}")
+            print(f"True Positive Rate (TPR): {tpr:.4f}")
+            print(f"True Negative Rate (TNR): {tnr:.4f}")
+            print(f"False Positive Rate (FPR): {fpr:.4f}")
+            print(f"False Negative Rate (FNR): {fnr:.4f}\n")
 
 if __name__ == '__main__':
     compare_models()
