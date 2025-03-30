@@ -75,6 +75,29 @@ def get_plant_species(request):
     species = WebscrapedPlant.objects.all().values("index", "name")
     return JsonResponse(list(species), safe=False)
 
+@csrf_exempt
+def get_plant_info(request):
+    if request.method != "POST":
+        return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
+    try:
+        data = json.loads(request.body)
+        plant = WebscrapedPlant.objects.get(name=data["species"])
+
+        plant_info = {
+            "scientific_name": plant.scientific_name,
+            "light_description": plant.light_description,
+            "light_t0": plant.light_t0,
+            "light_duration": plant.light_duration,
+            "water_description": plant.water_description,
+            "temp_min": plant.temp_min,
+            "temp_max": plant.temp_max,
+            "humidity_min": plant.humidity_min,
+            "humidity_max": plant.humidity_max,
+        }
+        return JsonResponse(plant_info, safe=False)
+    except Exception as e:
+        return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+        
 
 @csrf_exempt
 # get detailed webscraped plant data and save to database

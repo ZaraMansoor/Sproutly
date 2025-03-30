@@ -41,9 +41,8 @@ const HomePage = () => {
     }, []);
 
 
-    // TODO: add actual sensor data later
 
-    // store 24 hours long of sensor data (sensor data is sent every 1 min)
+    // display 24 hours long of sensor data (sensor data is sent every 1 min)
     const [sensorDataHistory, setSensorDataHistory] = React.useState([]);
 
 
@@ -131,6 +130,31 @@ const HomePage = () => {
         setCurrView('home');
     }
 
+
+
+    const [plantInfo, setPlantInfo] = React.useState([]);
+
+    React.useEffect(() => {
+        if (!selectedPlant) {
+            return;
+        }
+
+        fetch("http://localhost:8000/get-plant-info/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ species: selectedPlant.species })
+        })
+        .then(result => result.json())
+        .then(data => {
+            setPlantInfo(data);
+        })
+        .catch(e => console.error("Failed to fetch plant info", e));
+    }, [selectedPlant]);
+
+
+
     let navigate = useNavigate();
 
     const renderView = () => {
@@ -168,13 +192,16 @@ const HomePage = () => {
                 <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
                 <SensorChart label="Humidity (%)" dataKey="humidity" color="green" />
 
-
-                {/* <p>Temperature: {sensorData.temperature}°C</p>
-                <p>Humidity: {sensorData.humidity}%</p>
-                <p>Light: {sensorData.light} lux</p>
-                <p>Soil Moisture: {sensorData.soil_moisture}%</p>
-                <p>pH: {sensorData.ph}</p>
-                <p>Nutrients: {sensorData.nutrients}mL</p> */}
+                <h2>Ideal Plant Care Conditions for {selectedPlant.name}</h2>
+                <p>Scientific Name: {plantInfo.scientific_name}</p>
+                <p>Light: {plantInfo.light_description}</p>
+                <p>Light Start Time: {plantInfo.light_t0}</p>
+                <p>Light Duration: {plantInfo.light_duration} hours</p>
+                <p>Water: {plantInfo.water_description}</p>
+                <p>Minimum Temperature: {plantInfo.temp_min} °F</p>
+                <p>Maximum Temperature: {plantInfo.temp_max} °F</p>
+                <p>Minimum Humidity: {plantInfo.humidity_min} %</p>
+                <p>Maximum Humidity: {plantInfo.humidity_max} %</p>
             </div>
         );
     }

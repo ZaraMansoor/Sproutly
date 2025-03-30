@@ -5,7 +5,6 @@ class Plant(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=100)
-    # image = models.ImageField(upload_to='plant_images/', blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
     health_status = models.CharField(max_length=100, blank=True, null=True)
 
