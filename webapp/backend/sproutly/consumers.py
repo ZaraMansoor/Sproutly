@@ -6,22 +6,28 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 class SensorConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         print("WebSocket attempted!")
+        await self.channel_layer.group_add("sproutly_sensor_data", self.channel_name)
+        await self.channel_layer.group_add("sproutly_health_status", self.channel_name)
         await self.accept()
         print("WebSocket connected!")
 
 
     async def disconnect(self, close_code):
-        pass
+        await self.channel_layer.group_discard("sproutly_sensor_data", self.channel_name)
+        await self.channel_layer.group_discard("sproutly_health_status", self.channel_name)
         print(f"WebSocket disconnected! {close_code}")
 
-    async def receive(self, text_data):
-        data_json = json.loads(text_data)
-        print("Received data:", data_json)
+    # received message from websocket. send to frontend
+    async def sensorDataUpdate(self, event):
+        try:
+            print("Sending sensor data:", event["data"])
+            await self.send(text_data=json.dumps(event["data"]))
+        except Exception as e:
+            print("Error sending sensor data:", e)
 
-        message = data_json['message']
-
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'temperature': data_json['temperature'],
-            'humidity': data_json['humidity'], # fix later
-        }))
+    async def healthUpdate(self, event):
+        try:
+            print("Sending health status:", event["data"])
+            await self.send(text_data=json.dumps(event["data"]))
+        except Exception as e:
+            print("Error sending health status:", e)

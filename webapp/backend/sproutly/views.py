@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from sproutly.models import WebscrapedPlant, Plant
 from soltech_scraping import webscrape_plant
 import time
+from sproutly.models import SensorData
 
 MQTT_SERVER = "broker.emqx.io"
 MQTT_PORT = 1883
@@ -113,3 +114,13 @@ def get_webscraped_plant_data(request):
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
 
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def get_sensor_data_history(request):
+    data = list(SensorData.objects.all().values())
+    
+    for d in data:
+        d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
+
+    return JsonResponse(data, safe=False)

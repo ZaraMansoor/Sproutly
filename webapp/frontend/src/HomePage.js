@@ -4,6 +4,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Tab, Tabs } from 'react-bootstrap';
 import socket from './socket';
+import { Line } from 'react-chartjs-2';
+
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+  } from 'chart.js';
+  
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+  );
 
 const HomePage = () => {
 
@@ -20,25 +42,79 @@ const HomePage = () => {
 
 
     // TODO: add actual sensor data later
-    // const sensorData = {
-    //     temperature: 25,
-    //     humidity: 50,
-    //     light: 100,
-    //     soil_moisture: 75,
-    //     ph: 7.5,
-    //     nutrients: 50
-    // };
 
-    const [sensorData, setSensorData] = React.useState({});
+    // store 24 hours long of sensor data (sensor data is sent every 1 min)
+    const [sensorDataHistory, setSensorDataHistory] = React.useState([]);
+
+
+    React.useEffect(() => {
+        fetch("http://localhost:8000/get-sensor-data-history/")
+            .then(res => res.json())
+            .then(data => {
+                console.log("Fetching past sensor data history:", data);
+                setSensorDataHistory(data);
+            })
+            .catch(e => console.error("Failed to fetch sensor data history", e));
+    }, []);
+
 
     React.useEffect(() => {
         socket.onmessage = (event) => {
+            console.log("Sensor data chart update attempting...");
             const data = JSON.parse(event.data);
-            setSensorData(data);
+
+            console.log("data.type:", data.type);
+            if (data.type === "plant_health") {
+                return;
+            }
+
+            const timestampedData = {
+                ...data,
+                timestamp: new Date().toLocaleString(),
+            };
+            setSensorDataHistory((prevData) => 
+                [...prevData.slice(-1439), timestampedData]
+            );
+            console.log("Sensor data chart updated!!!:", data);
         };
 
-        return () => socket.close();
+        // return () => socket.close();
+        // TODO: idk why it's closing as soon as the page loads
     }, []);
+    
+
+
+    const SensorChart = ({ label, dataKey, color }) => {
+        const data = {
+            labels: sensorDataHistory.map(d => d.timestamp),
+            datasets: [
+                {
+                    label,
+                    data: sensorDataHistory.map(d => d[dataKey]),
+                    borderColor: color,
+                    backgroundColor: color,
+                }
+            ]
+        };
+    
+        const options = {
+            responsive: true,
+            plugins: {
+                legend: { 
+                    position: 'top',
+                },
+                title: { 
+                    display: true, 
+                    text: `${label} for the Last 24 Hours`, 
+                }
+            }
+        };
+    
+        return <Line data={data} options={options} />;
+    };
+    
+
+
     
 
     const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
@@ -86,12 +162,19 @@ const HomePage = () => {
                 <button onClick={() => setCurrView('schedule')}>Set Up Auto Control</button>
                 <button onClick={() => navigate('/control-command')}>Turn On/Off Actuators</button>
                 
-                <p>Temperature: {sensorData.temperature}°C</p>
+                <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
+
+                <SensorChart label="Temperature (°C)" dataKey="temperature_c" color="red" />
+                <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
+                <SensorChart label="Humidity (%)" dataKey="humidity" color="green" />
+
+
+                {/* <p>Temperature: {sensorData.temperature}°C</p>
                 <p>Humidity: {sensorData.humidity}%</p>
                 <p>Light: {sensorData.light} lux</p>
                 <p>Soil Moisture: {sensorData.soil_moisture}%</p>
                 <p>pH: {sensorData.ph}</p>
-                <p>Nutrients: {sensorData.nutrients}mL</p>
+                <p>Nutrients: {sensorData.nutrients}mL</p> */}
             </div>
         );
     }

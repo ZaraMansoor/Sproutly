@@ -2,6 +2,8 @@ import paho.mqtt.client as mqtt
 import json
 import os
 import django
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
 django.setup()
@@ -26,15 +28,48 @@ def on_message(client, userdata, msg):
         print("Raw MQTT Payload:", raw_payload)
 
         data = json.loads(raw_payload) 
-        print("Received Sensor Data:", data)
+        print("Received Sensor/Health Data:", data)
 
-        # save sensor data to mysql db
-        SensorData.objects.create(
-            temperature_c = data["temperature_c"],
-            temperature_f = data["temperature_f"],
-            humidity = data["humidity"],
-            # TODO: add more sensors later
-        )
+
+        try: # sensor data received
+
+            # TODO: check if sensor data > 1440, if so, delete old data
+
+            # save sensor data to mysql db
+            SensorData.objects.create(
+                temperature_c = data["temperature_c"],
+                temperature_f = data["temperature_f"],
+                humidity = data["humidity"],
+                # TODO: add more sensors later
+            )
+
+            # send sensor data to websocket
+            channel_layer = get_channel_layer()
+
+            async_to_sync(channel_layer.group_send)(
+                "sproutly_sensor_data",
+                {
+                    "type": "sensorDataUpdate",
+                    "data": data,
+                }
+            )
+            print("Received Sensor Data:", data)
+        
+        except KeyError as e: # health status received
+            channel_layer = get_channel_layer()
+
+            async_to_sync(channel_layer.group_send)(
+                "sproutly_health_status",
+                {
+                    "type": "healthUpdate",
+                    "data": data,
+                }
+            )
+            print("Received Health Data:", data)
+        
+        except Exception as e:
+            print("Error saving sensor data!:", e)
+
 
     except json.JSONDecodeError as e:
         print("JSON Decode Error:", e)
@@ -50,9 +85,3 @@ client.on_message = on_message
 
 client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)
 client.loop_forever()
-
-client.connect(
-    host=MQTT_SERVER,
-    port=MQTT_PORT,
-    keepalive=MQTT_KEEPALIVE
-)
