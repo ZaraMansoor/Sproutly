@@ -24,6 +24,7 @@ class ImageDataset(Dataset):
         self.transform = transform
         self.greyscale = greyscale
         self.multi_class_labels = multi_class_labels
+        print(f'multi_class_labels: {multi_class_labels}, num_classes: {len(multi_class_labels)}')
 
     def __len__(self):
         return len(self.dataset)
@@ -54,11 +55,9 @@ class ImageDataset(Dataset):
             # convert the health labels to indices
             if sample['health_class'] == 'healthy':
                 health_class = self.multi_class_labels.index('healthy')
-                print(health_class, 'healthy')
             else:
                 label = sample['health_labels'].split(', ')[0]
                 health_class = self.multi_class_labels.index(label)
-                print(health_class, label)
 
         # apply transformations if provided
         if self.transform:

@@ -9,6 +9,9 @@ from evaluate import evaluate_model
 import argparse
 import pandas as pd
 from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'torch.cuda.is_available(): {torch.cuda.is_available()}')
@@ -67,12 +70,12 @@ def compare_models():
               ('MobileNetV2', load_model('mobilenet_v2'))]
     trained_models = []
 
-    # train models
-    for model_name, model in models:
-        print(f'Training {model_name}...')
-        output_dir = os.path.join(args.output, args.dataset, model_name)
-        print(output_dir)
-        trained_models.append((model_name, train_model(model, device, output_dir, train_loader, val_loader, epochs=args.epochs, lr=args.lr)))
+    # # train models
+    # for model_name, model in models:
+    #     print(f'Training {model_name}...')
+    #     output_dir = os.path.join(args.output, args.dataset, model_name)
+    #     print(output_dir)
+    #     trained_models.append((model_name, train_model(model, device, output_dir, train_loader, val_loader, epochs=args.epochs, lr=args.lr)))
 
     # load already trained models
     for model_name, model in models:
@@ -88,18 +91,60 @@ def compare_models():
 
     # evaluate models
     with open(os.path.join(args.output, args.dataset, 'comparison_results_2.txt'), 'w') as f:
-        f.write(f"Comparison of Models:\n\n")
-        f.write(f"Dataset: {args.dataset}\n")
+        # add training details to log
+        f.write(f'Comparison of Models:\n\n')
+        f.write(f'Dataset: {args.dataset}\n')
+        desc = (
+            f'Training Details:\n'
+            f'- Epochs: {args.epochs}\n'
+            f'- Device: {device}\n'
+            f'- Learning Rate: {args.lr}\n'
+            f'- Batch Size: {32}\n'
+        )
+        if args.val:
+            desc += '- Validation Set: Used\n'
+        desc += '\n'
+        f.write(desc)
+
         for model_name, trained_model in trained_models:
             print(f'Evaluating {model_name}...')
             labels, preds = evaluate_model(trained_model, device, test_loader)
-            classification_rep = classification_report(labels, preds, target_names=['healthy', 'unhealthy'])
+            target_names = ['healthy', 'unhealthy']
+            classification_rep = classification_report(labels, preds, target_names=target_names)
 
             # format confusion matrix with labels
             conf_matrix = confusion_matrix(labels, preds)
             conf_matrix_df = pd.DataFrame(conf_matrix, 
-                                        index=["Actual Healthy", "Actual Unhealthy"], 
-                                        columns=["Predicted Healthy", "Predicted Unhealthy"])
+                                        index=['Actual Healthy', 'Actual Unhealthy'], 
+                                        columns=['Predicted Healthy', 'Predicted Unhealthy'])
+
+            # save the confusion matrix as an image to the output directory
+            plt.figure(figsize=(8, 6))
+            sns.heatmap(conf_matrix_df, annot=True, fmt='g', cmap='Blues', xticklabels=target_names, yticklabels=target_names)
+            plt.title(f'Confusion Matrix: {model_name}')
+            plt.ylabel('True Label')
+            plt.xlabel('Predicted Label')
+
+            image_file = os.path.join(args.output, args.dataset, model_name, f'{model_name}_confusion_matrix.png')
+            os.makedirs(os.path.dirname(image_file), exist_ok=True)
+            plt.savefig(image_file)
+            plt.close()
+
+            # save the normalised confusion matrix as an image to the output directory
+            normalised_conf_matrix = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis]
+            normalised_conf_matrix_df = pd.DataFrame(normalised_conf_matrix, 
+                                                     index=['Actual Healthy', 'Actual Unhealthy'], 
+                                                     columns=['Predicted Healthy', 'Predicted Unhealthy'])
+            plt.figure(figsize=(8, 6))
+            sns.heatmap(normalised_conf_matrix_df, annot=True, fmt='.2f', cmap='Blues', xticklabels=target_names, yticklabels=target_names)
+            plt.title(f'Normalized Confusion Matrix: {model_name}')
+            plt.ylabel('True Label')
+            plt.xlabel('Predicted Label')
+            
+            norm_image_file = os.path.join(args.output, args.dataset, model_name, f'{model_name}_normalized_confusion_matrix.png')
+            os.makedirs(os.path.dirname(norm_image_file), exist_ok=True)
+            plt.savefig(norm_image_file)
+            plt.close()
 
             # calculate metrics
             tn, fp, fn, tp = conf_matrix.ravel()
@@ -108,19 +153,19 @@ def compare_models():
             fpr = fp / (fp + tn)
             fnr = fn / (fn + tp)
 
-            f.write(f"{model_name} Evaluation Results:\n{classification_rep}\n")
-            f.write(f"Confusion Matrix:\n{conf_matrix_df.to_string()}\n\n")
-            f.write(f"True Positive Rate (TPR): {tpr:.4f}\n")
-            f.write(f"True Negative Rate (TNR): {tnr:.4f}\n")
-            f.write(f"False Positive Rate (FPR): {fpr:.4f}\n")
-            f.write(f"False Negative Rate (FNR): {fnr:.4f}\n\n")
+            f.write(f'{model_name} Evaluation Results:\n{classification_rep}\n')
+            f.write(f'Confusion Matrix:\n{conf_matrix_df.to_string()}\n\n')
+            f.write(f'True Positive Rate (TPR): {tpr:.4f}\n')
+            f.write(f'True Negative Rate (TNR): {tnr:.4f}\n')
+            f.write(f'False Positive Rate (FPR): {fpr:.4f}\n')
+            f.write(f'False Negative Rate (FNR): {fnr:.4f}\n\n')
 
             print(classification_rep)
-            print(f"Confusion Matrix for {model_name}:\n{conf_matrix_df}")
-            print(f"True Positive Rate (TPR): {tpr:.4f}")
-            print(f"True Negative Rate (TNR): {tnr:.4f}")
-            print(f"False Positive Rate (FPR): {fpr:.4f}")
-            print(f"False Negative Rate (FNR): {fnr:.4f}\n")
+            print(f'Confusion Matrix for {model_name}:\n{conf_matrix_df}')
+            print(f'True Positive Rate (TPR): {tpr:.4f}')
+            print(f'True Negative Rate (TNR): {tnr:.4f}')
+            print(f'False Positive Rate (FPR): {fpr:.4f}')
+            print(f'False Negative Rate (FNR): {fnr:.4f}\n')
 
 if __name__ == '__main__':
     compare_models()
