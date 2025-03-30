@@ -33,7 +33,11 @@ def on_message(client, userdata, msg):
 
         try: # sensor data received
 
-            # TODO: check if sensor data > 1440, if so, delete old data
+            # check if sensor data > 1440, if so, delete old data
+            # TODO: can be changed later? 1440 is based on 24 hours
+            if SensorData.objects.count() > 1440:
+                num_to_delete = SensorData.objects.count() - 1440
+                SensorData.objects.order_by('timestamp')[:num_to_delete].delete()
 
             # save sensor data to mysql db
             SensorData.objects.create(
