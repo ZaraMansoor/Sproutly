@@ -24,6 +24,10 @@ if os.path.exists(libdir):
 
 from waveshare_TSL2591 import TSL2591
 
+class Relay(OutputDevice):
+  def __init__(self, pin, active_high=False):
+    super().__init__(pin, active_high=active_high)
+
 # MQTT configuration
 MQTT_SERVER = "broker.emqx.io"  # use your broker address
 MQTT_PORT = 1883
@@ -31,6 +35,12 @@ MQTT_KEEPALIVE_INTERVAL = 60
 MQTT_TOPIC = "django/sproutly/mqtt"  # topic to send data to
 HEALTH_TOPIC = "django/sproutly/health"
 CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands from web app
+HEATER_RELAY_PIN = 23
+WATER_PUMP_RELAY_PIN = 18
+LED_1_RELAY_PIN = 26
+LED_2_RELAY_PIN = 6
+LED_3_RELAY_PIN = 5
+WHITE_LIGHT_RELAY_PIN = 16
 
 # check sensor data once a minute
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
@@ -48,19 +58,22 @@ soil_moisture = 0.0
 lux = 0
 
 # heater 
-HEATER_RELAY_PIN = 23
-heater_relay = OutputDevice(HEATER_RELAY_PIN)
-heater_relay.on()
+heater_relay = Relay(HEATER_RELAY_PIN, active_high=False)
+heater_relay.off()
 
 # water pump
-WATER_PUMP_RELAY_PIN = 18
-water_pump_relay = OutputDevice(WATER_PUMP_RELAY_PIN)
-water_pump_relay.on()
+water_pump_relay = Relay(WATER_PUMP_RELAY_PIN, active_high=False)
+water_pump_relay.off()
 
 # LED light
-LED_RELAY_PIN = 24
-led_relay = OutputDevice(LED_RELAY_PIN)
-led_relay.on()
+led_1_relay = Relay(LED_1_RELAY_PIN, active_high=False)
+led_2_relay = Relay(LED_2_RELAY_PIN, active_high=False)
+led_3_relay = Relay(LED_3_RELAY_PIN, active_high=False)
+white_light_relay = Relay(WHITE_LIGHT_RELAY_PIN, active_high=False)
+led_1_relay.off()
+led_2_relay.off()
+led_3_relay.off()
+white_light_relay.off()
 
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
@@ -79,26 +92,45 @@ def on_message(client, userdata, msg):
     control_command = json.loads(raw_payload)
     if control_command["command"] == "get_plant_health_check":
       send_plant_health(client)
-    if control_command["command"] == "on":
+    elif "actuator" in control_command:
       if control_command["actuator"] == "heater":
-        print("heater on")
-        heater_relay.off()
-      if control_command["actuator"] == "water_pump":
-        print("water pump on")
-        water_pump_relay.off()
-      if control_command["actuator"] == "lights":
-        print("led on")
-        led_relay.off()
-    if control_command["command"] == "off":
-      if control_command["actuator"] == "heater":
-        print("heater off")
-        heater_relay.on()
-      if control_command["actuator"] == "water_pump":
-        print("water pump off")
-        water_pump_relay.on()
-      if control_command["actuator"] == "lights":
-        print("led off")
-        led_relay.on()
+        if control_command["command"] == "on":
+          heater_relay.on()
+        elif control_command["command"] == "off":
+          heater_relay.off()
+      elif control_command["actuator"] == "water_pump":
+        if control_command["command"] == "on":
+          water_pump_relay.on()
+        elif control_command["command"] == "off":
+          water_pump_relay.off()
+      elif control_command["actuator"] == "white_light":
+        if control_command["command"] == "on":
+          white_light_relay.on()
+          led_1_relay.off()
+          led_2_relay.off()
+          led_3_relay.off()
+        elif control_command["command"] == "off":
+          white_light_relay.off()
+      elif control_command["actuator"] == "LED_light":
+        if control_command["command"] == "0":
+          led_1_relay.off()
+          led_2_relay.off()
+          led_3_relay.off()
+        elif control_command["command"] == "1":
+          led_1_relay.on()
+          led_2_relay.off()
+          led_3_relay.off()
+          white_light_relay.off()
+        elif control_command["command"] == "2":
+          led_1_relay.on()
+          led_2_relay.on()
+          led_3_relay.off()
+          white_light_relay.off()
+        elif control_command["command"] == "3":
+          led_1_relay.on()
+          led_2_relay.on()
+          led_3_relay.on()
+          white_light_relay.off()
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
