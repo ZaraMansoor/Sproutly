@@ -3,7 +3,7 @@
  * https://react.dev/reference/react
  * https://react-bootstrap.netlify.app/docs/forms/checks-radios/
  * https://dev.to/collegewap/how-to-work-with-checkboxes-in-react-44bc
-
+ * https://mui.com/material-ui/react-slider/
  */
 
 import React from 'react';
