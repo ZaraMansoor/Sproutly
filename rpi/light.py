@@ -21,24 +21,24 @@ while True:
     user_input = input("how many lights? (0, 1, 2 or 3) ").strip().lower()
 
     if user_input == '0':
-        light_1.on()
-        light_2.on()
-        light_3.on()
-        print("0 lights are on")
-    elif user_input == '1':
-        light_1.off()
-        light_2.on()
-        light_3.on()
-        print("1 light is on")
-    elif user_input == '2':
-        light_1.off()
-        light_2.off()
-        light_3.on()
-        print("2 lights are on")
-    elif user_input == '3':
         light_1.off()
         light_2.off()
         light_3.off()
+        print("0 lights are on")
+    elif user_input == '1':
+        light_1.on()
+        light_2.off()
+        light_3.off()
+        print("1 light is on")
+    elif user_input == '2':
+        light_1.on()
+        light_2.on()
+        light_3.off()
+        print("2 lights are on")
+    elif user_input == '3':
+        light_1.on()
+        light_2.on()
+        light_3.on()
         print("3 lights are on")
     elif user_input == 'exit':
         print("Exiting program...")
