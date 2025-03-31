@@ -124,7 +124,7 @@ const ControlCommandPage = () => {
                         value={lightValue}
                         onChange={(e) => {
                             setLightValue(e.target.value);
-                            sendCommand({command: e.target.value, actuator: "LED_light"});
+                            sendCommand({command: lightValue, actuator: "LED_light"});
                         }}
                     />
                 </div>
