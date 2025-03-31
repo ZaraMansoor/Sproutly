@@ -3,6 +3,7 @@
  * https://react.dev/reference/react
  * https://react-bootstrap.netlify.app/docs/forms/checks-radios/
  * https://dev.to/collegewap/how-to-work-with-checkboxes-in-react-44bc
+
  */
 
 import React from 'react';
@@ -10,6 +11,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Tab, Tabs } from 'react-bootstrap';
+import { Slider } from '@mui/material';
 
 const ControlCommandPage = () => {
 
@@ -45,7 +47,8 @@ const ControlCommandPage = () => {
     const [heater, setHeater] = React.useState(false);
     const [nutrientDispenser, setNutrientDispenser] = React.useState(false);
 
-    
+    const [lightValue, setLightValue] = React.useState(0);
+
     const sendCommand = async (commandData) => {
         try {
             const response = await fetch("http://localhost:8000/send-command/",
@@ -109,9 +112,22 @@ const ControlCommandPage = () => {
                     onChange={(e) => {
                         const lightsState = e.target.checked;
                         setLights(lightsState);
-                        sendCommand({command: lightsState ? "on" : "off", actuator: "lights"});
+                        sendCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
                     }}
                 />
+                <div className="my-4">
+                    <p>LED Brightness: {lightValue}</p>
+                    <Slider
+                        min={0}
+                        max={3}
+                        step={1}
+                        value={lightValue}
+                        onChange={(e) => {
+                            setLightValue(e.target.value);
+                            sendCommand({command: e.target.value, actuator: "LED_light"});
+                        }}
+                    />
+                </div>
                 <Form.Check 
                     type="switch"
                     id="custom-switch"
