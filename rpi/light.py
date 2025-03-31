@@ -46,5 +46,5 @@ while True:
     else:
         print("Invalid input. Please type '0', 1', '2', or '3'.")
   
-    time.sleep(1)
+    sleep(1)
 
