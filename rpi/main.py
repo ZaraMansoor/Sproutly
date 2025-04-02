@@ -214,6 +214,7 @@ while True:
       print(err)
 
     if ser.in_waiting > 0:
+      ser.reset_input_buffer()
       try:
         line = ser.readline().decode('utf-8').strip()
         values = line.split(',')
