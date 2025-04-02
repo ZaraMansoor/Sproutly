@@ -50,6 +50,9 @@ last_health_check_time = datetime.now() - timedelta(days=1)
 
 # DHT11 sensor
 dht_device = adafruit_dht.DHT11(board.D17)
+temperature_c = 0
+temperature_f = 0
+humidity = 0
 
 # soil moisture and light sensor data from arduino
 ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
@@ -189,9 +192,13 @@ client.loop_start()
 
 while True:
   try:
-    temperature_c = dht_device.temperature
-    temperature_f = temperature_c * (9 / 5) + 32
-    humidity = dht_device.humidity
+    try:
+      temperature_c = dht_device.temperature
+      temperature_f = temperature_c * (9 / 5) + 32
+      humidity = dht_device.humidity
+    except RuntimeError as err:
+      print(err)
+      
     if ser.in_waiting > 0:
       try:
         line = ser.readline().decode('utf-8').strip()
