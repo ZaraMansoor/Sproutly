@@ -56,7 +56,7 @@ while True:
         light_3.on()
         light_4.on()
         white_light.off()
-        print("3 lights are on")
+        print("4 lights are on")
     elif user_input == 'white':
         light_1.off()
         light_2.off()
