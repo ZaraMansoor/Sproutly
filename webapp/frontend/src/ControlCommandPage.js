@@ -119,12 +119,13 @@ const ControlCommandPage = () => {
                     <p>LED Brightness: {lightValue}</p>
                     <Slider
                         min={0}
-                        max={3}
+                        max={4}
                         step={1}
                         value={lightValue}
                         onChange={(e) => {
-                            setLightValue(e.target.value);
-                            sendCommand({command: lightValue, actuator: "LED_light"});
+                            const newLightValue = e.target.value;
+                            setLightValue(newLightValue);
+                            sendCommand({ command: newLightValue, actuator: "LED_light" }); 
                         }}
                     />
                 </div>
