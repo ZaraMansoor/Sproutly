@@ -222,6 +222,7 @@ while True:
           lux = int(values[1])
       except ValueError: 
         print(f"Invalid data received")
+    ser.reset_input_buffer()
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}% Light: {} lux".format(temperature_c, temperature_f, humidity, soil_moisture, lux))
 
     # check if 1 minute has passed since last sensor data was sent
