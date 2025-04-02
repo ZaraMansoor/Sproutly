@@ -40,6 +40,7 @@ WATER_PUMP_RELAY_PIN = 18
 LED_1_RELAY_PIN = 26
 LED_2_RELAY_PIN = 6
 LED_3_RELAY_PIN = 5
+LED_3_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
 # check sensor data once a minute
@@ -72,10 +73,12 @@ water_pump_relay.off()
 led_1_relay = Relay(LED_1_RELAY_PIN, active_high=False)
 led_2_relay = Relay(LED_2_RELAY_PIN, active_high=False)
 led_3_relay = Relay(LED_3_RELAY_PIN, active_high=False)
+led_3_relay = Relay(LED_4_RELAY_PIN, active_high=False)
 white_light_relay = Relay(WHITE_LIGHT_RELAY_PIN, active_high=False)
 led_1_relay.off()
 led_2_relay.off()
 led_3_relay.off()
+led_4_relay.off()
 white_light_relay.off()
 
 # callback for when the MQTT client connects to the broker
@@ -119,20 +122,30 @@ def on_message(client, userdata, msg):
           led_1_relay.off()
           led_2_relay.off()
           led_3_relay.off()
+          led_4_relay.off()
         elif control_command["command"] == "1":
           led_1_relay.on()
           led_2_relay.off()
           led_3_relay.off()
+          led_4_relay.off()
           white_light_relay.off()
         elif control_command["command"] == "2":
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.off()
+          led_4_relay.off()
           white_light_relay.off()
         elif control_command["command"] == "3":
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.on()
+          led_4_relay.off()
+          white_light_relay.off()
+        elif control_command["command"] == "4":
+          led_1_relay.on()
+          led_2_relay.on()
+          led_3_relay.on()
+          led_4_relay.on()
           white_light_relay.off()
 
   except json.JSONDecodeError as e:
@@ -198,7 +211,7 @@ while True:
       humidity = dht_device.humidity
     except RuntimeError as err:
       print(err)
-      
+
     if ser.in_waiting > 0:
       try:
         line = ser.readline().decode('utf-8').strip()
