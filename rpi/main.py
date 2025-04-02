@@ -84,6 +84,9 @@ led_3_relay.off()
 led_4_relay.off()
 white_light_relay.off()
 
+# keep track of LED light state
+last_led_state = 0
+
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
   if rc == 0:
@@ -94,6 +97,7 @@ def on_connect(client, userdata, flags, rc):
 
 # callback for receiving control messages
 def on_message(client, userdata, msg):
+  global last_led_state
   print(f"msg.topics: {msg.topic}")
   try:
     raw_payload = msg.payload.decode()
@@ -121,36 +125,76 @@ def on_message(client, userdata, msg):
           led_4_relay.off()
         elif control_command["command"] == "off":
           white_light_relay.off()
+          # go back to prev led state 
+          if last_led_state == 0:
+            led_1_relay.off()
+            led_2_relay.off()
+            led_3_relay.off()
+            led_4_relay.off()
+            last_led_state = 0
+          elif last_led_state == 1:
+            led_1_relay.on()
+            led_2_relay.off()
+            led_3_relay.off()
+            led_4_relay.off()
+            white_light_relay.off()
+            last_led_state = 1
+          elif last_led_state == 2:
+            led_1_relay.on()
+            led_2_relay.on()
+            led_3_relay.off()
+            led_4_relay.off()
+            white_light_relay.off()
+            last_led_state = 2
+          elif last_led_state == 3:
+            led_1_relay.on()
+            led_2_relay.on()
+            led_3_relay.on()
+            led_4_relay.off()
+            white_light_relay.off()
+            last_led_state = 3
+          elif last_led_state == 4:
+            led_1_relay.on()
+            led_2_relay.on()
+            led_3_relay.on()
+            led_4_relay.on()
+            white_light_relay.off()
+            last_led_state = 4
       elif control_command["actuator"] == "LED_light":
         if control_command["command"] == 0:
           led_1_relay.off()
           led_2_relay.off()
           led_3_relay.off()
           led_4_relay.off()
+          last_led_state = 0
         elif control_command["command"] == 1:
           led_1_relay.on()
           led_2_relay.off()
           led_3_relay.off()
           led_4_relay.off()
           white_light_relay.off()
+          last_led_state = 1
         elif control_command["command"] == 2:
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.off()
           led_4_relay.off()
           white_light_relay.off()
+          last_led_state = 2
         elif control_command["command"] == 3:
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.on()
           led_4_relay.off()
           white_light_relay.off()
+          last_led_state = 3
         elif control_command["command"] == 4:
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.on()
           led_4_relay.on()
           white_light_relay.off()
+          last_led_state = 4
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
