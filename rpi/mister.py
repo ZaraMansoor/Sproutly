@@ -27,10 +27,10 @@ def press_mister(press_count=1, delay_between=0.5):
 
 
 while True:
-    user_input = input("Enter number of presses (1-3): ")
+    user_input = input("Mister on or off: ")
     if user_input in ["on"]:
         mister.on()
-    if user_input in ["off"]:
+    elif user_input in ["off"]:
         mister.off()
     else:
-        print("Invalid input. Enter 1, 2, or 3.")
+        print("Invalid input. Enter on or off")
