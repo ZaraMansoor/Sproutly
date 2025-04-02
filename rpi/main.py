@@ -87,6 +87,28 @@ white_light_relay.off()
 # keep track of LED light state
 last_led_state = 0
 
+# control how may leds currently on
+def control_leds(num_leds):
+  if num_leds > 0:
+    led_1_relay.on()
+  else:
+    led_1_relay.off()
+
+  if num_leds > 1:
+    led_2_relay.on()
+  else:
+    led_2_relay.off()
+
+  if num_leds > 2:
+    led_3_relay.on()
+  else:
+    led_3_relay.off()
+
+  if num_leds > 3:
+    led_4_relay.on()
+  else:
+    led_4_relay.off()
+
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
   if rc == 0:
@@ -119,80 +141,47 @@ def on_message(client, userdata, msg):
       elif control_command["actuator"] == "white_light":
         if control_command["command"] == "on":
           white_light_relay.on()
-          led_1_relay.off()
-          led_2_relay.off()
-          led_3_relay.off()
-          led_4_relay.off()
+          control_leds(0)
         elif control_command["command"] == "off":
           white_light_relay.off()
           # go back to prev led state 
           if last_led_state == 0:
-            led_1_relay.off()
-            led_2_relay.off()
-            led_3_relay.off()
-            led_4_relay.off()
+            control_leds(0)
             last_led_state = 0
           elif last_led_state == 1:
-            led_1_relay.on()
-            led_2_relay.off()
-            led_3_relay.off()
-            led_4_relay.off()
+            control_leds(1)
             white_light_relay.off()
             last_led_state = 1
           elif last_led_state == 2:
-            led_1_relay.on()
-            led_2_relay.on()
-            led_3_relay.off()
-            led_4_relay.off()
+            control_leds(2)
             white_light_relay.off()
             last_led_state = 2
           elif last_led_state == 3:
-            led_1_relay.on()
-            led_2_relay.on()
-            led_3_relay.on()
-            led_4_relay.off()
+            control_leds(3)
             white_light_relay.off()
             last_led_state = 3
           elif last_led_state == 4:
-            led_1_relay.on()
-            led_2_relay.on()
-            led_3_relay.on()
-            led_4_relay.on()
+            control_leds(4)
             white_light_relay.off()
             last_led_state = 4
       elif control_command["actuator"] == "LED_light":
         if control_command["command"] == 0:
-          led_1_relay.off()
-          led_2_relay.off()
-          led_3_relay.off()
-          led_4_relay.off()
+          control_leds(0)
           last_led_state = 0
         elif control_command["command"] == 1:
-          led_1_relay.on()
-          led_2_relay.off()
-          led_3_relay.off()
-          led_4_relay.off()
+          control_leds(1)
           white_light_relay.off()
           last_led_state = 1
         elif control_command["command"] == 2:
-          led_1_relay.on()
-          led_2_relay.on()
-          led_3_relay.off()
-          led_4_relay.off()
+          control_leds(2)
           white_light_relay.off()
           last_led_state = 2
         elif control_command["command"] == 3:
-          led_1_relay.on()
-          led_2_relay.on()
-          led_3_relay.on()
-          led_4_relay.off()
+          control_leds(3)
           white_light_relay.off()
           last_led_state = 3
         elif control_command["command"] == 4:
-          led_1_relay.on()
-          led_2_relay.on()
-          led_3_relay.on()
-          led_4_relay.on()
+          control_leds(4)
           white_light_relay.off()
           last_led_state = 4
 
