@@ -122,30 +122,30 @@ def on_message(client, userdata, msg):
         elif control_command["command"] == "off":
           white_light_relay.off()
       elif control_command["actuator"] == "LED_light":
-        if control_command["command"] == "0":
+        if control_command["command"] == 0:
           led_1_relay.off()
           led_2_relay.off()
           led_3_relay.off()
           led_4_relay.off()
-        elif control_command["command"] == "1":
+        elif control_command["command"] == 1:
           led_1_relay.on()
           led_2_relay.off()
           led_3_relay.off()
           led_4_relay.off()
           white_light_relay.off()
-        elif control_command["command"] == "2":
+        elif control_command["command"] == 2:
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.off()
           led_4_relay.off()
           white_light_relay.off()
-        elif control_command["command"] == "3":
+        elif control_command["command"] == 3:
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.on()
           led_4_relay.off()
           white_light_relay.off()
-        elif control_command["command"] == "4":
+        elif control_command["command"] == 4:
           led_1_relay.on()
           led_2_relay.on()
           led_3_relay.on()
@@ -217,7 +217,6 @@ while True:
       print(err)
 
     if ser.in_waiting > 0:
-      print("ser buf len 1", ser.in_waiting)
       try:
         line = ser.readline().decode('utf-8').strip()
         values = line.split(',')
