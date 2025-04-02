@@ -49,6 +49,9 @@ last_sensor_send_time = datetime.now() - timedelta(minutes=1)
 # check plant health once a day
 last_health_check_time = datetime.now() - timedelta(days=1)
 
+# reset serial buffer data every 2.3 seconds
+last_reset_time = datetime.now() - timedelta(seconds=2.3)
+
 # DHT11 sensor
 dht_device = adafruit_dht.DHT11(board.D17)
 temperature_c = 0
@@ -214,6 +217,7 @@ while True:
       print(err)
 
     if ser.in_waiting > 0:
+      print("ser buf len 1", ser.in_waiting)
       try:
         line = ser.readline().decode('utf-8').strip()
         values = line.split(',')
@@ -222,7 +226,6 @@ while True:
           lux = int(values[1])
       except ValueError: 
         print(f"Invalid data received")
-    ser.reset_input_buffer()
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}% Light: {} lux".format(temperature_c, temperature_f, humidity, soil_moisture, lux))
 
     # check if 1 minute has passed since last sensor data was sent
@@ -232,6 +235,11 @@ while True:
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
       send_plant_health(client)
+    
+    # check if 2.3 seconds have passed since serial buffer reset
+    if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
+      ser.reset_input_buffer()
+      last_reset_time = datetime.now()
 
   except RuntimeError as err:
     print(err.args[0])
