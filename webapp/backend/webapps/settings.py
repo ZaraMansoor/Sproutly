@@ -87,8 +87,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'plantdata',
-        'USER': 'root',
-        'PASSWORD': '',
+        'USER': 'sproutly',
+        'PASSWORD': 'stanley',
         'HOST': 'localhost',
         'PORT': '3306',
     }
