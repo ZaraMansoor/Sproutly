@@ -1,8 +1,8 @@
 from pymodbus.client import ModbusSerialClient
 
 client = ModbusSerialClient(
-    port="/dev/tty.usbserial-BG00R07C",    # Serial port for mac
-    # port="/dev/tty.usbserial-BG00R07C",    # Serial port for rpi
+    # port="/dev/tty.usbserial-BG00R07C",    # Serial port for mac
+    port="/dev/ttyUSB0",                   # Serial port for rpi
     baudrate=9600,                         # Baudrate for communication
     bytesize=8,                            # Number of bits per byte
     parity="N",                            # No parity
