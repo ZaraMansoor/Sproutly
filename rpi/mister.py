@@ -6,7 +6,7 @@ class Relay(OutputDevice):
         super().__init__(pin, active_high=active_high)
 
 # using GPIO pin 12
-mister = Relay(12, active_high=False)
+mister = Relay(12, active_high=True)
 
 
 def press_mister(press_count=1, delay_between=1.0):
@@ -18,19 +18,20 @@ def press_mister(press_count=1, delay_between=1.0):
         if _ < press_count - 1:
             time.sleep(delay_between)
 
+'''
 while True:
     user_input = input("Enter number of presses (1-3): ")
     if user_input in ["1", "2", "3"]:
         press_mister(int(user_input))
     else:
         print("Invalid input. Enter 1, 2, or 3.")
+'''
 
-
-# while True:
-#     user_input = input("Mister on or off: ")
-#     if user_input in ["on"]:
-#         mister.on()
-#     elif user_input in ["off"]:
-#         mister.off()
-#     else:
-#         print("Invalid input. Enter on or off")
+while True:
+    user_input = input("Mister on or off: ")
+    if user_input in ["on"]:
+        mister.on()
+    elif user_input in ["off"]:
+        mister.off()
+    else:
+        print("Invalid input. Enter on or off")
