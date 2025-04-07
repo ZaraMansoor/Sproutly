@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'plantdata',
         'USER': 'sproutly',
         'PASSWORD': 'stanley',
-        'HOST': 'localhost',
+        'HOST': '172.26.29.166',
         'PORT': '3306',
     }
 }
