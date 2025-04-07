@@ -1,12 +1,27 @@
+'''
+References:
+https://docs.python.org/3/library/re.html
+'''
+
+import sys
+import os
+
+rpi_path = os.path.abspath(os.path.join(__file__, '../../../../rpi'))
+sys.path.append(rpi_path)
+
+# from plant_id_api import identify_plant
+# TODO: rpi???
+
 from django.shortcuts import render
 import paho.mqtt.client as mqtt
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from sproutly.models import WebscrapedPlant, Plant
+from sproutly.models import WebscrapedPlant, Plant, AutoSchedule
 from soltech_scraping import webscrape_plant
 import time
 from sproutly.models import SensorData
+import re
 
 MQTT_SERVER = "broker.emqx.io"
 MQTT_PORT = 1883
@@ -49,12 +64,57 @@ def get_user_plants(request):
         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
 
 
+# make species lowercase, remove special characters
+def lowercase_species(species):
+    return re.sub(r'[^\w\s]', '', species.lower())
 
 @csrf_exempt
 def add_user_plant(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
+
+            if data["species"] == "no-species":
+                # plant species detection
+                # TODO: change this to rpi code
+                # best_match, common_names = identify_plant()
+                best_match = "Dracaena masoniana (Chahin.) Byng & Christenh."
+                common_names = ['Whale Fin Plant', 'Sansevieria Masoniana']
+                lowercase_best_match = lowercase_species(best_match)
+                lowercase_common_names = [lowercase_species(name) for name in common_names]
+
+                # check if plant exists in webscraped database
+                plants_in_db = WebscrapedPlant.objects.all()
+
+                for plant_in_db in plants_in_db:
+                    lowercase_plant_in_db = lowercase_species(plant_in_db.name)
+
+                    if lowercase_best_match in lowercase_plant_in_db or lowercase_plant_in_db in lowercase_best_match:
+                        # if exists, add to database
+                        img_url = WebscrapedPlant.objects.get(name=plant_in_db.species).image_url
+
+                        new_plant = Plant(
+                            name = plant_in_db.name,
+                            species = plant_in_db.species,
+                            image_url = img_url,
+                        )
+                        new_plant.save()
+                        
+                        return JsonResponse({"status": "detected plant found", "species": plant_in_db.name}, status=200)
+                    else:
+                        for common_name in lowercase_common_names:
+                            if common_name in lowercase_plant_in_db or lowercase_plant_in_db in common_name:
+                                return JsonResponse({"status": "detected plant found", "species": plant_in_db.name}, status=200)
+                    
+                # if doesn't exist, allow manual auto scheduling
+                new_plant = Plant(
+                    name = data["name"],
+                    species = best_match
+                )
+                new_plant.save()
+
+                return JsonResponse({"status": "detected plant not found", "plantId": new_plant.id}, status=200)
+
             img_url = WebscrapedPlant.objects.get(name=data["species"]).image_url
 
             new_plant = Plant(
@@ -63,12 +123,69 @@ def add_user_plant(request):
                 image_url = img_url,
             )
             new_plant.save()
+
+            # set up initial auto-schedule
+            webscraped_plant = WebscrapedPlant.objects.get(name=data["species"])
+
+            new_autoschedule = AutoSchedule(
+                plant = new_plant,
+                min_temp = webscraped_plant.temp_min,
+                max_temp = webscraped_plant.temp_max,
+                min_humidity = webscraped_plant.humidity_min,
+                max_humidity = webscraped_plant.humidity_max,
+                # light_frequency = 0,
+                light_hours = webscraped_plant.light_duration,
+                # water_frequency = 0,
+                # water_amount = 0,
+            )
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
         
     return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
 
+
+@csrf_exempt
+def update_manual_autoschedule(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            user_plant = Plant.objects.get(id=data["plantId"])
+
+            if not AutoSchedule.objects.filter(plant=user_plant).exists():
+                new_autoschedule = AutoSchedule(
+                    plant = user_plant,
+                    min_temp = data["schedule"]["minTemp"],
+                    max_temp = data["schedule"]["maxTemp"],
+                    min_humidity = data["schedule"]["minHumidity"],
+                    max_humidity = data["schedule"]["maxHumidity"],
+                    light_frequency = data["schedule"]["lightFrequency"],
+                    light_hours = data["schedule"]["lightHours"],
+                    water_frequency = data["schedule"]["waterFrequency"],
+                    water_amount = data["schedule"]["waterAmount"],
+                )
+                new_autoschedule.save()
+                return JsonResponse({"status": "Success"}, status=200)
+
+
+            AutoSchedule.objects.filter(plant=user_plant).update(
+                min_temp = data["schedule"]["minTemp"],
+                max_temp = data["schedule"]["maxTemp"],
+                min_humidity = data["schedule"]["minHumidity"],
+                max_humidity = data["schedule"]["maxHumidity"],
+                light_frequency = data["schedule"]["lightFrequency"],
+                light_hours = data["schedule"]["lightHours"],
+                water_frequency = data["schedule"]["waterFrequency"],
+                water_amount = data["schedule"]["waterAmount"],
+                # TODO: add other fields later
+            )
+
+            return JsonResponse({"status": "Success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    
+    return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
 
 @csrf_exempt
 def get_plant_species(request):

@@ -13,6 +13,7 @@ const AddPlantPage = () => {
 
     const [webscrapedPlantData, setWebscrapedPlantData] = React.useState([]);
 
+
     React.useEffect(() => {
         fetch("http://localhost:8000/plant-species/")
           .then(result => result.json())
@@ -26,12 +27,16 @@ const AddPlantPage = () => {
     const submitAddPlant = async (e) => {
         e.preventDefault();
 
-        const selectedPlant = webscrapedPlantData.find((plant) => plant.name === plantSpecies);
-
-        if (!selectedPlant) {
-            alert("error with plant species");
+        if (!plantName) {
+            alert("error with plant name");
             return;
         }
+
+        let selectedPlant = null;
+        if (plantSpecies !== "no-species") {
+            selectedPlant = webscrapedPlantData.find((plant) => plant.name === plantSpecies);
+        }
+        
 
         const userPlantResponse = await fetch("http://localhost:8000/add-user-plant/",
             {
@@ -42,6 +47,14 @@ const AddPlantPage = () => {
         );
 
         const userPlantResult = await userPlantResponse.json();
+        if (userPlantResult.status === "detected plant not found") {
+            navigate('/manual-autoschedule', {
+                state: {
+                    plantId: userPlantResult.plantId
+                }
+            });
+            return;
+        }
         if (userPlantResult.status === "Error") {
             alert("Failed to add your new plant.");
             return;
@@ -81,6 +94,9 @@ const AddPlantPage = () => {
                     <Form.Label>Species</Form.Label>
                     <Form.Select onChange={(e) => setPlantSpecies(e.target.value)} required>
                         <option value="">Select plant species</option>
+                        <option key="-1" value="no-species">
+                                I don't know my plant's species
+                        </option>
                         {webscrapedPlantData.map((species) => (
                             <option key={species.index} value={species.name}>
                                 {species.name}

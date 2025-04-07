@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
-class Plant(models.Model):
-    id = models.IntegerField(primary_key=True)
+class Plant(models.Model): # user's plant
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=100)
     image_url = models.URLField(blank=True, null=True)
@@ -15,23 +15,16 @@ class Plant(models.Model):
 class AutoSchedule(models.Model):
     plant = models.OneToOneField(Plant, on_delete=models.CASCADE, related_name='auto_schedule')
     
-    watering_enabled = models.BooleanField(default=True)
-    watering_amount = models.FloatField() # mL
-    
-    humidity_control_enabled = models.BooleanField(default=True)
-    humidity_target = models.FloatField() # %
-    
-    lighting_enabled = models.BooleanField(default=True)
-    lighting_hours = models.IntegerField() # hours/day
-    
-    temperature_control_enabled = models.BooleanField(default=True)
-    temperature_target = models.FloatField() # degree celsius
+    min_temp = models.FloatField(blank=True, null=True) # degree fahrenheit
+    max_temp = models.FloatField(blank=True, null=True) # degree fahrenheit
+    min_humidity = models.FloatField(blank=True, null=True) # %
+    max_humidity = models.FloatField(blank=True, null=True) # %
+    light_frequency = models.FloatField(blank=True, null=True) # hours
+    light_hours = models.FloatField(blank=True, null=True) # hours
+    water_frequency = models.FloatField(blank=True, null=True) # hours
+    water_amount = models.IntegerField(blank=True, null=True) # mL
 
-    nutrients_control_enabled = models.BooleanField(default=True)
-    nutrients_target = models.FloatField() # mL
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    # nutrients_target = models.FloatField(blank=True, null=True) # mL
     
     def __str__(self):
         return f"Auto schedule for {self.plant.name}"
