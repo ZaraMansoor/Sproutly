@@ -9,11 +9,11 @@ class Relay(OutputDevice):
 mister = Relay(12, active_high=False)
 
 
-def press_mister(press_count=1, delay_between=0.5):
+def press_mister(press_count=1, delay_between=1.0):
     """Simulates pressing the mister button press_count times."""
     for _ in range(press_count):
         mister.on()
-        time.sleep(0.2)
+        time.sleep(1.0)
         mister.off()
         if _ < press_count - 1:
             time.sleep(delay_between)
