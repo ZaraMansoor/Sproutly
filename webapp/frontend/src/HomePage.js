@@ -43,11 +43,11 @@ const HomePage = () => {
             .then(result => result.json())
             .then(data => {
                 setPlants(data);
-                // if (data.length === 0) {
-                //     alert("Please add a plant first!");
-                //     navigate('/add-plant');
-                //     return;
-                // }
+                if (data.length === 0) {
+                    alert("Please add a plant first!");
+                    navigate('/add-plant');
+                    return;
+                }
             })
             .catch(e => console.error("Failed to fetch user plants", e));
     }, []);
