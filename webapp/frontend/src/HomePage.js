@@ -39,7 +39,7 @@ const HomePage = () => {
     const [plants, setPlants] = React.useState([]);
     
     React.useEffect(() => {
-        fetch("http://localhost:8000/get-user-plants/")
+        fetch("http://172.26.192.48:8000/get-user-plants/")
             .then(result => result.json())
             .then(data => {
                 setPlants(data);
@@ -59,7 +59,7 @@ const HomePage = () => {
 
 
     React.useEffect(() => {
-        fetch("http://localhost:8000/get-sensor-data-history/")
+        fetch("http://172.26.192.48:8000/get-sensor-data-history/")
             .then(res => res.json())
             .then(data => {
                 console.log("Fetching past sensor data history:", data);
@@ -151,7 +151,7 @@ const HomePage = () => {
             return;
         }
 
-        fetch("http://localhost:8000/get-plant-info/", {
+        fetch("http://172.26.192.48:8000/get-plant-info/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
