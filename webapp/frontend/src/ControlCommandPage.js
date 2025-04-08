@@ -18,7 +18,7 @@ const ControlCommandPage = () => {
     const [plants, setPlants] = React.useState([]);
             
         React.useEffect(() => {
-            fetch("http://localhost:8000/get-user-plants/")
+            fetch("http://172.26.192.48:8000/get-user-plants/")
                 .then(result => result.json())
                 .then(data => {
                     setPlants(data);
@@ -51,7 +51,7 @@ const ControlCommandPage = () => {
 
     const sendCommand = async (commandData) => {
         try {
-            const response = await fetch("http://localhost:8000/send-command/",
+            const response = await fetch("http://172.26.192.48:8000/send-command/",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

@@ -16,7 +16,7 @@ const MonitoringPage = () => {
     const [plants, setPlants] = React.useState([]);
         
     React.useEffect(() => {
-        fetch("http://localhost:8000/get-user-plants/")
+        fetch("http://172.26.192.48:8000/get-user-plants/")
             .then(result => result.json())
             .then(data => {
                 setPlants(data);

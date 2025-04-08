@@ -15,7 +15,7 @@ const AddPlantPage = () => {
 
 
     React.useEffect(() => {
-        fetch("http://localhost:8000/plant-species/")
+        fetch("http://172.26.192.48:8000/plant-species/")
           .then(result => result.json())
           .then(data => {
             setWebscrapedPlantData(data);
@@ -38,7 +38,7 @@ const AddPlantPage = () => {
         }
         
 
-        const userPlantResponse = await fetch("http://localhost:8000/add-user-plant/",
+        const userPlantResponse = await fetch("http://172.26.192.48:8000/add-user-plant/",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -62,7 +62,7 @@ const AddPlantPage = () => {
 
         const plantIndex = selectedPlant.index;
 
-        const scrapeResponse = await fetch("http://localhost:8000/scrape-plant/",
+        const scrapeResponse = await fetch("http://172.26.192.48:8000/scrape-plant/",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
