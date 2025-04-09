@@ -29,5 +29,5 @@ urlpatterns = [
     path("get-plant-info/", get_plant_info),
     path("scrape-plant/", get_webscraped_plant_data),
     path('get-sensor-data-history/', get_sensor_data_history),
-    path('get-autoschedule/<int:plant_id>', get_autoschedule),
+    # path('get-autoschedule/<int:plant_id>', get_autoschedule),
 ]
