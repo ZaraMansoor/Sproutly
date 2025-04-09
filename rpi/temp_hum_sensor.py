@@ -1,18 +1,14 @@
-import dht11
-import RPi.GPIO as GPIO
+import pigpio
 import time
+import dht11
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
-
-sensor = dht11.DHT11(pin=17)
+pi = pigpio.pi()
+sensor = dht11.DHT11(pin=17)  # GPIO17
 
 while True:
-    result = sensor.read()
-    if result.is_valid():
-        print(f"Temperature: {result.temperature} C")
-        print(f"Humidity: {result.humidity} %")
-    else:
-        print("Failed to read from DHT11")
-    time.sleep(2)
+  result = sensor.read()
+  if result[0] == dht11.DHT11.OK:
+    print(f"Temp: {result[1]} C  Humidity: {result[2]}%")
+  else:
+    print("Failed to read.")
+  time.sleep(2)
