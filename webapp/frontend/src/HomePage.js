@@ -117,10 +117,9 @@ const HomePage = () => {
 
             console.log("data.type:", data.type);
             if (data.type === "plant_health") {
-                if (selectedPlant && selectedPlant.health_status === "healthy" &&
-                    data.health_status === "unhealthy") {
+                if (selectedPlant && data.health_status === "unhealthy") {
                     new Notification("Plant Health Alert!", {
-                        body: `Plant ${selectedPlant.name} is now unhealthy!`
+                        body: `Plant ${selectedPlant.name} is unhealthy!`
                     });
                 return;
                 }
