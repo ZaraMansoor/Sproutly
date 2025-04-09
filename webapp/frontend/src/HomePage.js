@@ -55,17 +55,6 @@ const HomePage = () => {
     }, []);
 
 
-    // notification permission handling
-    Notification.requestPermission().then((result) => {
-        console.log(result);
-        if (result === "granted") {
-            console.log("Notification permission granted");
-        } else {
-            console.log("Notification permission denied");
-        }
-    });
-
-
     // display 24 hours long of sensor data (sensor data is sent every 1 min)
     const [sensorDataHistory, setSensorDataHistory] = React.useState([]);
 
@@ -228,7 +217,16 @@ const HomePage = () => {
         return (
             <div>
                 <p>If you want to get notifications when your plant is unhealthy, click this to enable notifications on your browser.</p>
-                <button onClick={() => Notification.requestPermission()}>Enable Notifications</button>
+                <button onClick={() => {
+                    Notification.requestPermission().then((result) => {
+                        console.log(result);
+                        if (result === "granted") {
+                            console.log("Notification permission granted");
+                        } else {
+                            console.log("Notification permission denied");
+                        }
+                    });
+                }}>Enable Notifications</button>
                 <h2>{selectedPlant.name}</h2>
                 <p>Health Status: {selectedPlant.health_status === 'healthy' ? 'Healthy' : 'Unhealthy'}</p>
                 <p>Species: {selectedPlant.species}</p>
