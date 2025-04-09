@@ -1,14 +1,17 @@
-import pigpio
-import time
-import dht11
+import os
+os.environ["BLINKA_FORCE_SW_PIN"] = "1"
 
-pi = pigpio.pi()
-sensor = dht11.DHT11(pin=17)  # GPIO17
+import board
+import adafruit_dht
+import time
+
+dht = adafruit_dht.DHT11(board.D17)
 
 while True:
-  result = sensor.read()
-  if result[0] == dht11.DHT11.OK:
-    print(f"Temp: {result[1]} C  Humidity: {result[2]}%")
-  else:
-    print("Failed to read.")
-  time.sleep(2)
+    try:
+        temp = dht.temperature
+        humidity = dht.humidity
+        print(f"Temp: {temp}C  Humidity: {humidity}%")
+    except RuntimeError as e:
+        print(f"Runtime error: {e}")
+    time.sleep(2)
