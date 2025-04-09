@@ -15,7 +15,7 @@ const AddPlantPage = () => {
 
 
     React.useEffect(() => {
-        fetch("http://172.26.192.48:8000/plant-species/")
+        fetch("https://172.26.192.48:8443/plant-species/")
           .then(result => result.json())
           .then(data => {
             console.log("Species fetched!!:", data);
@@ -39,7 +39,7 @@ const AddPlantPage = () => {
         }
         
 
-        const userPlantResponse = await fetch("http://172.26.192.48:8000/add-user-plant/",
+        const userPlantResponse = await fetch("https://172.26.192.48:8443/add-user-plant/",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -63,7 +63,7 @@ const AddPlantPage = () => {
 
         const plantIndex = selectedPlant.index;
 
-        const scrapeResponse = await fetch("http://172.26.192.48:8000/scrape-plant/",
+        const scrapeResponse = await fetch("https://172.26.192.48:8443/scrape-plant/",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

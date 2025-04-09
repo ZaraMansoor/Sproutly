@@ -3,6 +3,8 @@
  * https://react.dev/learn
  * https://react-chartjs-2.js.org/examples/line-chart
  * https://react-bootstrap.netlify.app/docs/components/tabs
+ * https://developer.chrome.com/docs/extensions/reference/api/notifications
+ * https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
  */
 
 import React from 'react';
@@ -39,7 +41,7 @@ const HomePage = () => {
     const [plants, setPlants] = React.useState([]);
     
     React.useEffect(() => {
-        fetch("http://172.26.192.48:8000/get-user-plants/")
+        fetch("https://172.26.192.48:8443/get-user-plants/")
             .then(result => result.json())
             .then(data => {
                 setPlants(data);
@@ -53,13 +55,17 @@ const HomePage = () => {
     }, []);
 
 
+    Notification.requestPermission().then((result) => {
+        console.log(result);
+    });
+
 
     // display 24 hours long of sensor data (sensor data is sent every 1 min)
     const [sensorDataHistory, setSensorDataHistory] = React.useState([]);
 
 
     React.useEffect(() => {
-        fetch("http://172.26.192.48:8000/get-sensor-data-history/")
+        fetch("https://172.26.192.48:8443/get-sensor-data-history/")
             .then(res => res.json())
             .then(data => {
                 console.log("Fetching past sensor data history:", data);
@@ -151,7 +157,7 @@ const HomePage = () => {
             return;
         }
 
-        fetch("http://172.26.192.48:8000/get-plant-info/", {
+        fetch("https://172.26.192.48:8443/get-plant-info/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

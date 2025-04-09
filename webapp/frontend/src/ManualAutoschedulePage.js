@@ -27,7 +27,7 @@ const ManualAutoschedulePage = () => {
         const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightFrequency, lightHours, waterFrequency, waterAmount };
         
         
-        const response = await fetch("http://172.26.192.48:8000/manual-autoschedule/",
+        const response = await fetch("https://172.26.192.48:8443/manual-autoschedule/",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
