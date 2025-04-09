@@ -117,7 +117,7 @@ const HomePage = () => {
 
             console.log("data.type:", data.type);
             if (data.type === "plant_health") {
-                if (selectedPlant && data.health_status === "unhealthy") {
+                if (selectedPlant && data.health_status === "Unhealthy") {
                     new Notification("Plant Health Alert!", {
                         body: `Plant ${selectedPlant.name} is unhealthy!`
                     });
@@ -228,7 +228,7 @@ const HomePage = () => {
                 }}>Enable Notifications</button> */}
 
                 <h2>{selectedPlant.name}</h2>
-                <p>Health Status: {selectedPlant.health_status === 'healthy' ? 'Healthy' : 'Unhealthy'}</p>
+                <p>Health Status: {selectedPlant.health_status === 'Healthy' ? 'Healthy' : 'Unhealthy'}</p>
                 <p>Species: {selectedPlant.species}</p>
 
                 {/* TODO: control buttons */}
