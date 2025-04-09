@@ -216,7 +216,7 @@ const HomePage = () => {
     const renderHomeView = () => {
         return (
             <div>
-                <p>If you want to get notifications when your plant is unhealthy, click this to enable notifications on your browser.</p>
+                {/* <p>If you want to get notifications when your plant is unhealthy, click this to enable notifications on your browser.</p>
                 <button onClick={() => {
                     Notification.requestPermission().then((result) => {
                         console.log(result);
@@ -226,7 +226,8 @@ const HomePage = () => {
                             console.log("Notification permission denied");
                         }
                     });
-                }}>Enable Notifications</button>
+                }}>Enable Notifications</button> */}
+
                 <h2>{selectedPlant.name}</h2>
                 <p>Health Status: {selectedPlant.health_status === 'healthy' ? 'Healthy' : 'Unhealthy'}</p>
                 <p>Species: {selectedPlant.species}</p>
