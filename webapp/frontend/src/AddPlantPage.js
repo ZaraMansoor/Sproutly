@@ -18,6 +18,7 @@ const AddPlantPage = () => {
         fetch("http://172.26.192.48:8000/plant-species/")
           .then(result => result.json())
           .then(data => {
+            console.log("Species fetched!!:", data);
             setWebscrapedPlantData(data);
           })
           .catch(e => console.error("Failed to fetch plant species", e));
