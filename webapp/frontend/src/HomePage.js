@@ -55,6 +55,46 @@ const HomePage = () => {
     }, []);
 
 
+
+    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
+    const [currView, setCurrView] = React.useState('home'); // default
+
+    React.useEffect(() => {
+        if (!selectedPlant) {
+            setSelectedPlant(plants[0]);
+        }
+    }, [plants]);
+
+    const selectPlant = (plant) => {
+        setSelectedPlant(plant);
+        setCurrView('home');
+    }
+
+
+
+    const [plantInfo, setPlantInfo] = React.useState([]);
+
+    React.useEffect(() => {
+        if (!selectedPlant) {
+            return;
+        }
+
+        fetch("https://172.26.192.48:8443/get-plant-info/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ species: selectedPlant.species })
+        })
+        .then(result => result.json())
+        .then(data => {
+            setPlantInfo(data);
+        })
+        .catch(e => console.error("Failed to fetch plant info", e));
+    }, [selectedPlant]);
+
+
+
     // display 24 hours long of sensor data (sensor data is sent every 1 min)
     const [sensorDataHistory, setSensorDataHistory] = React.useState([]);
 
@@ -153,46 +193,6 @@ const HomePage = () => {
         return <Line data={data} options={options} />;
     };
     
-
-
-    
-
-    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
-    const [currView, setCurrView] = React.useState('home'); // default
-
-    React.useEffect(() => {
-        if (!selectedPlant) {
-            setSelectedPlant(plants[0]);
-        }
-    }, [plants]);
-
-    const selectPlant = (plant) => {
-        setSelectedPlant(plant);
-        setCurrView('home');
-    }
-
-
-
-    const [plantInfo, setPlantInfo] = React.useState([]);
-
-    React.useEffect(() => {
-        if (!selectedPlant) {
-            return;
-        }
-
-        fetch("https://172.26.192.48:8443/get-plant-info/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ species: selectedPlant.species })
-        })
-        .then(result => result.json())
-        .then(data => {
-            setPlantInfo(data);
-        })
-        .catch(e => console.error("Failed to fetch plant info", e));
-    }, [selectedPlant]);
 
 
 
