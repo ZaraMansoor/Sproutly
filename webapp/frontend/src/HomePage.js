@@ -104,7 +104,7 @@ const HomePage = () => {
 
             // send notifications
             if (plantInfo) {
-                notifications = []
+                const notifications = []
                 if (data.temperature_f < plantInfo.temp_min) {
                     notifications.push('Temperature is too low :(');
                 } else if (data.temperature_f > plantInfo.temp_max) {
