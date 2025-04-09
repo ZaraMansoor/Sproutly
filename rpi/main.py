@@ -6,7 +6,6 @@ Reference for dht11: https://pimylifeup.com/raspberry-pi-dht11-sensor/
 Reference for MQTT: https://www.emqx.com/en/blog/how-to-use-mqtt-in-django
 '''
 import os
-os.environ["BLINKA_FORCE_SW_PIN"] = "1"
 import time
 import adafruit_dht
 import board
