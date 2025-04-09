@@ -5,13 +5,14 @@ Zara Mansoor (zmansoor)
 Reference for dht11: https://pimylifeup.com/raspberry-pi-dht11-sensor/
 Reference for MQTT: https://www.emqx.com/en/blog/how-to-use-mqtt-in-django
 '''
+import os
+os.environ["BLINKA_FORCE_SW_PIN"] = "1"
 import time
 import adafruit_dht
 import board
 import paho.mqtt.client as mqtt
 import json
 import sys
-import os
 import logging
 from datetime import datetime, timedelta
 from plant_health.main import health_check
