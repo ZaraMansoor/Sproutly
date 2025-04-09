@@ -55,8 +55,14 @@ const HomePage = () => {
     }, []);
 
 
+    // notification permission handling
     Notification.requestPermission().then((result) => {
         console.log(result);
+        if (result === "granted") {
+            console.log("Notification permission granted");
+        } else {
+            console.log("Notification permission denied");
+        }
     });
 
 
@@ -82,13 +88,41 @@ const HomePage = () => {
 
             console.log("data.type:", data.type);
             if (data.type === "plant_health") {
+                if (selectedPlant && selectedPlant.health_status === "healthy" &&
+                    data.health_status === "unhealthy") {
+                    new Notification("Plant Health Alert!", {
+                        body: `Plant ${selectedPlant.name} is now unhealthy!`
+                    });
                 return;
+                }
             }
 
             const timestampedData = {
                 ...data,
                 timestamp: new Date().toLocaleString(),
             };
+
+            // send notifications
+            if (plantInfo) {
+                notifications = []
+                if (data.temperature_f < plantInfo.temp_min) {
+                    notifications.push('Temperature is too low :(');
+                } else if (data.temperature_f > plantInfo.temp_max) {
+                    notifications.push('Temperature is too high :(');
+                }
+                if (data.humidity < plantInfo.humidity_min) {
+                    notifications.push('Humidity is too low :(');
+                } else if (data.humidity > plantInfo.humidity_max) {
+                    notifications.push('Humidity is too high :(');
+                }
+                // TODO: add more sensors
+                if (notifications.length > 0) {
+                    new Notification("Plant Health Alert!", {
+                        body: `${notifications.join('\n')}`
+                    });
+                }
+            }
+
             setSensorDataHistory((prevData) => 
                 [...prevData.slice(-1439), timestampedData]
             );
@@ -97,7 +131,7 @@ const HomePage = () => {
 
         // return () => socket.close();
         // TODO: idk why it's closing as soon as the page loads
-    }, []);
+    }, [selectedPlant, plantInfo]);
     
 
 
@@ -193,6 +227,8 @@ const HomePage = () => {
     const renderHomeView = () => {
         return (
             <div>
+                <p>If you want to get notifications when your plant is unhealthy, click this to enable notifications on your browser.</p>
+                <button onClick={() => Notification.requestPermission()}>Enable Notifications</button>
                 <h2>{selectedPlant.name}</h2>
                 <p>Health Status: {selectedPlant.health_status === 'healthy' ? 'Healthy' : 'Unhealthy'}</p>
                 <p>Species: {selectedPlant.species}</p>
