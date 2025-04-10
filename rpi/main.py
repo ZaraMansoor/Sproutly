@@ -49,8 +49,8 @@ LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
 # start the stream, keep track of if we are streaming or not
-stream.start_stream()
-streaming = True
+# stream.start_stream()
+streaming = False
 
 # check sensor data once a minute
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
@@ -199,9 +199,11 @@ def on_message(client, userdata, msg):
         if control_command["command"] == "on":
           if not streaming:
             stream.start_stream()
+          streaming = True
         elif control_command["command"] == "off":
           if streaming:
             stream.stop_stream()
+          streaming = False
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
@@ -235,7 +237,7 @@ def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moistu
 def send_plant_health(client):
   global last_health_check_time
   try:
-    # turn ehite light on and wait for 2 seconds for camera to adjust
+    # turn white light on and wait for 2 seconds for camera to adjust
     control_leds(0)
     white_light_relay.on()
     time.sleep(2)
@@ -246,11 +248,11 @@ def send_plant_health(client):
       image = Image.open(io.BytesIO(frame))
     else:
       # capture image
+      picam2.start()
       image = picam2.capture_array('main')
       image = Image.fromarray(image)
-      plt.imshow(image)
-      plt.axis('off')
-      plt.show()
+      image = image.convert('RGB')
+      picam2.stop()
 
     health_status = health_check(image)
 
