@@ -281,9 +281,10 @@ while True:
   try:
     try:
       dht_result = dht_instance.read()
-      temperature_c = dht_result.temperature
-      temperature_f = temperature_c * (9 / 5) + 32
-      humidity = dht_result.humidity
+      if dht_result.is_valid():
+        temperature_c = dht_result.temperature
+        temperature_f = temperature_c * (9 / 5) + 32
+        humidity = dht_result.humidity
     except RuntimeError as err:
       print(err)
 
