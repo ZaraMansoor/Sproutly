@@ -17,14 +17,7 @@ from threading import Condition
 from picamera2 import Picamera2
 from PIL import Image
 import numpy as np
-
-from picamera2.encoders import MJPEGEncoder
-from picamera2.outputs import FileOutput
 from libcamera import Transform
-
-
-
-
 
 # adjustable settings
 RESOLUTION = (3280, 2464)
@@ -120,18 +113,14 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 # initialize PiCamera2 for video streaming
 picam2 = Picamera2()
-config = picam2.create_video_configuration(main={'size': RESOLUTION})
-# config = picam2.create_video_configuration(
-#     main={'size': RESOLUTION, 'format': 'RGB888'},
-#     transform=Transform(hflip=1, vflip=1)
-# )
+config = picam2.create_video_configuration(main={'size': RESOLUTION}, transform=Transform(hflip=1, vflip=1))
 
 print("Available Controls:")
 for control, value in picam2.camera_controls.items():
     print(f"{control}: {value}")
 
 picam2.configure(config)
-# picam2.set_controls({"FrameRate": FRAME_RATE})
+picam2.set_controls({"FrameRate": FRAME_RATE})
 picam2.start()
 
 # create an instance to store streaming frame
@@ -168,22 +157,10 @@ def adjust_camera_settings():
 # continuously capture JPEG frames and update the streaming output
 def capture_frames():
     while True:
-        # adjust_camera_settings()
-
-
         image_stream = io.BytesIO()
         picam2.capture_file(image_stream, format="jpeg")
         image_stream.seek(0)
-
         img = Image.open(image_stream)
-        # plt.imshow(image)
-        # plt.axis('off')
-        # plt.show()
-
-
-
-        # frame = picam2.capture_array('main')
-        # img = Image.fromarray(frame).convert('RGB')
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
             output.update_frame(buf.getvalue())
