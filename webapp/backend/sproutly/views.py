@@ -153,7 +153,13 @@ def update_manual_autoschedule(request):
 
             user_plant = Plant.objects.get(id=data["plantId"])
 
+            print("plant_id:", data["plantId"])
+            print("plant_id type:", type("plantId"))
+            print("plant_id data type:", type(data["plantId"]))
+            print("user_plant: ", user_plant)
+
             if not AutoSchedule.objects.filter(plant=user_plant).exists():
+                print("new autoschedule111")
                 new_autoschedule = AutoSchedule(
                     plant = user_plant,
                     min_temp = data["schedule"]["minTemp"],
@@ -165,10 +171,11 @@ def update_manual_autoschedule(request):
                     water_frequency = data["schedule"]["waterFrequency"],
                     water_amount = data["schedule"]["waterAmount"],
                 )
+                print("autoschedule made! saving...")
                 new_autoschedule.save()
                 return JsonResponse({"status": "Success"}, status=200)
 
-
+            print("let's update schedule222")
             AutoSchedule.objects.filter(plant=user_plant).update(
                 min_temp = data["schedule"]["minTemp"],
                 max_temp = data["schedule"]["maxTemp"],
@@ -186,6 +193,26 @@ def update_manual_autoschedule(request):
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     
     return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
+
+# @csrf_exempt
+# def get_autoschedule(request, plant_id):
+#     try:
+#         autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(plant_id))
+#         autoschedule_json = {
+#             "min_temp": autoschedule.min_temp,
+#             "max_temp": autoschedule.max_temp,
+#             "min_humidity": autoschedule.min_humidity,
+#             "max_humidity": autoschedule.max_humidity,
+#             "light_frequency": autoschedule.light_frequency,
+#             "light_hours": autoschedule.light_hours,
+#             "water_frequency": autoschedule.water_frequency,
+#             "water_amount": autoschedule.water_amount
+#         }
+#         return JsonResponse(list(autoschedule), safe=False)
+#     except Exception as e:
+#         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    
+
 
 @csrf_exempt
 def get_plant_species(request):
