@@ -147,10 +147,13 @@ def add_user_plant(request):
 
 @csrf_exempt
 def update_manual_autoschedule(request):
+    print("entered update_manual_autoschedule")
     if request.method == "POST":
         try:
+            print("json loads starting...")
             data = json.loads(request.body)
 
+            print("json loads done")
             user_plant = Plant.objects.get(id=data["plantId"])
 
             print("plant_id:", data["plantId"])
