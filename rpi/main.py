@@ -46,8 +46,9 @@ LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
-# start the stream
+# start the stream, keep track of if we are streaming or not
 stream.start_stream()
+streaming = True
 
 # check sensor data once a minute
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
@@ -223,10 +224,20 @@ def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moistu
 def send_plant_health(client):
   global last_health_check_time
   try:
+    # turn ehite light on and wait for 2 seconds for camera to adjust
+    control_leds(0)
+    white_light_relay.on()
+    time.sleep(2)
+
     # get frame from stream
     frame = stream.get_latest_frame()
     image = Image.open(io.BytesIO(frame))
     health_status = health_check(image)
+
+    # turn white light off
+    white_light_relay.off()
+    assert 0 <= last_led_state <= 4
+    control_leds(last_led_state)
     
     payload = json.dumps({
         "type": "plant_health",
