@@ -154,11 +154,8 @@ def update_manual_autoschedule(request):
             data = json.loads(request.body)
 
             print("json loads done")
-            print("plant_id:", data["plantId"])
-            print("plant_id type:", type("plantId"))
-            print("plant_id data type:", type(data["plantId"]))
-            print("user_plant: ", user_plant)
             user_plant = Plant.objects.get(id=data["plantId"])
+            print("user_plant found")
 
             
 
