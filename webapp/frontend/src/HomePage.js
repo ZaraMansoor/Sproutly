@@ -227,7 +227,7 @@ const HomePage = () => {
 
                 <button onClick={() => navigate('/monitoring')}>Live Camera</button>
                 <button onClick={() => navigate('/add-plant')}>Add Plant</button>
-                <button onClick={() => setCurrView('/manual-autoschedule')}>Set Up Auto Control</button>
+                <button onClick={() => navigate('/manual-autoschedule')}>Set Up Auto Control</button>
                 <button onClick={() => navigate('/control-command')}>Turn On/Off Actuators</button>
                 
                 <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
