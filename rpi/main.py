@@ -7,7 +7,6 @@ Reference for MQTT: https://www.emqx.com/en/blog/how-to-use-mqtt-in-django
 '''
 import os
 import time
-import adafruit_dht
 import board
 import paho.mqtt.client as mqtt
 import json
@@ -20,6 +19,8 @@ import serial
 import stream
 from PIL import Image
 import io
+import RPi.GPIO as GPIO
+import dht11
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -60,7 +61,9 @@ last_health_check_time = datetime.now() - timedelta(days=1)
 last_reset_time = datetime.now() - timedelta(seconds=2.3)
 
 # DHT11 sensor
-dht_device = adafruit_dht.DHT11(board.D17)
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+dht_instance = dht11.DHT11(pin=17)
 temperature_c = 0
 temperature_f = 0
 humidity = 0
@@ -263,9 +266,10 @@ client.loop_start()
 while True:
   try:
     try:
-      temperature_c = dht_device.temperature
+      dht_result = dht_instance.read()
+      temperature_c = dht_result.temperature
       temperature_f = temperature_c * (9 / 5) + 32
-      humidity = dht_device.humidity
+      humidity = dht_result.humidity
     except RuntimeError as err:
       print(err)
 
