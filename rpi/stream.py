@@ -17,10 +17,8 @@ from threading import Condition
 from picamera2 import Picamera2
 from PIL import Image
 import numpy as np
-
-from picamera2.encoders import MJPEGEncoder
-from picamera2.outputs import FileOutput
 from libcamera import Transform
+import threading
 
 # adjustable settings
 RESOLUTION = (3280, 2464)
@@ -173,22 +171,20 @@ def capture_frames():
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
             output.update_frame(buf.getvalue())
 
-# start capturing frames in a background thread
-import threading
-threading.Thread(target=capture_frames, daemon=True).start()
 
-# start HTTP server
 def start_stream():
-    def run_server():
-        try:
-            address = ('', 8000)
-            server = StreamingServer(address, StreamingHandler)
-            print('Starting server on port 8000...')
-            server.serve_forever()
-        finally:
-            picam2.stop()
-
-    threading.Thread(target=run_server, daemon=True).start()
+    # start capturing frames in a background thread
+    threading.Thread(target=capture_frames, daemon=True).start()
+    # start HTTP server
+    try:
+        address = ('', 8000)
+        server = StreamingServer(address, StreamingHandler)
+        print('Starting server on port 8000...')
+        server.serve_forever()
+    finally:
+        picam2.stop()
 
 def stop_stream():
     picam2.stop()
+
+
