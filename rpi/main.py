@@ -49,8 +49,8 @@ LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
 # start the stream, keep track of if live streaming or not
-stream.start_stream()
-streaming = True
+# stream.start_stream()
+streaming = False
 
 # 
 if streaming:
