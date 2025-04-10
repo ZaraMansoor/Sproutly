@@ -25,13 +25,14 @@ from libcamera import Transform
 # adjustable settings
 RESOLUTION = (3280, 2464)
 FRAME_RATE = 30
-JPEG_QUALITY = 90 # (1 - 100)
+JPEG_QUALITY = 100 # (1 - 100)
 
 # define daytime (bright light) settings
 DAY_SETTINGS = {
     "AeEnable": True,          # Auto exposure enabled
     "FrameRate": 30,           # Higher frame rate
     "AnalogueGain": 1.0,       # Low analog gain
+    "Sharpness": 2.0,
 }
 
 # define nighttime (low light) settings
@@ -40,6 +41,7 @@ NIGHT_SETTINGS = {
     "FrameRate": 15,           # Lower frame rate for better low-light performance
     "ExposureTime": 30000,     # Longer exposure time (30ms)
     "AnalogueGain": 2.0,       # Increase analog gain
+    "Sharpness": 2.0,
 }
 
 LIGHT_THRESHOLD = 100
@@ -115,9 +117,8 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 # initialize PiCamera2 for video streaming
 picam2 = Picamera2()
-# config = picam2.create_video_configuration(main={'size': RESOLUTION})
 config = picam2.create_video_configuration(
-    main={'size': RESOLUTION, 'format': 'RGB888'},
+    main={'size': RESOLUTION},
     transform=Transform(hflip=1, vflip=1)
 )
 
@@ -164,8 +165,10 @@ def adjust_camera_settings():
 def capture_frames():
     while True:
         adjust_camera_settings()
-        frame = picam2.capture_array('main')
-        img = Image.fromarray(frame).convert('RGB')
+        image_stream = io.BytesIO()
+        picam2.capture_file(image_stream, format="jpeg")
+        image_stream.seek(0)
+        img = Image.open(image_stream)
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
             output.update_frame(buf.getvalue())
