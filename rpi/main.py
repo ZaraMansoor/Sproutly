@@ -16,10 +16,12 @@ from plant_health.main import health_check
 from gpiozero import OutputDevice
 import serial
 import stream
+from stream import picam2
 from PIL import Image
 import io
 import RPi.GPIO as GPIO
 import dht11
+import matplotlib.pyplot as plt
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -243,10 +245,12 @@ def send_plant_health(client):
       frame = stream.get_latest_frame()
       image = Image.open(io.BytesIO(frame))
     else:
-      return
       # capture image
       image = picam2.capture_array('main')
       image = Image.fromarray(image)
+      plt.imshow(image)
+      plt.axis('off')
+      plt.show()
 
     health_status = health_check(image)
 

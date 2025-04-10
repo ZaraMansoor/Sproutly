@@ -1,8 +1,5 @@
-import time
 import torch
 import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
-from picamera2 import Picamera2
 from torchvision import models
 from torch import nn
 
