@@ -70,7 +70,7 @@ const MonitoringPage = () => {
                     onChange={(e) => {
                         const cameraState = e.target.checked;
                         setCamera(cameraState);
-                        sendCameraCommand({command: cameraState ? "on" : "off", , actuator: "live_stream"});
+                        sendCameraCommand({command: cameraState ? "on" : "off", actuator: "live_stream"});
                     }}
                 />
             </Form>
