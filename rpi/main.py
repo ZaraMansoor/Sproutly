@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 from plant_health.main import health_check
 from gpiozero import OutputDevice
 import serial
+import stream
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -260,13 +261,16 @@ while True:
         print(f"Invalid data received")
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}% Light: {} lux".format(temperature_c, temperature_f, humidity, soil_moisture, lux))
 
+    # start the stream
+    stream.start_stream()
+
     # check if 1 minute has passed since last sensor data was sent
     if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
       send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture, lux)
     
     # check if 24 hours have passed since last health check
-    if datetime.now() - last_health_check_time >= timedelta(days=1):
-      send_plant_health(client)
+    # if datetime.now() - last_health_check_time >= timedelta(days=1):
+    #   send_plant_health(client)
     
     # check if 2.3 seconds have passed since serial buffer reset
     if datetime.now() - last_reset_time >= timedelta(seconds=2.3):

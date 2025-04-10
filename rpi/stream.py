@@ -178,10 +178,17 @@ import threading
 threading.Thread(target=capture_frames, daemon=True).start()
 
 # start HTTP server
-try:
-    address = ('', 8000)
-    server = StreamingServer(address, StreamingHandler)
-    print('Starting server on port 8000...')
-    server.serve_forever()
-finally:
+def start_stream():
+    def run_server():
+        try:
+            address = ('', 8000)
+            server = StreamingServer(address, StreamingHandler)
+            print('Starting server on port 8000...')
+            server.serve_forever()
+        finally:
+            picam2.stop()
+
+    threading.Thread(target=run_server, daemon=True).start()
+
+def stop_stream():
     picam2.stop()
