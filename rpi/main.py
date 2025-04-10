@@ -52,6 +52,25 @@ WHITE_LIGHT_RELAY_PIN = 16
 stream.start_stream()
 streaming = True
 
+# 
+if streaming:
+  # get frame from stream
+  frame = stream.get_latest_frame()
+  image_stream = io.BytesIO(frame)
+  picam2.capture_file(image_stream, format="jpeg")
+  image_stream.seek(0)
+else:
+  # capture image
+  picam2.start()
+  image_stream = io.BytesIO()
+  picam2.capture_file(image_stream, format="jpeg")
+  image_stream.seek(0)
+  picam2.stop()
+files = [
+    ('images', ('image.jpg', image_stream, 'image/jpeg'))
+]
+best_match, common_names = identify_plant(files)
+
 # check sensor data once a minute
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
 
@@ -139,23 +158,24 @@ def on_message(client, userdata, msg):
     if control_command["command"] == "get_plant_health_check":
       send_plant_health(client)
     elif control_command["command"] == "get_plant_id":
-      if streaming:
-        # get frame from stream
-        frame = stream.get_latest_frame()
-        image_stream = io.BytesIO(frame)
-        picam2.capture_file(image_stream, format="jpeg")
-        image_stream.seek(0)
-      else:
-        # capture image
-        picam2.start()
-        image_stream = io.BytesIO()
-        picam2.capture_file(image_stream, format="jpeg")
-        image_stream.seek(0)
-        picam2.stop()
-      files = [
-          ('images', ('image.jpg', image_stream, 'image/jpeg'))
-      ]
-      best_match, common_names = identify_plant(files)
+      # if streaming:
+      #   # get frame from stream
+      #   frame = stream.get_latest_frame()
+      #   image_stream = io.BytesIO(frame)
+      #   picam2.capture_file(image_stream, format="jpeg")
+      #   image_stream.seek(0)
+      # else:
+      #   # capture image
+      #   picam2.start()
+      #   image_stream = io.BytesIO()
+      #   picam2.capture_file(image_stream, format="jpeg")
+      #   image_stream.seek(0)
+      #   picam2.stop()
+      # files = [
+      #     ('images', ('image.jpg', image_stream, 'image/jpeg'))
+      # ]
+      # best_match, common_names = identify_plant(files)
+      pass
     elif "actuator" in control_command:
       if control_command["actuator"] == "heater":
         if control_command["command"] == "on":
