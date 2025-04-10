@@ -120,13 +120,13 @@ config = picam2.create_video_configuration(
     transform=Transform(hflip=1, vflip=1)
 )
 
-print("Available Controls:")
-for control, value in picam2.camera_controls.items():
-    print(f"{control}: {value}")
+# print("Available Controls:")
+# for control, value in picam2.camera_controls.items():
+#     print(f"{control}: {value}")
 
 picam2.configure(config)
 picam2.set_controls({"FrameRate": FRAME_RATE})
-picam2.start()
+# picam2.start()
 
 # create an instance to store streaming frame
 output = StreamingOutput()
@@ -172,6 +172,9 @@ def capture_frames():
             output.update_frame(buf.getvalue())
 
 def start_stream():
+    if not picam2.is_running():  # Ensure camera is not already running
+        picam2.start()
+
     # start capturing frames in a background thread
     threading.Thread(target=capture_frames, daemon=True).start()
     
@@ -192,6 +195,7 @@ def start_stream():
 
 def stop_stream():
     picam2.stop()
+    print("Stream stopped.")
 
 def get_latest_frame():
     with output.condition:
