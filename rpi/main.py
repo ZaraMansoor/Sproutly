@@ -7,7 +7,6 @@ Reference for MQTT: https://www.emqx.com/en/blog/how-to-use-mqtt-in-django
 '''
 import os
 import time
-import board
 import paho.mqtt.client as mqtt
 import json
 import sys
