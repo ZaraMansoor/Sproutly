@@ -130,6 +130,7 @@ def on_connect(client, userdata, flags, rc):
 # callback for receiving control messages
 def on_message(client, userdata, msg):
   global last_led_state
+  global streaming
   print(f"msg.topics: {msg.topic}")
   try:
     raw_payload = msg.payload.decode()
@@ -237,6 +238,7 @@ def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moistu
 
 def send_plant_health(client):
   global last_health_check_time
+  global streaming
   try:
     # turn white light on and wait for 2 seconds for camera to adjust
     control_leds(0)
@@ -277,6 +279,7 @@ def send_plant_health(client):
 
 
 def send_plant_id(client):
+  global streaming
   try:
     # turn white light on and wait for 2 seconds for camera to adjust
     control_leds(0)
