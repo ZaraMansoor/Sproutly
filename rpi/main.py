@@ -358,7 +358,6 @@ while True:
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
       send_plant_health(client)
-      send_plant_id(client)
     
     # check if 2.3 seconds have passed since serial buffer reset
     if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
@@ -369,3 +368,6 @@ while True:
     print(err.args[0])
 
   time.sleep(2.0)
+
+# TODO: remove once integrated with webapp
+send_plant_id(client)
