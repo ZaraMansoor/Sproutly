@@ -38,7 +38,6 @@ MQTT_SERVER = "broker.emqx.io"  # use your broker address
 MQTT_PORT = 1883
 MQTT_KEEPALIVE_INTERVAL = 60
 MQTT_TOPIC = "django/sproutly/mqtt"  # topic to send data to
-HEALTH_TOPIC = "django/sproutly/health"
 CONTROL_TOPIC = "django/sproutly/control" # topic to receive control commands from web app
 HEATER_RELAY_PIN = 23
 WATER_PUMP_RELAY_PIN = 18
@@ -49,27 +48,8 @@ LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
 # start the stream, keep track of if live streaming or not
-# stream.start_stream()
-streaming = False
-
-# 
-if streaming:
-  # get frame from stream
-  frame = stream.get_latest_frame()
-  image_stream = io.BytesIO(frame)
-  picam2.capture_file(image_stream, format="jpeg")
-  image_stream.seek(0)
-else:
-  # capture image
-  picam2.start()
-  image_stream = io.BytesIO()
-  picam2.capture_file(image_stream, format="jpeg")
-  image_stream.seek(0)
-  picam2.stop()
-files = [
-    ('images', ('image.jpg', image_stream, 'image/jpeg'))
-]
-best_match, common_names = identify_plant(files)
+stream.start_stream()
+streaming = True
 
 # check sensor data once a minute
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
@@ -158,24 +138,7 @@ def on_message(client, userdata, msg):
     if control_command["command"] == "get_plant_health_check":
       send_plant_health(client)
     elif control_command["command"] == "get_plant_id":
-      # if streaming:
-      #   # get frame from stream
-      #   frame = stream.get_latest_frame()
-      #   image_stream = io.BytesIO(frame)
-      #   picam2.capture_file(image_stream, format="jpeg")
-      #   image_stream.seek(0)
-      # else:
-      #   # capture image
-      #   picam2.start()
-      #   image_stream = io.BytesIO()
-      #   picam2.capture_file(image_stream, format="jpeg")
-      #   image_stream.seek(0)
-      #   picam2.stop()
-      # files = [
-      #     ('images', ('image.jpg', image_stream, 'image/jpeg'))
-      # ]
-      # best_match, common_names = identify_plant(files)
-      pass
+      send_plant_id(client)
     elif "actuator" in control_command:
       if control_command["actuator"] == "heater":
         if control_command["command"] == "on":
@@ -304,13 +267,59 @@ def send_plant_health(client):
         "status": health_status
     })
     
-    client.publish(HEALTH_TOPIC, payload)
+    client.publish(MQTT_TOPIC, payload)
     print("Published plant health status:", payload)
 
     last_health_check_time = datetime.now()
 
   except Exception as e:
     print(f"Error in health check: {e}")
+
+
+def send_plant_id(client):
+  try:
+    # turn white light on and wait for 2 seconds for camera to adjust
+    control_leds(0)
+    white_light_relay.on()
+    time.sleep(2)
+    
+    if streaming:
+      # get frame from stream
+      frame = stream.get_latest_frame()
+      image_stream = io.BytesIO(frame)
+      picam2.capture_file(image_stream, format="jpeg")
+      image_stream.seek(0)
+    else:
+      # capture image
+      picam2.start()
+      image_stream = io.BytesIO()
+      picam2.capture_file(image_stream, format="jpeg")
+      image_stream.seek(0)
+      picam2.stop()
+    
+    files = [
+        ('images', ('image.jpg', image_stream, 'image/jpeg'))
+    ]
+    
+    # turn white light off
+    white_light_relay.off()
+    assert 0 <= last_led_state <= 4
+    control_leds(last_led_state)
+    
+    best_match, common_names = identify_plant(files)
+  
+    payload = json.dumps({
+        "type": "plant_id",
+        "best_match": best_match,
+        "common_names": common_names
+    })
+    
+    client.publish(MQTT_TOPIC, payload)
+    print("Published plant id:", payload)
+  
+  except Exception as e:
+    print(f"Error in plant identification (api): {e}")
+
 
 # initialize MQTT client
 client = mqtt.Client()
@@ -349,6 +358,7 @@ while True:
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
       send_plant_health(client)
+      send_plant_id(client)
     
     # check if 2.3 seconds have passed since serial buffer reset
     if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
