@@ -205,14 +205,6 @@ const HomePage = () => {
                 </div>
             )
         }
-        if (currView === 'home') {
-            return renderHomeView();
-        } else if (currView === 'schedule') {
-            return renderScheduleView();
-        } // TODO: add different control views
-    }
-
-    const renderHomeView = () => {
         return (
             <div>
                 {/* <p>If you want to get notifications when your plant is unhealthy, click this to enable notifications on your browser.</p>
@@ -235,7 +227,7 @@ const HomePage = () => {
 
                 <button onClick={() => navigate('/monitoring')}>Live Camera</button>
                 <button onClick={() => navigate('/add-plant')}>Add Plant</button>
-                <button onClick={() => setCurrView('schedule')}>Set Up Auto Control</button>
+                <button onClick={() => setCurrView('/manual-autoschedule')}>Set Up Auto Control</button>
                 <button onClick={() => navigate('/control-command')}>Turn On/Off Actuators</button>
                 
                 <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
@@ -258,20 +250,6 @@ const HomePage = () => {
         );
     }
 
-    const renderScheduleView = () => {
-        return (
-            <div>
-                <h2>Auto-schedule Setup</h2>
-                <p>Recommended: </p>
-                <p>Water: </p>
-                <p>Recommended: </p>
-                <p>Moisture: </p>
-                <p>Recommended: </p>
-                <p>Temperature: </p>
-                {/* TODO */}
-            </div>
-        );
-    }
 
 
     return (
