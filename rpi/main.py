@@ -44,6 +44,9 @@ LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
+# start the stream
+stream.start_stream()
+
 # check sensor data once a minute
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
 
@@ -261,9 +264,6 @@ while True:
       except ValueError: 
         print(f"Invalid data received")
     print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}% Light: {} lux".format(temperature_c, temperature_f, humidity, soil_moisture, lux))
-
-    # start the stream
-    stream.start_stream()
 
     # check if 1 minute has passed since last sensor data was sent
     if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
