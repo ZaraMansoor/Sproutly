@@ -36,12 +36,45 @@ const MonitoringPage = () => {
         setSelectedPlant(plant);
     }
 
+
+    const sendCameraCommand = async (cameraCommandData) => {
+        try {
+            const response = await fetch("https://172.26.192.48:8443/send-command/",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(cameraCommandData),
+                });
+            console.log("Camera control command sent", await response.json());
+        } catch (error) {
+            console.error("Error sending camera control command:", error);
+        }
+    }
+
+
     const RPI_IP_ADDRESS = "172.26.192.48";
+
+    const [camera, setCamera] = React.useState(false);
     
     let navigate = useNavigate();
 
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
+          <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+            <Form>
+                <Form.Check 
+                    type="switch"
+                    id="custom-switch"
+                    label="Camera Swtich"
+                    checked={camera}
+                    onChange={(e) => {
+                        const cameraState = e.target.checked;
+                        setCamera(cameraState);
+                        sendCameraCommand({command: cameraState ? "on" : "off", , actuator: "live_stream"});
+                    }}
+                />
+            </Form>
+          </div>
           <div className="d-flex justify-content-between align-items-center mb-4">
 
             <Tabs activeKey={selectedPlant ? selectedPlant.id.toString() : null} onSelect={(key) => {
