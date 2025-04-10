@@ -181,7 +181,7 @@ def start_stream():
             address = ('', 8000)
             server = StreamingServer(address, StreamingHandler)
             print('Starting server on port 8000...')
-            server.serve_forever()  # this will block, but in its own thread
+            server.serve_forever()
         except Exception as e:
             print(f"Error in server: {e}")
         finally:

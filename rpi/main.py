@@ -18,6 +18,8 @@ from plant_health.main import health_check
 from gpiozero import OutputDevice
 import serial
 import stream
+from PIL import Image
+import io
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -222,7 +224,8 @@ def send_plant_health(client):
   global last_health_check_time
   try:
     # get frame from stream
-    image = stream.get_latest_frame()
+    frame = stream.get_latest_frame()
+    image = Image.open(io.BytesIO(frame))
     health_status = health_check(image)
     
     payload = json.dumps({

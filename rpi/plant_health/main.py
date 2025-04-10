@@ -1,9 +1,7 @@
-import io
 import time
 import torch
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-from PIL import Image
 from picamera2 import Picamera2
 from torchvision import models
 from torch import nn
@@ -27,20 +25,6 @@ def load_model(model_name='resnet18'):
     return model
 
 def health_check(image):
-    # # capture image 
-    # picam2 = Picamera2()
-    # picam2.start()
-    # time.sleep(2)
-
-    # image_stream = io.BytesIO()
-    # picam2.capture_file(image_stream, format="jpeg")
-    # image_stream.seek(0)
-
-    # image = Image.open(image_stream)
-    # plt.imshow(image)
-    # plt.axis('off')
-    # plt.show()
-
     # resize to 224x224 - expected input size for models, ImageNet normalization
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -48,8 +32,7 @@ def health_check(image):
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-    # convert image stream to PIL image
-    # image = Image.open(image_stream)
+    # transform image
     image = transform(image).unsqueeze(0)
 
     # load model
