@@ -29,7 +29,6 @@ DAY_SETTINGS = {
     "AeEnable": True,          # Auto exposure enabled
     "FrameRate": 30,           # Higher frame rate
     "AnalogueGain": 1.0,       # Low analog gain
-    "ColourGains": (1.2, 2.0)
 }
 
 # define nighttime (low light) settings
