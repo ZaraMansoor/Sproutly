@@ -26,20 +26,20 @@ def load_model(model_name='resnet18'):
 
     return model
 
-def health_check():
-    # capture image 
-    picam2 = Picamera2()
-    picam2.start()
-    time.sleep(2)
+def health_check(image):
+    # # capture image 
+    # picam2 = Picamera2()
+    # picam2.start()
+    # time.sleep(2)
 
-    image_stream = io.BytesIO()
-    picam2.capture_file(image_stream, format="jpeg")
-    image_stream.seek(0)
+    # image_stream = io.BytesIO()
+    # picam2.capture_file(image_stream, format="jpeg")
+    # image_stream.seek(0)
 
-    image = Image.open(image_stream)
-    plt.imshow(image)
-    plt.axis('off')
-    plt.show()
+    # image = Image.open(image_stream)
+    # plt.imshow(image)
+    # plt.axis('off')
+    # plt.show()
 
     # resize to 224x224 - expected input size for models, ImageNet normalization
     transform = transforms.Compose([
@@ -49,7 +49,7 @@ def health_check():
     ])
 
     # convert image stream to PIL image
-    image = Image.open(image_stream)
+    # image = Image.open(image_stream)
     image = transform(image).unsqueeze(0)
 
     # load model

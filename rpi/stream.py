@@ -170,19 +170,6 @@ def capture_frames():
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
             output.update_frame(buf.getvalue())
-'''
-def start_stream():
-    # start capturing frames in a background thread
-    threading.Thread(target=capture_frames, daemon=True).start()
-    # start HTTP server
-    try:
-        address = ('', 8000)
-        server = StreamingServer(address, StreamingHandler)
-        print('Starting server on port 8000...')
-        server.serve_forever()
-    finally:
-        picam2.stop()
-'''
 
 def start_stream():
     # start capturing frames in a background thread
@@ -200,11 +187,13 @@ def start_stream():
         finally:
             picam2.stop()
 
-    # Create a new thread for the server so that it doesn't block the main thread
+    # create a new thread for the server
     threading.Thread(target=run_server, daemon=True).start()
-
 
 def stop_stream():
     picam2.stop()
 
-
+def get_latest_frame():
+    with output.condition:
+        output.condition.wait()
+        return output.frame

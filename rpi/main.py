@@ -14,7 +14,7 @@ import json
 import sys
 import logging
 from datetime import datetime, timedelta
-# from plant_health.main import health_check
+from plant_health.main import health_check
 from gpiozero import OutputDevice
 import serial
 import stream
@@ -51,7 +51,7 @@ stream.start_stream()
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
 
 # check plant health once a day
-# last_health_check_time = datetime.now() - timedelta(days=1)
+last_health_check_time = datetime.now() - timedelta(days=1)
 
 # reset serial buffer data every 2.3 seconds
 last_reset_time = datetime.now() - timedelta(seconds=2.3)
@@ -129,10 +129,9 @@ def on_message(client, userdata, msg):
     raw_payload = msg.payload.decode()
     print(f"Received control message: {raw_payload}")
     control_command = json.loads(raw_payload)
-    # if control_command["command"] == "get_plant_health_check":
-    #   send_plant_health(client)
-    # elif "actuator" in control_command:
-    if "actuator" in control_command:
+    if control_command["command"] == "get_plant_health_check":
+      send_plant_health(client)
+    elif "actuator" in control_command:
       if control_command["actuator"] == "heater":
         if control_command["command"] == "on":
           heater_relay.on()
@@ -219,23 +218,25 @@ def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moistu
     print(f"Error in sending sensor data: {e}")
 
 
-# def send_plant_health(client):
-#   global last_health_check_time
-#   try:
-#     health_status = health_check()
+def send_plant_health(client):
+  global last_health_check_time
+  try:
+    # get frame from stream
+    image = stream.get_latest_frame()
+    health_status = health_check(image)
     
-#     payload = json.dumps({
-#         "type": "plant_health",
-#         "status": health_status
-#     })
+    payload = json.dumps({
+        "type": "plant_health",
+        "status": health_status
+    })
     
-#     client.publish(HEALTH_TOPIC, payload)
-#     print("Published plant health status:", payload)
+    client.publish(HEALTH_TOPIC, payload)
+    print("Published plant health status:", payload)
 
-#     last_health_check_time = datetime.now()
+    last_health_check_time = datetime.now()
 
-#   except Exception as e:
-#     print(f"Error in health check: {e}")
+  except Exception as e:
+    print(f"Error in health check: {e}")
 
 # initialize MQTT client
 client = mqtt.Client()
@@ -270,8 +271,8 @@ while True:
       send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture, lux)
     
     # check if 24 hours have passed since last health check
-    # if datetime.now() - last_health_check_time >= timedelta(days=1):
-    #   send_plant_health(client)
+    if datetime.now() - last_health_check_time >= timedelta(days=1):
+      send_plant_health(client)
     
     # check if 2.3 seconds have passed since serial buffer reset
     if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
