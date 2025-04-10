@@ -20,7 +20,7 @@ const ManualAutoschedulePage = () => {
     let location = useLocation();
     let plantId = "";
     if (!location.state) {
-        plantId = 0;
+        plantId = "1";
     } else {
         plantId = location.state.plantId;
     }

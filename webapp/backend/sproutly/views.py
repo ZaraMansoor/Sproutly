@@ -158,7 +158,7 @@ def update_manual_autoschedule(request):
             print("plant_id type:", type("plantId"))
             print("plant_id data type:", type(data["plantId"]))
             print("user_plant: ", user_plant)
-            user_plant = Plant.objects.get(id=str(data["plantId"]))
+            user_plant = Plant.objects.get(id=data["plantId"])
 
             
 
