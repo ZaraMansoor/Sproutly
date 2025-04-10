@@ -150,17 +150,11 @@ def update_manual_autoschedule(request):
     print("entered update_manual_autoschedule")
     if request.method == "POST":
         try:
-            print("json loads starting...")
             data = json.loads(request.body)
 
-            print("json loads done")
             user_plant = Plant.objects.get(id=data["plantId"])
-            print("user_plant found")
-
-            
 
             if not AutoSchedule.objects.filter(plant=user_plant).exists():
-                print("new autoschedule111")
                 new_autoschedule = AutoSchedule(
                     plant = user_plant,
                     min_temp = data["schedule"]["minTemp"],
@@ -172,7 +166,6 @@ def update_manual_autoschedule(request):
                     water_frequency = data["schedule"]["waterFrequency"],
                     water_amount = data["schedule"]["waterAmount"],
                 )
-                print("autoschedule made! saving...")
                 new_autoschedule.save()
                 return JsonResponse({"status": "Success"}, status=200)
 

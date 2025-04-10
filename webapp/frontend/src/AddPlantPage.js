@@ -74,6 +74,7 @@ const AddPlantPage = () => {
         const scrapeResult = await scrapeResponse.json();
         if (scrapeResult.status === "Success") {
             alert("Successfully added your new plant!");
+            navigate('/home');
         } else if (scrapeResult.status === "Error") {
             alert("Failed to add your new plant.");
         }

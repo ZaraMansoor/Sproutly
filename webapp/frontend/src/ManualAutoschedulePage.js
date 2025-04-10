@@ -43,6 +43,7 @@ const ManualAutoschedulePage = () => {
         const result = await response.json();
         if (result.status === "Success") {
             alert("Successfully added/updated your plant's schedule!");
+            navigate('/home');
         } else if (result.status === "Error") {
             alert("Failed to add/update your plant's schedule.");
         }
