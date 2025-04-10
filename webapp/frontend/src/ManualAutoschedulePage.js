@@ -19,7 +19,7 @@ const ManualAutoschedulePage = () => {
     let navigate = useNavigate();
     let location = useLocation();
     let plantId = "";
-    if (!location.state.plantId) {
+    if (!location.state) {
         plantId = 0;
     } else {
         plantId = location.state.plantId;
