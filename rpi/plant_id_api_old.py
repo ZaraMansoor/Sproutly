@@ -17,25 +17,18 @@ API_KEY = "2b10KGTzAgqcb5baVQciCheRU"  # Set your API_KEY here
 PROJECT = "all"  # try "weurope" or "canada"
 api_endpoint = f"https://my-api.plantnet.org/v2/identify/{PROJECT}?api-key={API_KEY}"
 
-def identify_plant(files):
-    # picam2 = Picamera2()
-    # picam2.start()
+def identify_plant():
+    picam2 = Picamera2()
+    picam2.start()
     
-    # # capture image into memory
-    # image_stream = io.BytesIO()
-    # picam2.capture_file(image_stream, format="jpeg")
-    # image_stream.seek(0)
-    
-    # '''
-    # image = Image.open(image_stream)
-    # plt.imshow(image)
-    # plt.axis('off')
-    # plt.show()
-    # '''
+    # capture image into memory
+    image_stream = io.BytesIO()
+    picam2.capture_file(image_stream, format="jpeg")
+    image_stream.seek(0)
 
-    # files = [
-    #     ('images', ('image.jpg', image_stream, 'image/jpeg'))
-    # ]
+    files = [
+        ('images', ('image.jpg', image_stream, 'image/jpeg'))
+    ]
 
     response = requests.post(api_endpoint, files=files)
 

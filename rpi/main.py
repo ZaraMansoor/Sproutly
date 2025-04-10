@@ -13,6 +13,7 @@ import sys
 import logging
 from datetime import datetime, timedelta
 from plant_health.main import health_check
+from plant_id_api import identify_plant
 from gpiozero import OutputDevice
 import serial
 import stream
@@ -21,7 +22,6 @@ from PIL import Image
 import io
 import RPi.GPIO as GPIO
 import dht11
-import matplotlib.pyplot as plt
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -48,9 +48,9 @@ LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
-# start the stream, keep track of if we are streaming or not
-# stream.start_stream()
-streaming = False
+# start the stream, keep track of if live streaming or not
+stream.start_stream()
+streaming = True
 
 # check sensor data once a minute
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
@@ -138,6 +138,24 @@ def on_message(client, userdata, msg):
     control_command = json.loads(raw_payload)
     if control_command["command"] == "get_plant_health_check":
       send_plant_health(client)
+    elif control_command["command"] == "get_plant_id":
+      if streaming:
+        # get frame from stream
+        frame = stream.get_latest_frame()
+        image_stream = io.BytesIO(frame)
+        picam2.capture_file(image_stream, format="jpeg")
+        image_stream.seek(0)
+      else:
+        # capture image
+        picam2.start()
+        image_stream = io.BytesIO()
+        picam2.capture_file(image_stream, format="jpeg")
+        image_stream.seek(0)
+        picam2.stop()
+      files = [
+          ('images', ('image.jpg', image_stream, 'image/jpeg'))
+      ]
+      best_match, common_names = identify_plant(files)
     elif "actuator" in control_command:
       if control_command["actuator"] == "heater":
         if control_command["command"] == "on":
