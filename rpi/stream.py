@@ -172,8 +172,7 @@ def capture_frames():
             output.update_frame(buf.getvalue())
 
 def start_stream():
-    if not picam2.is_running():  # Ensure camera is not already running
-        picam2.start()
+    picam2.start()
 
     # start capturing frames in a background thread
     threading.Thread(target=capture_frames, daemon=True).start()
