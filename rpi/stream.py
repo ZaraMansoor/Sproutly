@@ -18,6 +18,14 @@ from picamera2 import Picamera2
 from PIL import Image
 import numpy as np
 
+from picamera2.encoders import MJPEGEncoder
+from picamera2.outputs import FileOutput
+from libcamera import Transform
+
+
+
+
+
 # adjustable settings
 RESOLUTION = (3280, 2464)
 FRAME_RATE = 30
@@ -111,7 +119,11 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 # initialize PiCamera2 for video streaming
 picam2 = Picamera2()
-config = picam2.create_video_configuration(main={'size': RESOLUTION})
+# config = picam2.create_video_configuration(main={'size': RESOLUTION})
+config = picam2.create_video_configuration(
+    main={'size': RESOLUTION, 'format': 'RGB888'},
+    transform=Transform(hflip=1, vflip=1)
+)
 
 print("Available Controls:")
 for control, value in picam2.camera_controls.items():
