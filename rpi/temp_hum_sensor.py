@@ -1,17 +1,21 @@
-import os
-os.environ["BLINKA_FORCE_SW_PIN"] = "1"
-
-import board
-import adafruit_dht
+import RPi.GPIO as GPIO
+import dht11
 import time
 
-dht = adafruit_dht.DHT11(board.D17)
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.cleanup()
 
-while True:
-  try:
-    temp = dht.temperature
-    humidity = dht.humidity
-    print(f"Temp: {temp}C  Humidity: {humidity}%")
-  except RuntimeError as e:
-    print(f"Runtime error: {e}")
-  time.sleep(2)
+instance = dht11.DHT11(pin=17)
+
+try:
+  while True:
+    result = instance.read()
+    if result.is_valid():
+      print(f"Temp: {result.temperature}C  Humidity: {result.humidity}%")
+    else:
+      print(":(")
+    time.sleep(2)
+except KeyboardInterrupt:
+  print("Cleanup")
+  GPIO.cleanup()
