@@ -191,6 +191,13 @@ def on_message(client, userdata, msg):
           control_leds(4)
           white_light_relay.off()
           last_led_state = 4
+      elif control_command["actuator"] == "live_stream":
+        if control_command["command"] == "on":
+          if not streaming:
+            stream.start_stream()
+        elif control_command["command"] == "off":
+          if streaming:
+            stream.stop_stream()
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
@@ -229,9 +236,16 @@ def send_plant_health(client):
     white_light_relay.on()
     time.sleep(2)
 
-    # get frame from stream
-    frame = stream.get_latest_frame()
-    image = Image.open(io.BytesIO(frame))
+    if streaming:
+      # get frame from stream
+      frame = stream.get_latest_frame()
+      image = Image.open(io.BytesIO(frame))
+    else:
+      return
+      # capture image
+      image = picam2.capture_array('main')
+      image = Image.fromarray(image)
+
     health_status = health_check(image)
 
     # turn white light off
