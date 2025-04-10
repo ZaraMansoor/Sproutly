@@ -4,7 +4,6 @@ import time
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
 
 instance = dht11.DHT11(pin=17)
 
