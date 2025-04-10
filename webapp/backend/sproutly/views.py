@@ -154,12 +154,13 @@ def update_manual_autoschedule(request):
             data = json.loads(request.body)
 
             print("json loads done")
-            user_plant = Plant.objects.get(id=str(data["plantId"]))
-
             print("plant_id:", data["plantId"])
             print("plant_id type:", type("plantId"))
             print("plant_id data type:", type(data["plantId"]))
             print("user_plant: ", user_plant)
+            user_plant = Plant.objects.get(id=str(data["plantId"]))
+
+            
 
             if not AutoSchedule.objects.filter(plant=user_plant).exists():
                 print("new autoschedule111")
