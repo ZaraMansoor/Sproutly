@@ -67,7 +67,7 @@ def main():
 
   # map of light_description: [light_t0, light_duration]
   light_map = {
-    'Full Sun (Bright Direct Light) & High Light (Bright Indirect Light)': [6, 14],
+    'Full Sun (Bright Direct Light) & High Light (Bright Indirect Light)': [6, 14], # [brightness(number leds on)=4]
     'High Light (Bright Indirect Light)': [7, 12], 
     'High Light (Bright Indirect Light); Low Light Tolerant': [8, 10],
     'Medium Light (Medium Indirect Light) to High Light (Bright Indirect Light)': [9, 8],

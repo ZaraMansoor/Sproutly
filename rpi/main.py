@@ -10,7 +10,6 @@ import time
 import paho.mqtt.client as mqtt
 import json
 import sys
-import logging
 from datetime import datetime, timedelta
 from plant_health.main import health_check
 from plant_id_api import identify_plant
@@ -22,6 +21,7 @@ from PIL import Image
 import io
 import RPi.GPIO as GPIO
 import dht11
+from pymodbus.client import ModbusSerialClient
 
 libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
 if os.path.exists(libdir):
@@ -64,15 +64,35 @@ last_reset_time = datetime.now() - timedelta(seconds=2.3)
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 dht_instance = dht11.DHT11(pin=17)
-temperature_c = 0
-temperature_f = 0
-humidity = 0
 
 # soil moisture and light sensor data from arduino
 ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 ser.reset_input_buffer()
-soil_moisture = 0.0
-lux = 0
+
+# 7-in-1 soil sensor 
+soil_client = ModbusSerialClient(
+  port="/dev/ttyUSB0",                   # Serial port for rpi
+  baudrate=9600,                         # Baudrate for communication
+  bytesize=8,                            # Number of bits per byte
+  parity="N",                            # No parity
+  stopbits=1,                            # One stop bit
+)
+
+soil_connected = soil_client.connect()
+if soil_connected:
+  print("Connected to soil sensor.")
+else:
+  print("Failed to connect to soil sensor.")
+
+soil_data = {
+  "ph": 0,
+  "soil_moisture_1": 0,
+  "soil_temp": 0,
+  "conductivity": 0,
+  "nitrogen": 0,
+  "phosphorus": 0,
+  "potassium": 0,
+}
 
 # heater 
 heater_relay = Relay(HEATER_RELAY_PIN, active_high=False)
@@ -212,19 +232,11 @@ def on_message(client, userdata, msg):
     print("Invalid JSON received:", raw_payload)
 
 
-def send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture, lux):
+def send_sensor_data(client, sensor_data):
   global last_sensor_send_time
   try:
-    # create a JSON object with the temperature and humidity
-    data = {
-      "temperature_c": temperature_c,
-      "temperature_f": temperature_f,
-      "humidity": humidity,
-      "soil_moisture": soil_moisture,
-      "lux": lux
-    }
-
-    payload = json.dumps(data)
+    # create a JSON object with the sensor data
+    payload = json.dumps(sensor_data)
 
     # publish the data to the MQTT topic
     client.publish(MQTT_TOPIC, payload)
@@ -323,6 +335,27 @@ def send_plant_id(client):
   except Exception as e:
     print(f"Error in plant identification (api): {e}")
 
+def get_soil_sensor_data(sensor_data):
+  ph_response = client.read_holding_registers(address=0x06, count=1, slave=1)
+  if not ph_response.isError():
+    sensor_data["ph"] = ph_response.registers[0] / 100.0
+
+  temp_moist_response = client.read_holding_registers(address=0x12, count=2, slave=1)
+  if not temp_moist_response.isError():
+    sensor_data["soil_moisture_1"] = temp_moist_response.registers[0] / 10.0
+    sensor_data["soil_temp"] = temp_moist_response.registers[1] / 10.0
+
+  conductivity_response = client.read_holding_registers(address=0x15, count=1, slave=1)
+  if not conductivity_response.isError():
+    sensor_data["conductivity"] = conductivity_response.registers[0]
+
+  npk_response = client.read_holding_registers(address=0x1e, count=3, slave=1)
+  if not npk_response.isError():
+    sensor_data["nitrogen"] = npk_response.registers[0]
+    sensor_data["phosphorus"] = npk_response.registers[1]
+    sensor_data["potassium"] = npk_response.registers[2]
+  
+  return (sensor_data)
 
 # initialize MQTT client
 client = mqtt.Client()
@@ -332,31 +365,64 @@ client.on_message = on_message
 client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
 client.loop_start()
 
+sensor_data = {
+  "temperature_c": 0,
+  "temperature_f": 0,
+  "humidity": 0,
+  "soil_moisture": 0,
+  "lux": 0,
+  "ph": 0,
+  "soil_moisture_1": 0,
+  "soil_temp": 0,
+  "conductivity": 0,
+  "nitrogen": 0,
+  "phosphorus": 0,
+  "potassium": 0,
+}
+
 while True:
   try:
+    # get dht11 sensor data
     try:
       dht_result = dht_instance.read()
       if dht_result.is_valid():
-        temperature_c = dht_result.temperature
-        temperature_f = temperature_c * (9 / 5) + 32
-        humidity = dht_result.humidity
+        sensor_data['temperature_c'] = dht_result.temperature
+        sensor_data['temperature_f'] = sensor_data['temperature_c'] * (9 / 5) + 32
+        sensor_data['humidity'] = dht_result.humidity
     except RuntimeError as err:
       print(err)
 
+    # get arduino sensor data
     if ser.in_waiting > 0:
       try:
         line = ser.readline().decode('utf-8').strip()
         values = line.split(',')
         if len(values) == 2:
-          soil_moisture = float(values[0])
-          lux = int(values[1])
+          sensor_data['soil_moisture'] = float(values[0])
+          sensor_data['lux'] = int(values[1])
       except ValueError: 
         print(f"Invalid data received")
-    print("Temp:{:.1f} C / {:.1f} F Humidity: {}% Soil Moisture: {}% Light: {} lux".format(temperature_c, temperature_f, humidity, soil_moisture, lux))
+
+    # get 7-in-1 soil sensor data
+    sensor_data = get_soil_sensor_data(sensor_data)
+
+    print(
+    f"Temp: {sensor_data['temperature_c']:.1f}°C / {sensor_data['temperature_f']:.1f}°F | "
+    f"Humidity: {sensor_data['humidity']}% | "
+    f"Soil Moisture: {sensor_data['soil_moisture']}% | "
+    f"Light: {sensor_data['lux']} lux | "
+    f"Soil pH: {sensor_data['ph']} pH | "
+    f"Soil Temp: {sensor_data['soil_temp']}°C | "
+    f"Soil Moisture 7-in-1: {sensor_data['soil_moisture_1']} RH% | "
+    f"Conductivity: {sensor_data['conductivity']} µS/cm | "
+    f"N: {sensor_data['nitrogen']} mg/kg | "
+    f"P: {sensor_data['phosphorus']} mg/kg | "
+    f"K: {sensor_data['potassium']} mg/kg"
+    )
 
     # check if 1 minute has passed since last sensor data was sent
     if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
-      send_sensor_data(client, temperature_c, temperature_f, humidity, soil_moisture, lux)
+      send_sensor_data(client, sensor_data)
     
     # check if 24 hours have passed since last health check
     if datetime.now() - last_health_check_time >= timedelta(days=1):
@@ -374,3 +440,8 @@ while True:
     print(err.args[0])
 
   time.sleep(2.0)
+
+except KeyboardInterrupt:
+  if soil_connected:
+    soil_client.close()
+  GPIO.cleanup()
