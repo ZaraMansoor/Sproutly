@@ -59,6 +59,8 @@ PAGE='''\
 </html>
 '''
 
+SERVER = None
+
 class StreamingOutput:
     def __init__(self):
         self.frame = None
@@ -173,6 +175,7 @@ def capture_frames():
             output.update_frame(buf.getvalue())
 
 def start_stream():
+    global SERVER
     picam2.start()
 
     # start capturing frames in a background thread
@@ -180,6 +183,7 @@ def start_stream():
     
     # start HTTP server in a separate thread
     def run_server():
+        global SERVER
         try:
             address = ('', 8444)
             server = StreamingServer(address, StreamingHandler)
@@ -191,6 +195,7 @@ def start_stream():
                 server_side=True
             )
             print('Starting server on port 8444...')
+            SERVER = server
             server.serve_forever()
         except Exception as e:
             print(f"Error in server: {e}")
@@ -201,6 +206,12 @@ def start_stream():
     threading.Thread(target=run_server, daemon=True).start()
 
 def stop_stream():
+    global SERVER
+
+    if SERVER:
+        SERVER.shutdown()
+        SERVER.server_close()
+        SERVER = None
     picam2.stop()
     print("Stream stopped.")
 
