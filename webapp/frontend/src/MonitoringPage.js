@@ -97,7 +97,7 @@ const MonitoringPage = () => {
                     <Card className="shadow-sm">
                         <Card.Body>
                             <h2 className="mb-3">{selectedPlant.name} Live Feed</h2>
-                            <img src={`http://${RPI_IP_ADDRESS}:8000/stream.mjpg`} 
+                            <img src={`http://${RPI_IP_ADDRESS}:8444/stream.mjpg`} 
                                 alt="Live Camera" 
                                 width="640" 
                                 height="480"

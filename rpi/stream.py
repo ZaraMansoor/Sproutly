@@ -19,6 +19,7 @@ from PIL import Image
 import numpy as np
 from libcamera import Transform
 import threading
+import ssl
 
 # adjustable settings
 RESOLUTION = (3280, 2464)
@@ -180,9 +181,16 @@ def start_stream():
     # start HTTP server in a separate thread
     def run_server():
         try:
-            address = ('', 8000)
+            address = ('', 8444)
             server = StreamingServer(address, StreamingHandler)
-            print('Starting server on port 8000...')
+            # socket with ssl to use https instead of http
+            server.socket = ssl.wrap_socket(
+                server.socket,
+                keyfile='key.pem',
+                certfile='cert.pem',
+                server_side=True
+            )
+            print('Starting server on port 8444...')
             server.serve_forever()
         except Exception as e:
             print(f"Error in server: {e}")
