@@ -336,20 +336,20 @@ def send_plant_id(client):
     print(f"Error in plant identification (api): {e}")
 
 def get_soil_sensor_data(sensor_data):
-  ph_response = client.read_holding_registers(address=0x06, count=1, slave=1)
+  ph_response = soil_client.read_holding_registers(address=0x06, count=1, slave=1)
   if not ph_response.isError():
     sensor_data["ph"] = ph_response.registers[0] / 100.0
 
-  temp_moist_response = client.read_holding_registers(address=0x12, count=2, slave=1)
+  temp_moist_response = soil_client.read_holding_registers(address=0x12, count=2, slave=1)
   if not temp_moist_response.isError():
     sensor_data["soil_moisture_1"] = temp_moist_response.registers[0] / 10.0
     sensor_data["soil_temp"] = temp_moist_response.registers[1] / 10.0
 
-  conductivity_response = client.read_holding_registers(address=0x15, count=1, slave=1)
+  conductivity_response = soil_client.read_holding_registers(address=0x15, count=1, slave=1)
   if not conductivity_response.isError():
     sensor_data["conductivity"] = conductivity_response.registers[0]
 
-  npk_response = client.read_holding_registers(address=0x1e, count=3, slave=1)
+  npk_response = soil_client.read_holding_registers(address=0x1e, count=3, slave=1)
   if not npk_response.isError():
     sensor_data["nitrogen"] = npk_response.registers[0]
     sensor_data["phosphorus"] = npk_response.registers[1]
