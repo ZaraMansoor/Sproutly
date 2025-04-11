@@ -380,66 +380,67 @@ sensor_data = {
   "potassium": 0,
 }
 
-while True:
-  try:
-    # get dht11 sensor data
+try:
+  while True:
     try:
-      dht_result = dht_instance.read()
-      if dht_result.is_valid():
-        sensor_data['temperature_c'] = dht_result.temperature
-        sensor_data['temperature_f'] = sensor_data['temperature_c'] * (9 / 5) + 32
-        sensor_data['humidity'] = dht_result.humidity
-    except RuntimeError as err:
-      print(err)
-
-    # get arduino sensor data
-    if ser.in_waiting > 0:
+      # get dht11 sensor data
       try:
-        line = ser.readline().decode('utf-8').strip()
-        values = line.split(',')
-        if len(values) == 2:
-          sensor_data['soil_moisture'] = float(values[0])
-          sensor_data['lux'] = int(values[1])
-      except ValueError: 
-        print(f"Invalid data received")
+        dht_result = dht_instance.read()
+        if dht_result.is_valid():
+          sensor_data['temperature_c'] = dht_result.temperature
+          sensor_data['temperature_f'] = sensor_data['temperature_c'] * (9 / 5) + 32
+          sensor_data['humidity'] = dht_result.humidity
+      except RuntimeError as err:
+        print(err)
 
-    # get 7-in-1 soil sensor data
-    sensor_data = get_soil_sensor_data(sensor_data)
+      # get arduino sensor data
+      if ser.in_waiting > 0:
+        try:
+          line = ser.readline().decode('utf-8').strip()
+          values = line.split(',')
+          if len(values) == 2:
+            sensor_data['soil_moisture'] = float(values[0])
+            sensor_data['lux'] = int(values[1])
+        except ValueError: 
+          print(f"Invalid data received")
 
-    print(
-    f"Temp: {sensor_data['temperature_c']:.1f}°C / {sensor_data['temperature_f']:.1f}°F | "
-    f"Humidity: {sensor_data['humidity']}% | "
-    f"Soil Moisture: {sensor_data['soil_moisture']}% | "
-    f"Light: {sensor_data['lux']} lux | "
-    f"Soil pH: {sensor_data['ph']} pH | "
-    f"Soil Temp: {sensor_data['soil_temp']}°C | "
-    f"Soil Moisture 7-in-1: {sensor_data['soil_moisture_1']} RH% | "
-    f"Conductivity: {sensor_data['conductivity']} µS/cm | "
-    f"N: {sensor_data['nitrogen']} mg/kg | "
-    f"P: {sensor_data['phosphorus']} mg/kg | "
-    f"K: {sensor_data['potassium']} mg/kg"
-    )
+      # get 7-in-1 soil sensor data
+      sensor_data = get_soil_sensor_data(sensor_data)
 
-    # check if 1 minute has passed since last sensor data was sent
-    if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
-      send_sensor_data(client, sensor_data)
-    
-    # check if 24 hours have passed since last health check
-    if datetime.now() - last_health_check_time >= timedelta(days=1):
-      send_plant_health(client)
+      print(
+      f"Temp: {sensor_data['temperature_c']:.1f}°C / {sensor_data['temperature_f']:.1f}°F | "
+      f"Humidity: {sensor_data['humidity']}% | "
+      f"Soil Moisture: {sensor_data['soil_moisture']}% | "
+      f"Light: {sensor_data['lux']} lux | "
+      f"Soil pH: {sensor_data['ph']} pH | "
+      f"Soil Temp: {sensor_data['soil_temp']}°C | "
+      f"Soil Moisture 7-in-1: {sensor_data['soil_moisture_1']} RH% | "
+      f"Conductivity: {sensor_data['conductivity']} µS/cm | "
+      f"N: {sensor_data['nitrogen']} mg/kg | "
+      f"P: {sensor_data['phosphorus']} mg/kg | "
+      f"K: {sensor_data['potassium']} mg/kg"
+      )
+
+      # check if 1 minute has passed since last sensor data was sent
+      if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
+        send_sensor_data(client, sensor_data)
       
-      # TODO: remove once integrated with webapp
-      send_plant_id(client)
-    
-    # check if 2.3 seconds have passed since serial buffer reset
-    if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
-      ser.reset_input_buffer()
-      last_reset_time = datetime.now()
+      # check if 24 hours have passed since last health check
+      if datetime.now() - last_health_check_time >= timedelta(days=1):
+        send_plant_health(client)
+        
+        # TODO: remove once integrated with webapp
+        send_plant_id(client)
+      
+      # check if 2.3 seconds have passed since serial buffer reset
+      if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
+        ser.reset_input_buffer()
+        last_reset_time = datetime.now()
 
-  except RuntimeError as err:
-    print(err.args[0])
+    except RuntimeError as err:
+      print(err.args[0])
 
-  time.sleep(2.0)
+    time.sleep(2.0)
 
 except KeyboardInterrupt:
   if soil_connected:
