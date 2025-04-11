@@ -179,6 +179,10 @@ def start_stream():
     
     # start HTTP server in a separate thread
     def run_server():
+        global server_started
+        if server_started:
+            print("Stream already started.")
+            return
         try:
             address = ('', 8000)
             server = StreamingServer(address, StreamingHandler)
