@@ -493,9 +493,9 @@ try:
       # check if 15 minute has passed since last sensor data was collected
       if datetime.now() - last_sensor_send_time >= timedelta(minutes=15):
         # save sensor data to excel file
-        excel_path = "/home/sproutly/Desktop/Sproutly/rpi/plant_health/datasets/rpi/sensor_log.xlsx"
+        excel_path = "/home/sproutly/Desktop/Sproutly/rpi/plant_health/datasets/rpi/sensor_log.csv"
         image_path = "/home/sproutly/Desktop/Sproutly/rpi/plant_health/datasets/rpi/images"
-        image_filepath = save_sensor_data_to_excel(sensor_data, excel_path, image_path)
+        image_filepath = save_sensor_data_to_csv(sensor_data, excel_path, image_path)
         last_sensor_send_time = datetime.now()
         print(f"Updated log: {excel_path}")
       
