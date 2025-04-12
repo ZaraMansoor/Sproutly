@@ -250,6 +250,7 @@ def send_plant_health(client):
       image = Image.fromarray(image)
       image = image.convert('RGB')
       picam2.stop()
+    print(f"--> health status (streaming = {streaming})")
 
     health_status = health_check(image)
 
@@ -293,6 +294,7 @@ def send_plant_id(client):
       picam2.capture_file(image_stream, format="jpeg")
       image_stream.seek(0)
       picam2.stop()
+    print(f"--> plant id (streaming = {streaming})")
     
     files = [
       ('images', ('image.jpg', image_stream, 'image/jpeg'))
