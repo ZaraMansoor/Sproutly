@@ -84,14 +84,15 @@ if soil_connected:
 else:
   print("Failed to connect to soil sensor.")
 
-soil_data = {
-  "ph": 0,
-  "soil_moisture_1": 0,
-  "soil_temp": 0,
-  "conductivity": 0,
-  "nitrogen": 0,
-  "phosphorus": 0,
-  "potassium": 0,
+# actuators
+actuators_status = {
+  "heater": "off",
+  "water_pump": "off",
+  "nutrients_pump": "off",
+  "mister": "off",
+  "white_light": "off",
+  "LED_light": 0,
+  "live_stream": "on",
 }
 
 # heater 
@@ -160,72 +161,53 @@ def on_message(client, userdata, msg):
       send_plant_health(client)
     elif control_command["command"] == "get_plant_id":
       send_plant_id(client)
+    elif control_command["command"] == "get_actuators_status":
+      send_actuators_status(client)
     elif "actuator" in control_command:
       if control_command["actuator"] == "heater":
         if control_command["command"] == "on":
           heater_relay.on()
+          actuators_status["heater"] = "on"
         elif control_command["command"] == "off":
           heater_relay.off()
+          actuators_status["heater"] = "off"
       elif control_command["actuator"] == "water_pump":
         if control_command["command"] == "on":
           water_pump_relay.on()
+          actuators_status["water_pump"] = "on"
         elif control_command["command"] == "off":
           water_pump_relay.off()
+          actuators_status["water_pump"] = "off"
       elif control_command["actuator"] == "white_light":
         if control_command["command"] == "on":
           white_light_relay.on()
           control_leds(0)
+          actuators_status["white_light"] = "on"
+          actuators_status["LED_light"] = 0
         elif control_command["command"] == "off":
           white_light_relay.off()
           # go back to prev led state 
-          if last_led_state == 0:
-            control_leds(0)
-            last_led_state = 0
-          elif last_led_state == 1:
-            control_leds(1)
-            white_light_relay.off()
-            last_led_state = 1
-          elif last_led_state == 2:
-            control_leds(2)
-            white_light_relay.off()
-            last_led_state = 2
-          elif last_led_state == 3:
-            control_leds(3)
-            white_light_relay.off()
-            last_led_state = 3
-          elif last_led_state == 4:
-            control_leds(4)
-            white_light_relay.off()
-            last_led_state = 4
+          control_leds(last_led_state)
+          actuators_status["white_light"] = "off"
+          actuators_status["LED_light"] = last_led_state
       elif control_command["actuator"] == "LED_light":
-        if control_command["command"] == 0:
-          control_leds(0)
-          last_led_state = 0
-        elif control_command["command"] == 1:
-          control_leds(1)
+        control_leds(control_command["command"])
+        last_led_state = control_command["command"]
+        actuators_status["LED_light"] = control_command["command"]
+        if control_command["command"] > 0:
           white_light_relay.off()
-          last_led_state = 1
-        elif control_command["command"] == 2:
-          control_leds(2)
-          white_light_relay.off()
-          last_led_state = 2
-        elif control_command["command"] == 3:
-          control_leds(3)
-          white_light_relay.off()
-          last_led_state = 3
-        elif control_command["command"] == 4:
-          control_leds(4)
-          white_light_relay.off()
-          last_led_state = 4
+          actuators_status["white_light"] = "off"
       elif control_command["actuator"] == "live_stream":
         if control_command["command"] == "on":
           if not streaming:
             stream.start_stream()
           streaming = True
+          actuators_status["live_stream"] = "on"
         elif control_command["command"] == "off":
           if streaming:
             stream.stop_stream()
           streaming = False
+          actuators_status["live_stream"] = "off"
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
@@ -313,7 +295,7 @@ def send_plant_id(client):
       picam2.stop()
     
     files = [
-        ('images', ('image.jpg', image_stream, 'image/jpeg'))
+      ('images', ('image.jpg', image_stream, 'image/jpeg'))
     ]
     
     # turn white light off
@@ -324,16 +306,31 @@ def send_plant_id(client):
     best_match, common_names = identify_plant(files)
   
     payload = json.dumps({
-        "type": "plant_id",
-        "best_match": best_match,
-        "common_names": common_names
+      "type": "plant_id",
+      "best_match": best_match,
+      "common_names": common_names
     })
     
     client.publish(MQTT_TOPIC, payload)
     print("Published plant id:", payload)
   
   except Exception as e:
-    print(f"Error in plant identification (api): {e}")
+  print(f"Error in plant identification (api): {e}")
+
+
+def send_actuators_status(client):
+  global actuators_status
+  try:
+    # create a JSON object with the actuator data
+    payload = json.dumps(actuators_status)
+
+    # publish the data to the MQTT topic
+    client.publish(MQTT_TOPIC, payload)
+    print("Published actuator data:", payload)
+
+  except Exception as e:
+    print(f"Error in sending actuator data: {e}")
+
 
 def get_soil_sensor_data(sensor_data):
   ph_response = soil_client.read_holding_registers(address=0x06, count=1, slave=1)

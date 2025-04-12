@@ -65,13 +65,13 @@ def main():
 
   plant_info["scientific_name"] = scientific_name
 
-  # map of light_description: [light_t0, light_duration]
+  # map of light_description: [light_intensity]
   light_map = {
-    'Full Sun (Bright Direct Light) & High Light (Bright Indirect Light)': [6, 14], # [brightness(number leds on)=4]
-    'High Light (Bright Indirect Light)': [7, 12], 
-    'High Light (Bright Indirect Light); Low Light Tolerant': [8, 10],
-    'Medium Light (Medium Indirect Light) to High Light (Bright Indirect Light)': [9, 8],
-    'Medium Light (Medium Indirect Light) to High Light (Bright Indirect Light); Low Light Tolerant': [9, 6]
+    'Full Sun (Bright Direct Light) & High Light (Bright Indirect Light)': 4,
+    'High Light (Bright Indirect Light)': 3, 
+    'High Light (Bright Indirect Light); Low Light Tolerant': 3,
+    'Medium Light (Medium Indirect Light) to High Light (Bright Indirect Light)': 2,
+    'Medium Light (Medium Indirect Light) to High Light (Bright Indirect Light); Low Light Tolerant': 1
   }
 
   light = "n/a"
@@ -84,8 +84,7 @@ def main():
         light = strong_tags[1].text.strip()
 
   plant_info["light_description"] = light
-  plant_info["light_t0"] = light_map[light][0]
-  plant_info["light_duration"] = light_map[light][1]
+  plant_info["light_intensity"] = light_map[light]
 
   water = "n/a"
   water_tag = soup.find("strong", string=lambda text: text and "Quick Tip" in text)
