@@ -53,10 +53,10 @@ streaming = False
 HEALTH = "healthy"
 
 # collect sensor data once every 15 minutes
-last_sensor_send_time = datetime.now() - timedelta(seconds=870)
+last_sensor_send_time = datetime.now() - timedelta(seconds=885)
 
 # collect image data once every 15 minutes
-last_image_send_time = datetime.now() - timedelta(seconds=870)
+last_image_send_time = datetime.now() - timedelta(seconds=885)
 
 # collect image data once every 15 minutes
 last_led_time = datetime.now() - timedelta(hours=1)
@@ -361,6 +361,9 @@ def get_soil_sensor_data(sensor_data):
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 def save_sensor_data_to_excel(sensor_data, excel_path, image_path):
+  os.makedirs(os.path.dirname(excel_path), exist_ok=True)
+  os.makedirs(image_path, exist_ok=True)
+  
   if os.path.exists(excel_path):
     workbook = load_workbook(excel_path)
     sheet = workbook.active
@@ -505,12 +508,14 @@ try:
         image_path = "/home/sproutly/Desktop/Sproutly/rpi/plant_health/datasets/rpi/images"
         image_filepath = save_sensor_data_to_excel(sensor_data, excel_path, image_path)
         last_sensor_send_time = datetime.now()
+        print(f"Updated log: {excel_path}")
       
       # check if 15 minute has passed since last image data was collected
       if datetime.now() - last_image_send_time >= timedelta(minutes=15):
         # save image data to image folder
         save_image_data(image_filepath)
         last_image_send_time = datetime.now()
+        print(f"Added image: {image_filepath}")
       
       # check if 2.3 seconds have passed since serial buffer reset
       if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
