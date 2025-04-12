@@ -243,8 +243,6 @@ def send_plant_health(client):
       # get frame from stream
       frame = stream.get_latest_frame()
       image = Image.open(io.BytesIO(frame))
-      # TODO: remove after debugging
-      image.show()
     else:
       # capture image
       picam2.start()
@@ -252,8 +250,6 @@ def send_plant_health(client):
       image = Image.fromarray(image)
       image = image.convert('RGB')
       picam2.stop()
-      image.show()
-    print(f"--> health status (streaming = {streaming})")
 
     health_status = health_check(image)
 
@@ -290,9 +286,6 @@ def send_plant_id(client):
       image_stream = io.BytesIO(frame)
       picam2.capture_file(image_stream, format="jpeg")
       image_stream.seek(0)
-      # TODO: remove after debugging
-      image = Image.open(image_stream)
-      image.show()
     else:
       # capture image
       picam2.start()
@@ -300,11 +293,7 @@ def send_plant_id(client):
       picam2.capture_file(image_stream, format="jpeg")
       image_stream.seek(0)
       picam2.stop()
-      # TODO: remove after debugging
-      image = Image.open(image_stream)
-      image.show()
-    print(f"--> plant id (streaming = {streaming})")
-    
+
     files = [
       ('images', ('image.jpg', image_stream, 'image/jpeg'))
     ]
@@ -438,6 +427,7 @@ try:
         send_plant_health(client)
         
         # TODO: remove once integrated with webapp
+        time.sleep(2)
         send_plant_id(client)
       
       # check if 2.3 seconds have passed since serial buffer reset
