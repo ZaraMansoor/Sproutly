@@ -390,7 +390,7 @@ def save_sensor_data_to_csv(sensor_data, csv_path, image_path):
     # row of data
     row = [
       datetime.now().isoformat(),
-      image_filepath,
+      image_filename,
       HEALTH,
       sensor_data['temperature_c'],
       sensor_data['temperature_f'],
@@ -500,7 +500,7 @@ try:
         print(f"Updated log: {excel_path}")
       
       # check if 15 minute has passed since last image data was collected
-      if datetime.now() - last_image_send_time >= timedelta(minutes=15):
+      if datetime.now() - last_image_send_time >= timedelta(minutes=1):
         # save image data to image folder
         save_image_data(image_filepath)
         last_image_send_time = datetime.now()
