@@ -315,7 +315,7 @@ def send_plant_id(client):
     print("Published plant id:", payload)
   
   except Exception as e:
-  print(f"Error in plant identification (api): {e}")
+    print(f"Error in plant identification (api): {e}")
 
 
 def send_actuators_status(client):
