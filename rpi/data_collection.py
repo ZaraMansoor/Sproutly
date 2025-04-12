@@ -53,11 +53,8 @@ streaming = False
 
 HEALTH = "healthy"
 
-# collect sensor data once every 15 minutes
-last_sensor_send_time = datetime.now() - timedelta(seconds=885)
-
-# collect image data once every 15 minutes
-last_image_send_time = datetime.now() - timedelta(seconds=885)
+# collect data once every 15 minutes
+last_data_send_time = datetime.now() - timedelta(seconds=885)
 
 # collect image data once every 15 minutes
 last_led_time = datetime.now() - timedelta(hours=1)
@@ -490,21 +487,19 @@ try:
       # get 7-in-1 soil sensor data
       sensor_data = get_soil_sensor_data(sensor_data)
 
-      # check if 15 minute has passed since last sensor data was collected
-      if datetime.now() - last_sensor_send_time >= timedelta(minutes=15):
+      # check if 15 minute has passed since last data was collected
+      if datetime.now() - last_data_send_time >= timedelta(minutes=15):
         # save sensor data to excel file
         excel_path = "/home/sproutly/Desktop/Sproutly/rpi/plant_health/datasets/rpi/sensor_log.csv"
         image_path = "/home/sproutly/Desktop/Sproutly/rpi/plant_health/datasets/rpi/images"
         image_filepath = save_sensor_data_to_csv(sensor_data, excel_path, image_path)
-        last_sensor_send_time = datetime.now()
         print(f"Updated log: {excel_path}")
-      
-      # check if 15 minute has passed since last image data was collected
-      if datetime.now() - last_image_send_time >= timedelta(minutes=1):
+        
         # save image data to image folder
         save_image_data(image_filepath)
-        last_image_send_time = datetime.now()
         print(f"Added image: {image_filepath}")
+
+        last_data_send_time = datetime.now()
       
       # check if 2.3 seconds have passed since serial buffer reset
       if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
