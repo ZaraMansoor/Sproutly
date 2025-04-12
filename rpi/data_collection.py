@@ -5,6 +5,7 @@ Jana Armouti (jarmouti)
 Based on main.py
 '''
 import os
+import csv
 import time
 import paho.mqtt.client as mqtt
 import json
@@ -358,54 +359,56 @@ def get_soil_sensor_data(sensor_data):
   
   return (sensor_data)
 
-from openpyxl import Workbook, load_workbook
-from openpyxl.utils import get_column_letter
-def save_sensor_data_to_excel(sensor_data, excel_path, image_path):
-  os.makedirs(os.path.dirname(excel_path), exist_ok=True)
+
+def save_sensor_data_to_csv(sensor_data, csv_path, image_path):
+  os.makedirs(os.path.dirname(csv_path), exist_ok=True)
   os.makedirs(image_path, exist_ok=True)
-  
-  if os.path.exists(excel_path):
-    workbook = load_workbook(excel_path)
-    sheet = workbook.active
-  else:
-    workbook = Workbook()
-    sheet = workbook.active
 
-    headers = ["Timestamp", "Image Path", "Health", "Temperature (°C)", 
-               "Temperature (°F)", "Humidity (%)", "Soil Moisture (%)", 
-               "Light (lux)", "Soil pH", "Soil Temp (°C)", "Soil Moisture 7-in-1 (RH%)", 
-               "Conductivity (µS/cm)", "Nitrogen (mg/kg)", "Phosphorus (mg/kg)", "Potassium (mg/kg)"]
-    sheet.append(headers)
-  
-  image_files = [f for f in os.listdir(image_path) if f.startswith("image_") and f.endswith(".jpg")]
-  image_nums = [int(f.split("_")[1].split(".")[0]) for f in image_files if f.split("_")[1].split(".")[0].isdigit()]
-  next_image_num = max(image_nums) + 1 if image_nums else 0
+  file_exists = os.path.exists(csv_path)
+  with open(csv_path, mode='a', newline='') as file:
+    writer = csv.writer(file)
 
-  image_filename = f"image_{next_image_num}.jpg"
-  image_filepath = os.path.join(image_path, image_filename)
+    # if the file doesn't exist, write headers
+    if not file_exists:
+      headers = [
+        "Timestamp", "Image Path", "Health", "Temperature (°C)", 
+        "Temperature (°F)", "Humidity (%)", "Soil Moisture (%)", 
+        "Light (lux)", "Soil pH", "Soil Temp (°C)", "Soil Moisture 7-in-1 (RH%)", 
+        "Conductivity (µS/cm)", "Nitrogen (mg/kg)", "Phosphorus (mg/kg)", "Potassium (mg/kg)"
+      ]
+      writer.writerow(headers)
 
-  row = [
-    datetime.now().isoformat(),
-    image_filepath,
-    HEALTH,
-    sensor_data['temperature_c'],
-    sensor_data['temperature_f'],
-    sensor_data['humidity'],
-    sensor_data['soil_moisture'],
-    sensor_data['lux'],
-    sensor_data['ph'],
-    sensor_data['soil_temp'],
-    sensor_data['soil_moisture_1'],
-    sensor_data['conductivity'],
-    sensor_data['nitrogen'],
-    sensor_data['phosphorus'],
-    sensor_data['potassium'],   
-  ]
-  sheet.append(row)
+    # find next image number
+    image_files = [f for f in os.listdir(image_path) if f.startswith("image_") and f.endswith(".jpg")]
+    image_nums = [int(f.split("_")[1].split(".")[0]) for f in image_files if f.split("_")[1].split(".")[0].isdigit()]
+    next_image_num = max(image_nums) + 1 if image_nums else 0
 
-  workbook.save(excel_path)
+    # find next image filename
+    image_filename = f"image_{next_image_num}.jpg"
+    image_filepath = os.path.join(image_path, image_filename)
 
-  return image_path
+    # row of data
+    row = [
+      datetime.now().isoformat(),
+      image_filepath,
+      HEALTH,
+      sensor_data['temperature_c'],
+      sensor_data['temperature_f'],
+      sensor_data['humidity'],
+      sensor_data['soil_moisture'],
+      sensor_data['lux'],
+      sensor_data['ph'],
+      sensor_data['soil_temp'],
+      sensor_data['soil_moisture_1'],
+      sensor_data['conductivity'],
+      sensor_data['nitrogen'],
+      sensor_data['phosphorus'],
+      sensor_data['potassium'],
+    ]
+    writer.writerow(row)
+
+  return image_filepath
+
 
 def save_image_data(image_path):
   global streaming
@@ -486,20 +489,6 @@ try:
 
       # get 7-in-1 soil sensor data
       sensor_data = get_soil_sensor_data(sensor_data)
-
-      print(
-      f"Temp: {sensor_data['temperature_c']:.1f}°C / {sensor_data['temperature_f']:.1f}°F | "
-      f"Humidity: {sensor_data['humidity']}% | "
-      f"Soil Moisture: {sensor_data['soil_moisture']}% | "
-      f"Light: {sensor_data['lux']} lux | "
-      f"Soil pH: {sensor_data['ph']} pH | "
-      f"Soil Temp: {sensor_data['soil_temp']}°C | "
-      f"Soil Moisture 7-in-1: {sensor_data['soil_moisture_1']} RH% | "
-      f"Conductivity: {sensor_data['conductivity']} µS/cm | "
-      f"N: {sensor_data['nitrogen']} mg/kg | "
-      f"P: {sensor_data['phosphorus']} mg/kg | "
-      f"K: {sensor_data['potassium']} mg/kg"
-      )
 
       # check if 15 minute has passed since last sensor data was collected
       if datetime.now() - last_sensor_send_time >= timedelta(minutes=15):
