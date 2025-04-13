@@ -19,7 +19,7 @@ class AutoSchedule(models.Model):
     max_temp = models.FloatField(blank=True, null=True) # degree fahrenheit
     min_humidity = models.FloatField(blank=True, null=True) # %
     max_humidity = models.FloatField(blank=True, null=True) # %
-    light_frequency = models.FloatField(blank=True, null=True) # hours
+    light_intensity = models.IntegerField(blank=True, null=True) # 1, 2, 3, or 4
     light_hours = models.FloatField(blank=True, null=True) # hours
     water_frequency = models.FloatField(blank=True, null=True) # hours
     water_amount = models.IntegerField(blank=True, null=True) # mL

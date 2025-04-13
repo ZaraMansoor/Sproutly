@@ -197,7 +197,7 @@ def update_manual_autoschedule(request):
 #             "max_temp": autoschedule.max_temp,
 #             "min_humidity": autoschedule.min_humidity,
 #             "max_humidity": autoschedule.max_humidity,
-#             "light_frequency": autoschedule.light_frequency,
+#             "light_intensity": autoschedule.light_intensity,
 #             "light_hours": autoschedule.light_hours,
 #             "water_frequency": autoschedule.water_frequency,
 #             "water_amount": autoschedule.water_amount
