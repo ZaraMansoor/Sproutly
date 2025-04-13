@@ -35,3 +35,24 @@ class SensorConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps(event["data"]))
         except Exception as e:
             print("Error sending health status:", e)
+
+
+# TODO: have to test
+class ActuatorConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        print("WebSocket attempted!")
+        await self.channel_layer.group_add("sproutly_actuator_status", self.channel_name)
+        await self.accept()
+        print("WebSocket connected!")
+
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard("sproutly_actuator_status", self.channel_name)
+        print(f"WebSocket disconnected! {close_code}")
+
+    async def actuatorStatusUpdate(self, event):
+        try:
+            print("Sending actuator status:", event["data"])
+            await self.send(text_data=json.dumps(event["data"]))
+        except Exception as e:
+            print("Error sending actuator status:", e)

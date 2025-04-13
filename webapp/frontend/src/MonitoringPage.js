@@ -56,6 +56,44 @@ const MonitoringPage = () => {
     const RPI_IP_ADDRESS = "172.26.192.48";
 
     const [camera, setCamera] = React.useState(false);
+
+    // TODO: have to test
+
+    const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+
+    let live_stream_status = "null";
+    websocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("Received data from websocket:", data);
+        live_stream_status = data["live_stream"];
+        if (live_stream_status === "on") {
+            setCamera(true);
+        } else if (live_stream_status === "off") {
+            setCamera(false);
+        }
+    }
+
+    // TODO: have to test
+    useEffect(() => {
+        const getInitialActuatorStatus = async () => {
+            try {
+                const response = await fetch("https://172.26.192.48:8443/send-command/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ command: "get_actuator_status" }),
+            });
+            const data = await response.json();
+            console.log("Initial actuator status:", data);
+            setActuatorStatus(data);
+            }  catch (error) {
+                console.error("Error getting initial actuator status:", error);
+            }
+        };
+
+        getInitialActuatorStatus();
+    }, []);
+
+    ////
     
     let navigate = useNavigate();
 

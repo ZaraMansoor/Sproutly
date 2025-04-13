@@ -37,9 +37,7 @@ const ControlCommandPage = () => {
     const selectPlant = (plant) => {
         setSelectedPlant(plant);
     }
-        
 
-    let navigate = useNavigate();
 
     const [waterPump, setWaterPump] = React.useState(false);
     const [mister, setMister] = React.useState(false);
@@ -48,6 +46,70 @@ const ControlCommandPage = () => {
     const [nutrientDispenser, setNutrientDispenser] = React.useState(false);
 
     const [lightValue, setLightValue] = React.useState(0);
+
+
+    // TODO: have to test
+
+    const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+
+    let heater_status = "null";
+    let water_pump_status = "null";
+    let nutrients_pump_status = "null";
+    let mister_status = "null";
+    let white_light_status = "null";
+    let LED_light_status = "null";
+
+    websocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("Received data from websocket:", data);
+        heater_status = data["heater"];
+        water_pump_status = data["water_pump"];
+        nutrients_pump_status = data["nutrients_pump"];
+        mister_status = data["mister"];
+        white_light_status = data["white_light"];
+        LED_light_status = data["LED_light"];
+        
+        if (heater_status === "on") {
+            setHeater(true);
+        } else if (heater_status === "off") {
+            setHeater(false);
+        }
+        if (water_pump_status === "on") {
+            setWaterPump(true);
+        } else if (water_pump_status === "off") {
+            setWaterPump(false);
+        }
+        if (nutrients_pump_status === "on") {
+            setNutrientDispenser(true);
+        } else if (nutrients_pump_status === "off") {
+            setNutrientDispenser(false);
+        }
+        if (mister_status === "on") {
+            setMister(true);
+        } else if (mister_status === "off") {
+            setMister(false);
+        }
+        if (white_light_status === "on") {
+            setLights(true);
+        } else if (white_light_status === "off") {
+            setLights(false);
+        }
+        if (LED_light_status === "0") {
+            setLightValue(0);
+        } else if (LED_light_status === "1") {
+            setLightValue(1);
+        } else if (LED_light_status === "2") {
+            setLightValue(2);
+        } else if (LED_light_status === "3") {
+            setLightValue(3);
+        } else if (LED_light_status === "4") {
+            setLightValue(4);
+        }
+    }
+    
+    ///////
+
+    let navigate = useNavigate();
 
     const sendCommand = async (commandData) => {
         try {
@@ -62,6 +124,26 @@ const ControlCommandPage = () => {
             console.error("Error sending control command:", error);
         }
     }
+
+    // TODO: have to test
+    useEffect(() => {
+        const getInitialActuatorStatus = async () => {
+            try {
+                const response = await fetch("https://172.26.192.48:8443/send-command/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ command: "get_actuator_status" }),
+            });
+            const data = await response.json();
+            console.log("Initial actuator status:", data);
+            setActuatorStatus(data);
+            }  catch (error) {
+                console.error("Error getting initial actuator status:", error);
+            }
+        };
+
+        getInitialActuatorStatus();
+    }, []);
 
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">

@@ -50,6 +50,14 @@ def on_message(client, userdata, msg):
                 temperature_c = data["temperature_c"],
                 temperature_f = data["temperature_f"],
                 humidity = data["humidity"],
+                soil_moisture = data["soil_moisture"],
+                lux = data["lux"],
+                ph = data["ph"],
+                soil_temp = data["soil_temp"],
+                conductivity = data["conductivity"],
+                nitrogen = data["nitrogen"],
+                phosphorus = data["phosphorus"],
+                potassium = data["potassium"],
                 # TODO: add more sensors later
             )
 
@@ -64,6 +72,17 @@ def on_message(client, userdata, msg):
                 }
             )
             print("Received Sensor Data:", data)
+
+            # TODO: have to test
+            if "heater" in data:
+                async_to_sync(channel_layer.group_send)(
+                    "sproutly_actuator_status",
+                    {
+                        "type": "actuatorStatusUpdate",
+                        "data": data,
+                    }
+                )
+                print("received actuators status:", data)
         
         except KeyError as e: # health status received
             channel_layer = get_channel_layer()

@@ -4,4 +4,5 @@ from . import consumers
 
 websocket_urlpatterns = [
     re_path(r'ws/sproutly/$', consumers.SensorConsumer.as_asgi()),
+    re_path(r'ws/sproutly/actuator/$', consumers.ActuatorConsumer.as_asgi()),
 ]

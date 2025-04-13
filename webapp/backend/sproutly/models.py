@@ -36,6 +36,14 @@ class SensorData(models.Model):
     temperature_c = models.FloatField(null=True, blank=True) # degree celsius
     temperature_f = models.FloatField(null=True, blank=True) # degree fahrenheit
     humidity = models.IntegerField(null=True, blank=True) # %
+    soil_moisture = models.FloatField(null=True, blank=True) # %
+    lux = models.IntegerField(null=True, blank=True) # lux
+    ph = models.FloatField(null=True, blank=True) # pH
+    soil_temp = models.FloatField(null=True, blank=True) # degree celsius
+    conductivity = models.FloatField(null=True, blank=True) # uS/cm
+    nitrogen = models.FloatField(null=True, blank=True) # mg/kg
+    phosphorus = models.FloatField(null=True, blank=True) # mg/kg
+    potassium = models.FloatField(null=True, blank=True) # mg/kg
 
     def __str__(self):
         return f"Sensor data for {self.plant.name}: temperature_c={self.temperature_c}, temperature_f={self.temperature_f}, humidity={self.humidity}"
