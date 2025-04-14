@@ -36,8 +36,19 @@ mister = Relay(14, active_high=True)
 #         print("Invalid input. Enter on or off")
 
 
-time.sleep(5.0)
-mister.on()
-time.sleep(5.0)
-mister.off()
-time.sleep(5.0)
+import RPi.GPIO as GPIO
+import time
+
+HUMIDIFIER_PIN = 14  # Replace with your chosen GPIO pin
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)
+
+try:
+    while True:
+        GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)  # Turn on humidifier
+        time.sleep(5)  # Keep it on for 5 seconds
+        GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)   # Turn off humidifier
+        time.sleep(5)  # Keep it off for 5 seconds
+except KeyboardInterrupt:
+    GPIO.cleanup()
