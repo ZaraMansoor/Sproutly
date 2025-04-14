@@ -202,7 +202,7 @@ def get_autoschedule(request, plant_id):
             "water_frequency": autoschedule.water_frequency,
             "water_amount": autoschedule.water_amount
         }
-        return JsonResponse(list(autoschedule), safe=False)
+        return JsonResponse(list(autoschedule_json), safe=False)
     except Exception as e:
         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     
