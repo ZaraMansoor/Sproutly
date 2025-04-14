@@ -135,7 +135,7 @@ const ControlCommandPage = () => {
                 const response = await fetch("https://172.26.192.48:8443/send-command/", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ command: "get_actuator_status" }),
+                    body: JSON.stringify({ command: "get_actuators_status" }),
             });
             const data = await response.json();
             console.log("Initial actuator status:", data);
