@@ -467,7 +467,7 @@ try:
       #   heater_relay.off()
       #   actuators_status["heater"] = "off"
 
-      if curr_time == datetime.strptime("10:48:00", "%H:%M:%S").time():
+      if curr_time == datetime.strptime("11:32:00", "%H:%M:%S").time():
         water_pump_relay.on()
         actuators_status["water_pump"] = "on"
         if schedule["light_intensity"] == 1:
@@ -491,12 +491,12 @@ try:
         # TODO: add more actuators later
 
       
-      water_off_time = datetime.strptime("10:48:00", "%H:%M:%S").time() + timedelta(hours=schedule["water_frequency"])
+      water_off_time = datetime.strptime("11:32:00", "%H:%M:%S").time() + timedelta(hours=schedule["water_frequency"])
       if curr_time == water_off_time:
         water_pump_relay.off()
         actuators_status["water_pump"] = "off" # TODO: water pump how many ml??
       
-      light_off_time = datetime.strptime("10:48:00", "%H:%M:%S").time() + timedelta(hours=schedule["light_hours"]//100) # for testing
+      light_off_time = datetime.strptime("11:32:00", "%H:%M:%S").time() + timedelta(hours=schedule["light_hours"]//100) # for testing
       if curr_time == light_off_time:
         if actuators_status["LED_light"] == 1:
           led_1_relay.off()
