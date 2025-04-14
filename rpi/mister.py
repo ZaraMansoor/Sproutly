@@ -44,15 +44,16 @@ HUMIDIFIER_PIN = 14
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)
 
-try:
-    time.sleep(5)
-    while True:
-        print('turning on')
-        GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)   # Active LOW
-        time.sleep(5)  # Keep it on for 5 seconds
+def pulse():
+    GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)
+    time.sleep(0.1)  # 100ms pulse
+    GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)
 
-        print('turning off')
-        GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)  # Inactive
-        time.sleep(5)  # Keep it off for 5 seconds
+try:
+    time.sleep(2)
+    while True:
+        print('toggle: on or off')
+        pulse()
+        time.sleep(5)
 except KeyboardInterrupt:
     GPIO.cleanup()
