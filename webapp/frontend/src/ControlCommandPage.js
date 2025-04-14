@@ -49,63 +49,69 @@ const ControlCommandPage = () => {
 
 
     // TODO: have to test
+    React.useEffect(() => {
+        const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
 
-    const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+        let heater_status = "null";
+        let water_pump_status = "null";
+        let nutrients_pump_status = "null";
+        let mister_status = "null";
+        let white_light_status = "null";
+        let LED_light_status = "null";
 
-    let heater_status = "null";
-    let water_pump_status = "null";
-    let nutrients_pump_status = "null";
-    let mister_status = "null";
-    let white_light_status = "null";
-    let LED_light_status = "null";
+        websocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("Received data from websocket:", data);
+            heater_status = data["heater"];
+            water_pump_status = data["water_pump"];
+            nutrients_pump_status = data["nutrients_pump"];
+            mister_status = data["mister"];
+            white_light_status = data["white_light"];
+            LED_light_status = data["LED_light"];
+            
+            if (heater_status === "on") {
+                setHeater(true);
+            } else if (heater_status === "off") {
+                setHeater(false);
+            }
+            if (water_pump_status === "on") {
+                setWaterPump(true);
+            } else if (water_pump_status === "off") {
+                setWaterPump(false);
+            }
+            if (nutrients_pump_status === "on") {
+                setNutrientsPump(true);
+            } else if (nutrients_pump_status === "off") {
+                setNutrientsPump(false);
+            }
+            if (mister_status === "on") {
+                setMister(true);
+            } else if (mister_status === "off") {
+                setMister(false);
+            }
+            if (white_light_status === "on") {
+                setLights(true);
+            } else if (white_light_status === "off") {
+                setLights(false);
+            }
+            if (LED_light_status === 0) {
+                setLightValue(0);
+            } else if (LED_light_status === 1) {
+                setLightValue(1);
+            } else if (LED_light_status === 2) {
+                setLightValue(2);
+            } else if (LED_light_status === 3) {
+                setLightValue(3);
+            } else if (LED_light_status === 4) {
+                setLightValue(4);
+            }
+        }
 
-    websocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log("Received data from websocket:", data);
-        heater_status = data["heater"];
-        water_pump_status = data["water_pump"];
-        nutrients_pump_status = data["nutrients_pump"];
-        mister_status = data["mister"];
-        white_light_status = data["white_light"];
-        LED_light_status = data["LED_light"];
-        
-        if (heater_status === "on") {
-            setHeater(true);
-        } else if (heater_status === "off") {
-            setHeater(false);
-        }
-        if (water_pump_status === "on") {
-            setWaterPump(true);
-        } else if (water_pump_status === "off") {
-            setWaterPump(false);
-        }
-        if (nutrients_pump_status === "on") {
-            setNutrientsPump(true);
-        } else if (nutrients_pump_status === "off") {
-            setNutrientsPump(false);
-        }
-        if (mister_status === "on") {
-            setMister(true);
-        } else if (mister_status === "off") {
-            setMister(false);
-        }
-        if (white_light_status === "on") {
-            setLights(true);
-        } else if (white_light_status === "off") {
-            setLights(false);
-        }
-        if (LED_light_status === 0) {
-            setLightValue(0);
-        } else if (LED_light_status === 1) {
-            setLightValue(1);
-        } else if (LED_light_status === 2) {
-            setLightValue(2);
-        } else if (LED_light_status === 3) {
-            setLightValue(3);
-        } else if (LED_light_status === 4) {
-            setLightValue(4);
-        }
-    }
+        return () => {
+            websocket.close(); 
+        };
+    }, []);
+    
     
     ///////
 
@@ -169,7 +175,7 @@ const ControlCommandPage = () => {
                     checked={waterPump}
                     onChange={(e) => {
                         const waterPumpState = e.target.checked;
-                        // setWaterPump(waterPumpState);
+                        setWaterPump(waterPumpState);
                         sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                     }}
                     
@@ -181,7 +187,7 @@ const ControlCommandPage = () => {
                     checked={mister}
                     onChange={(e) => {
                         const misterState = e.target.checked;
-                        // setMister(misterState);
+                        setMister(misterState);
                         sendCommand({command: misterState ? "on" : "off", actuator: "mister"});
                     }}
                 />
@@ -192,7 +198,7 @@ const ControlCommandPage = () => {
                     checked={lights}
                     onChange={(e) => {
                         const lightsState = e.target.checked;
-                        // setLights(lightsState);
+                        setLights(lightsState);
                         sendCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
                     }}
                 />
@@ -205,7 +211,7 @@ const ControlCommandPage = () => {
                         value={lightValue}
                         onChange={(e) => {
                             const newLightValue = e.target.value;
-                            // setLightValue(newLightValue);
+                            setLightValue(newLightValue);
                             sendCommand({ command: newLightValue, actuator: "LED_light" }); 
                         }}
                     />
@@ -217,7 +223,7 @@ const ControlCommandPage = () => {
                     checked={heater}
                     onChange={(e) => {
                         const heaterState = e.target.checked;
-                        // setHeater(heaterState);
+                        setHeater(heaterState);
                         sendCommand({command: heaterState ? "on" : "off", actuator: "heater"});
                     }}
                 />
@@ -228,7 +234,7 @@ const ControlCommandPage = () => {
                     checked={nutrientsPump}
                     onChange={(e) => {
                         const nutrientsPumpState = e.target.checked;
-                        // setNutrientsPump(nutrientsPumpState);
+                        setNutrientsPump(nutrientsPumpState);
                         sendCommand({command: nutrientsPumpState ? "on" : "off", actuator: "nutrients_pump"});
                     }}
                 />
