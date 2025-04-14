@@ -38,6 +38,17 @@ def on_message(client, userdata, msg):
 
 
         try: # sensor data received
+            # TODO: have to test
+            if "heater" in data:
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    "sproutly_actuator_status",
+                    {
+                        "type": "actuatorStatusUpdate",
+                        "data": data,
+                    }
+                )
+                print("received actuators status:", data)
 
             # check if sensor data > 1440, if so, delete old data
             # TODO: can be changed later? 1440 is based on 24 hours
@@ -72,17 +83,6 @@ def on_message(client, userdata, msg):
                 }
             )
             print("Received Sensor Data:", data)
-
-            # TODO: have to test
-            if "heater" in data:
-                async_to_sync(channel_layer.group_send)(
-                    "sproutly_actuator_status",
-                    {
-                        "type": "actuatorStatusUpdate",
-                        "data": data,
-                    }
-                )
-                print("received actuators status:", data)
         
         except KeyError as e: # health status received
             channel_layer = get_channel_layer()

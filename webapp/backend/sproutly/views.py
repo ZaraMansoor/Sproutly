@@ -161,8 +161,8 @@ def update_manual_autoschedule(request):
                     max_temp = data["schedule"]["maxTemp"],
                     min_humidity = data["schedule"]["minHumidity"],
                     max_humidity = data["schedule"]["maxHumidity"],
-                    light_frequency = data["schedule"]["lightFrequency"],
                     light_hours = data["schedule"]["lightHours"],
+                    light_intensity = data["schedule"]["lightIntensity"],
                     water_frequency = data["schedule"]["waterFrequency"],
                     water_amount = data["schedule"]["waterAmount"],
                 )
@@ -175,8 +175,8 @@ def update_manual_autoschedule(request):
                 max_temp = data["schedule"]["maxTemp"],
                 min_humidity = data["schedule"]["minHumidity"],
                 max_humidity = data["schedule"]["maxHumidity"],
-                light_frequency = data["schedule"]["lightFrequency"],
                 light_hours = data["schedule"]["lightHours"],
+                light_intensity = data["schedule"]["lightIntensity"],
                 water_frequency = data["schedule"]["waterFrequency"],
                 water_amount = data["schedule"]["waterAmount"],
                 # TODO: add other fields later
@@ -188,23 +188,28 @@ def update_manual_autoschedule(request):
     
     return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
 
-# @csrf_exempt
-# def get_autoschedule(request, plant_id):
-#     try:
-#         autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(plant_id))
-#         autoschedule_json = {
-#             "min_temp": autoschedule.min_temp,
-#             "max_temp": autoschedule.max_temp,
-#             "min_humidity": autoschedule.min_humidity,
-#             "max_humidity": autoschedule.max_humidity,
-#             "light_intensity": autoschedule.light_intensity,
-#             "light_hours": autoschedule.light_hours,
-#             "water_frequency": autoschedule.water_frequency,
-#             "water_amount": autoschedule.water_amount
-#         }
-#         return JsonResponse(list(autoschedule), safe=False)
-#     except Exception as e:
-#         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+@csrf_exempt
+def get_autoschedule(request, plant_id):
+    try:
+        print("entered get_autoschedule!!")
+        print("plant object?: ", Plant.objects.get(id=plant_id))
+        autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(id=plant_id))
+        print("autoschedule: ", autoschedule)
+        autoschedule_json = {
+            "min_temp": autoschedule.min_temp,
+            "max_temp": autoschedule.max_temp,
+            "min_humidity": autoschedule.min_humidity,
+            "max_humidity": autoschedule.max_humidity,
+            "light_intensity": autoschedule.light_intensity,
+            "light_hours": autoschedule.light_hours,
+            "water_frequency": autoschedule.water_frequency,
+            "water_amount": autoschedule.water_amount
+        }
+        print("autoschedule_json: ", autoschedule_json)
+        print("list(autoschedule_json): ", list(autoschedule_json))
+        return JsonResponse(list(autoschedule_json), safe=False)
+    except Exception as e:
+        return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     
 
 
