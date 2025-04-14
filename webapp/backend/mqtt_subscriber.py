@@ -94,12 +94,14 @@ def on_message(client, userdata, msg):
                     "data": data,
                 }
             )
-            print("Received Health Data:", data)
+            print("Received Health/plant_id Data:", data)
 
-            Plant.objects.filter(id=1).update(
-                health_status=data["status"]
-            )
-            print("Updated Plant Health Status:", data["status"])
+
+            if 'status' in data:
+                Plant.objects.filter(id=1).update(
+                    health_status=data["status"]
+                )
+                print("Updated Plant Health Status:", data["status"])
         
         except Exception as e:
             print("Error saving sensor data!:", e)
