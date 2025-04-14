@@ -1,12 +1,12 @@
-from gpiozero import OutputDevice
-import time
+# from gpiozero import OutputDevice
+# import time
 
-class Relay(OutputDevice):
-    def __init__(self, pin, active_high=False):
-        super().__init__(pin, active_high=active_high)
+# class Relay(OutputDevice):
+#     def __init__(self, pin, active_high=False):
+#         super().__init__(pin, active_high=active_high)
 
-# using GPIO pin 14
-mister = Relay(14, active_high=True)
+# # using GPIO pin 14
+# mister = Relay(14, active_high=True)
 
 
 # def press_mister(press_count=1, delay_between=1.0):
@@ -39,7 +39,7 @@ mister = Relay(14, active_high=True)
 import RPi.GPIO as GPIO
 import time
 
-HUMIDIFIER_PIN = 14  # Replace with your chosen GPIO pin
+HUMIDIFIER_PIN = 14  
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)
