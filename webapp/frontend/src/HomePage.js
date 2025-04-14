@@ -113,6 +113,7 @@ const HomePage = () => {
 
     React.useEffect(() => {
         socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
             console.log("data.type:", data.type);
             if (data.type === "plant_health") {
                 if (selectedPlant && data.status === "Healthy") {
@@ -132,7 +133,6 @@ const HomePage = () => {
             }
 
             console.log("Sensor data chart update attempting...");
-            const data = JSON.parse(event.data);
 
             const timestampedData = {
                 ...data,
