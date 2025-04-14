@@ -499,7 +499,7 @@ try:
       
       light_start_datetime = datetime.combine(datetime.now().date(), datetime.strptime("11:33:00", "%H:%M:%S").time())
       print("light_start_datetime: ", light_start_datetime)
-      light_off_time = (light_start_datetime + timedelta(hours=schedule["light_hours"]//100)).time() # for testing
+      light_off_time = (light_start_datetime + timedelta(hours=schedule["light_hours"]/100)).time() # for testing
       print("light_off_time: ", light_off_time)
       print("vs curr_time: ", curr_time)
       if curr_time == light_off_time:
