@@ -74,7 +74,10 @@ const MonitoringPage = () => {
     }
 
     // TODO: have to test
-    useEffect(() => {
+
+    const [actuatorStatus, setActuatorStatus] = React.useState({});
+    
+    React.useEffect(() => {
         const getInitialActuatorStatus = async () => {
             try {
                 const response = await fetch("https://172.26.192.48:8443/send-command/", {
