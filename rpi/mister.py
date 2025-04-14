@@ -26,11 +26,17 @@ mister = Relay(14, active_high=True)
 #         print("Invalid input. Enter 1, 2, or 3.")
 
 
-while True:
-    user_input = input("Mister on or off: ")
-    if user_input in ["on"]:
-        mister.on()
-    elif user_input in ["off"]:
-        mister.off()
-    else:
-        print("Invalid input. Enter on or off")
+# while True:
+#     user_input = input("Mister on or off: ")
+#     if user_input in ["on"]:
+#         mister.on()
+#     elif user_input in ["off"]:
+#         mister.off()
+#     else:
+#         print("Invalid input. Enter on or off")
+
+
+
+mister.on()
+time.sleep(5.0)
+mister.off()
