@@ -104,6 +104,11 @@ heater_relay.off()
 water_pump_relay = Relay(WATER_PUMP_RELAY_PIN, active_high=False)
 water_pump_relay.off()
 
+# nutrients pump 
+NUTRIENTS_PUMP_RELAY_PIN = 24
+nutrients_pump_relay = Relay(NUTRIENTS_PUMP_RELAY_PIN, active_high=False)
+nutrients_pump_relay.off()
+
 # LED light
 led_1_relay = Relay(LED_1_RELAY_PIN, active_high=False)
 led_2_relay = Relay(LED_2_RELAY_PIN, active_high=False)
@@ -179,6 +184,13 @@ def on_message(client, userdata, msg):
         elif control_command["command"] == "off":
           water_pump_relay.off()
           actuators_status["water_pump"] = "off"
+      elif control_command["actuator"] == "nutrients_pump":
+        if control_command["command"] == "on":
+          nutrients_pump_relay.on()
+          actuators_status["nutrients_pump"] = "on"
+        elif control_command["command"] == "off":
+          nutrients_pump_relay.off()
+          actuators_status["nutrients_pump"] = "off"
       elif control_command["actuator"] == "white_light":
         if control_command["command"] == "on":
           white_light_relay.on()
