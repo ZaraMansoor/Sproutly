@@ -192,6 +192,7 @@ def update_manual_autoschedule(request):
 def get_autoschedule(request, plant_id):
     try:
         autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(plant_id))
+        print("autoschedule: ", autoschedule)
         autoschedule_json = {
             "min_temp": autoschedule.min_temp,
             "max_temp": autoschedule.max_temp,
@@ -202,6 +203,8 @@ def get_autoschedule(request, plant_id):
             "water_frequency": autoschedule.water_frequency,
             "water_amount": autoschedule.water_amount
         }
+        print("autoschedule_json: ", autoschedule_json)
+        print("list(autoschedule_json): ", list(autoschedule_json))
         return JsonResponse(list(autoschedule_json), safe=False)
     except Exception as e:
         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
