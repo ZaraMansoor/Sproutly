@@ -6,7 +6,7 @@ class Relay(OutputDevice):
         super().__init__(pin, active_high=active_high)
 
 # using GPIO pin 14
-mister = Relay(14, active_high=False)
+mister = Relay(14, active_high=True)
 
 
 # def press_mister(press_count=1, delay_between=1.0):
