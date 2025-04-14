@@ -49,8 +49,12 @@ const ControlCommandPage = () => {
 
 
     // TODO: have to test
+
+    const websocketRef = React.useRef(null);
+
     React.useEffect(() => {
         const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+        websocketRef.current = websocket;
 
         let heater_status = "null";
         let water_pump_status = "null";
