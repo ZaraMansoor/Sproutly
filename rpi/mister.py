@@ -52,7 +52,10 @@ def pulse():
 try:
     time.sleep(2)
     while True:
-        print('toggle: on or off')
+        print('turning on')
+        pulse()
+        time.sleep(5)
+        print('turning off')
         pulse()
         time.sleep(5)
 except KeyboardInterrupt:
