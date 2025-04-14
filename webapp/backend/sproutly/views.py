@@ -192,7 +192,7 @@ def update_manual_autoschedule(request):
 def get_autoschedule(request, plant_id):
     try:
         print("entered get_autoschedule!!")
-        autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(plant_id))
+        autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(id=plant_id))
         print("autoschedule: ", autoschedule)
         autoschedule_json = {
             "min_temp": autoschedule.min_temp,
