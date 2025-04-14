@@ -59,7 +59,7 @@ const MonitoringPage = () => {
 
     // TODO: have to test
 
-    const websocket = new WebSocket('wss:///172.26.192.48:8443/ws/sproutly/actuator/');
+    const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
 
     let live_stream_status = "null";
     websocket.onmessage = (event) => {
