@@ -126,20 +126,58 @@ const ControlCommandPage = () => {
     }
 
     // TODO: have to test
-
-    const [actuatorStatus, setActuatorStatus] = React.useState({});
-
     React.useEffect(() => {
         const getInitialActuatorStatus = async () => {
             try {
                 const response = await fetch("https://172.26.192.48:8443/send-command/", {
-                    method: "POST",
+                    method: "GET",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ command: "get_actuators_status" }),
             });
             const data = await response.json();
             console.log("Initial actuator status:", data);
-            setActuatorStatus(data);
+            heaterStatus = data["heater"];
+            waterPumpStatus = data["water_pump"];
+            nutrientsPumpStatus = data["nutrients_pump"];
+            misterStatus = data["mister"];
+            whiteLightStatus = data["white_light"];
+            LEDLightStatus = data["LED_light"];
+            if (heaterStatus === "on") {
+                setHeater(true);
+            } else if (heaterStatus === "off") {
+                setHeater(false);
+            }
+            if (waterPumpStatus === "on") {
+                setWaterPump(true);
+            } else if (waterPumpStatus === "off") {
+                setWaterPump(false);
+            }
+            if (nutrientsPumpStatus === "on") {
+                setNutrientDispenser(true);
+            } else if (nutrientsPumpStatus === "off") {
+                setNutrientDispenser(false);
+            }
+            if (misterStatus === "on") {
+                setMister(true);
+            } else if (misterStatus === "off") {
+                setMister(false);
+            }
+            if (whiteLightStatus === "on") {
+                setLights(true);
+            } else if (whiteLightStatus === "off") {
+                setLights(false);
+            }
+            if (LEDLightStatus === "0") {
+                setLightValue(0);
+            } else if (LEDLightStatus === "1") {
+                setLightValue(1);
+            } else if (LEDLightStatus === "2") {
+                setLightValue(2);
+            } else if (LEDLightStatus === "3") {
+                setLightValue(3);
+            } else if (LEDLightStatus === "4") {
+                setLightValue(4);
+            }
             }  catch (error) {
                 console.error("Error getting initial actuator status:", error);
             }

@@ -74,20 +74,23 @@ const MonitoringPage = () => {
     }
 
     // TODO: have to test
-
-    const [actuatorStatus, setActuatorStatus] = React.useState({});
     
     React.useEffect(() => {
         const getInitialActuatorStatus = async () => {
             try {
                 const response = await fetch("https://172.26.192.48:8443/send-command/", {
-                    method: "POST",
+                    method: "GET",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ command: "get_actuators_status" }),
             });
             const data = await response.json();
             console.log("Initial actuator status:", data);
-            setActuatorStatus(data);
+            live_stream_status = data["live_stream"];
+            if (live_stream_status === "on") {
+                setCamera(true);
+            } else if (live_stream_status === "off") {
+                setCamera(false);
+            }
             }  catch (error) {
                 console.error("Error getting initial actuator status:", error);
             }
