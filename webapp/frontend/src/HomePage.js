@@ -242,7 +242,7 @@ const HomePage = () => {
                 }}>Enable Notifications</button> */}
 
                 <h2>{selectedPlant.name}</h2>
-                <p>Health Status: {plantHealth || "Unknown"}</p>
+                <p>Health Status: {plantHealth || selectedPlant.health_status}</p>
                 <p>Species: {selectedPlant.species}</p>
 
                 {/* TODO: control buttons */}

@@ -14,7 +14,7 @@ from asgiref.sync import async_to_sync
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
 django.setup()
 
-from sproutly.models import SensorData
+from sproutly.models import SensorData, Plant
 
 
 MQTT_SERVER = "broker.emqx.io"
@@ -95,6 +95,11 @@ def on_message(client, userdata, msg):
                 }
             )
             print("Received Health Data:", data)
+
+            Plant.objects.filter(id=1).update(
+                health_status=data["status"]
+            )
+            print("Updated Plant Health Status:", data["status"])
         
         except Exception as e:
             print("Error saving sensor data!:", e)
