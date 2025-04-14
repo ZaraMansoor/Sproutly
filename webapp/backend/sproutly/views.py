@@ -191,6 +191,7 @@ def update_manual_autoschedule(request):
 @csrf_exempt
 def get_autoschedule(request, plant_id):
     try:
+        print("entered get_autoschedule!!")
         autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(plant_id))
         print("autoschedule: ", autoschedule)
         autoschedule_json = {
