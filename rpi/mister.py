@@ -48,10 +48,11 @@ try:
     time.sleep(5)
     while True:
         print('turning on')
-        GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)  # Turn on humidifier
+        GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)   # Active LOW
         time.sleep(5)  # Keep it on for 5 seconds
+
         print('turning off')
-        GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)   # Turn off humidifier
+        GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)  # Inactive
         time.sleep(5)  # Keep it off for 5 seconds
 except KeyboardInterrupt:
     GPIO.cleanup()
