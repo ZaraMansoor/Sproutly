@@ -36,7 +36,8 @@ mister = Relay(14, active_high=True)
 #         print("Invalid input. Enter on or off")
 
 
-
+time.sleep(5.0)
 mister.on()
 time.sleep(5.0)
 mister.off()
+time.sleep(5.0)
