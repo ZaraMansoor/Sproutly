@@ -55,7 +55,7 @@ const MonitoringPage = () => {
 
     const RPI_IP_ADDRESS = "172.26.192.48";
 
-    const [camera, setCamera] = React.useState(false);
+    const [camera, setCamera] = React.useState(true);
 
     // TODO: have to test
 

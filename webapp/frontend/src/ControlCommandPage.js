@@ -94,15 +94,15 @@ const ControlCommandPage = () => {
         } else if (white_light_status === "off") {
             setLights(false);
         }
-        if (LED_light_status === "0") {
+        if (LED_light_status === 0) {
             setLightValue(0);
-        } else if (LED_light_status === "1") {
+        } else if (LED_light_status === 1) {
             setLightValue(1);
-        } else if (LED_light_status === "2") {
+        } else if (LED_light_status === 2) {
             setLightValue(2);
-        } else if (LED_light_status === "3") {
+        } else if (LED_light_status === 3) {
             setLightValue(3);
-        } else if (LED_light_status === "4") {
+        } else if (LED_light_status === 4) {
             setLightValue(4);
         }
     }
@@ -169,7 +169,7 @@ const ControlCommandPage = () => {
                     checked={waterPump}
                     onChange={(e) => {
                         const waterPumpState = e.target.checked;
-                        setWaterPump(waterPumpState);
+                        // setWaterPump(waterPumpState);
                         sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                     }}
                     
@@ -181,7 +181,7 @@ const ControlCommandPage = () => {
                     checked={mister}
                     onChange={(e) => {
                         const misterState = e.target.checked;
-                        setMister(misterState);
+                        // setMister(misterState);
                         sendCommand({command: misterState ? "on" : "off", actuator: "mister"});
                     }}
                 />
@@ -192,7 +192,7 @@ const ControlCommandPage = () => {
                     checked={lights}
                     onChange={(e) => {
                         const lightsState = e.target.checked;
-                        setLights(lightsState);
+                        // setLights(lightsState);
                         sendCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
                     }}
                 />
@@ -205,7 +205,7 @@ const ControlCommandPage = () => {
                         value={lightValue}
                         onChange={(e) => {
                             const newLightValue = e.target.value;
-                            setLightValue(newLightValue);
+                            // setLightValue(newLightValue);
                             sendCommand({ command: newLightValue, actuator: "LED_light" }); 
                         }}
                     />
@@ -217,7 +217,7 @@ const ControlCommandPage = () => {
                     checked={heater}
                     onChange={(e) => {
                         const heaterState = e.target.checked;
-                        setHeater(heaterState);
+                        // setHeater(heaterState);
                         sendCommand({command: heaterState ? "on" : "off", actuator: "heater"});
                     }}
                 />
@@ -228,7 +228,7 @@ const ControlCommandPage = () => {
                     checked={nutrientsPump}
                     onChange={(e) => {
                         const nutrientsPumpState = e.target.checked;
-                        setNutrientsPump(nutrientsPumpState);
+                        // setNutrientsPump(nutrientsPumpState);
                         sendCommand({command: nutrientsPumpState ? "on" : "off", actuator: "nutrients_pump"});
                     }}
                 />
