@@ -451,72 +451,72 @@ try:
       
       # TODO: test later!!!!!
 
-      # auto control running
-      plant_id = 1 # hardcoded
-      print("hereeee")
-      schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
-      print("here22")
-      # TODO: send auto control command
-      # lights, water are turned on every noon
-      curr_time = datetime.now().time()
-      print("curr_time: ", curr_time)
+      # # auto control running
+      # plant_id = 1 # hardcoded
+      # print("hereeee")
+      # schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
+      # print("here22")
+      # # TODO: send auto control command
+      # # lights, water are turned on every noon
+      # curr_time = datetime.now().time()
+      # print("curr_time: ", curr_time)
 
-      # if sensor_data['temperature_f'] < schedule["min_temp"]:
-      #   heater_relay.on()
-      #   actuators_status["heater"] = "on"
-      # elif sensor_data['temperature_f'] > schedule["max_temp"]:
-      #   heater_relay.off()
-      #   actuators_status["heater"] = "off"
+      # # if sensor_data['temperature_f'] < schedule["min_temp"]:
+      # #   heater_relay.on()
+      # #   actuators_status["heater"] = "on"
+      # # elif sensor_data['temperature_f'] > schedule["max_temp"]:
+      # #   heater_relay.off()
+      # #   actuators_status["heater"] = "off"
 
-      if curr_time == datetime.strptime("11:33:00", "%H:%M:%S").time():
-        water_pump_relay.on()
-        actuators_status["water_pump"] = "on"
-        if schedule["light_intensity"] == 1:
-          led_1_relay.on()
-          actuators_status["LED_light"] = 1
-        elif schedule["light_intensity"] == 2:
-          led_1_relay.on()
-          led_2_relay.on()
-          actuators_status["LED_light"] = 2
-        elif schedule["light_intensity"] == 3:
-          led_1_relay.on()
-          led_2_relay.on()
-          led_3_relay.on()
-          actuators_status["LED_light"] = 3
-        elif schedule["light_intensity"] == 4:
-          led_1_relay.on()
-          led_2_relay.on()
-          led_3_relay.on()
-          led_4_relay.on()
-          actuators_status["LED_light"] = 4
-        # TODO: add more actuators later
+      # if curr_time == datetime.strptime("11:33:00", "%H:%M:%S").time():
+      #   water_pump_relay.on()
+      #   actuators_status["water_pump"] = "on"
+      #   if schedule["light_intensity"] == 1:
+      #     led_1_relay.on()
+      #     actuators_status["LED_light"] = 1
+      #   elif schedule["light_intensity"] == 2:
+      #     led_1_relay.on()
+      #     led_2_relay.on()
+      #     actuators_status["LED_light"] = 2
+      #   elif schedule["light_intensity"] == 3:
+      #     led_1_relay.on()
+      #     led_2_relay.on()
+      #     led_3_relay.on()
+      #     actuators_status["LED_light"] = 3
+      #   elif schedule["light_intensity"] == 4:
+      #     led_1_relay.on()
+      #     led_2_relay.on()
+      #     led_3_relay.on()
+      #     led_4_relay.on()
+      #     actuators_status["LED_light"] = 4
+      #   # TODO: add more actuators later
 
       
-      water_off_time = datetime.strptime("11:33:00", "%H:%M:%S").time() + timedelta(hours=schedule["water_frequency"])
-      if curr_time == water_off_time:
-        water_pump_relay.off()
-        actuators_status["water_pump"] = "off" # TODO: water pump how many ml??
+      # water_off_time = datetime.strptime("11:33:00", "%H:%M:%S").time() + timedelta(hours=schedule["water_frequency"])
+      # if curr_time == water_off_time:
+      #   water_pump_relay.off()
+      #   actuators_status["water_pump"] = "off" # TODO: water pump how many ml??
       
-      light_off_time = datetime.strptime("11:33:00", "%H:%M:%S").time() + timedelta(hours=schedule["light_hours"]//100) # for testing
-      if curr_time == light_off_time:
-        if actuators_status["LED_light"] == 1:
-          led_1_relay.off()
-          actuators_status["LED_light"] = 0
-        elif actuators_status["LED_light"] == 2:
-          led_1_relay.off()
-          led_2_relay.off()
-          actuators_status["LED_light"] = 0
-        elif actuators_status["LED_light"] == 3:
-          led_1_relay.off()
-          led_2_relay.off()
-          led_3_relay.off()
-          actuators_status["LED_light"] = 0
-        elif actuators_status["LED_light"] == 4:
-          led_1_relay.off()
-          led_2_relay.off()
-          led_3_relay.off()
-          led_4_relay.off()
-          actuators_status["LED_light"] = 0
+      # light_off_time = datetime.strptime("11:33:00", "%H:%M:%S").time() + timedelta(hours=schedule["light_hours"]//100) # for testing
+      # if curr_time == light_off_time:
+      #   if actuators_status["LED_light"] == 1:
+      #     led_1_relay.off()
+      #     actuators_status["LED_light"] = 0
+      #   elif actuators_status["LED_light"] == 2:
+      #     led_1_relay.off()
+      #     led_2_relay.off()
+      #     actuators_status["LED_light"] = 0
+      #   elif actuators_status["LED_light"] == 3:
+      #     led_1_relay.off()
+      #     led_2_relay.off()
+      #     led_3_relay.off()
+      #     actuators_status["LED_light"] = 0
+      #   elif actuators_status["LED_light"] == 4:
+      #     led_1_relay.off()
+      #     led_2_relay.off()
+      #     led_3_relay.off()
+      #     led_4_relay.off()
+      #     actuators_status["LED_light"] = 0
 
   
 
