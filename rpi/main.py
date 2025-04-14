@@ -454,7 +454,7 @@ try:
       # auto control running
       plant_id = 1 # hardcoded
       print("hereeee")
-      schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/").json()
+      schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
       print("here22")
       # TODO: send auto control command
       # lights, water are turned on every noon
