@@ -94,6 +94,7 @@ const HomePage = () => {
     }, [selectedPlant]);
 
 
+    const [plantHealth, setPlantHealth] = React.useState([]);
 
     // display 24 hours long of sensor data (sensor data is sent every 1 min)
     const [sensorDataHistory, setSensorDataHistory] = React.useState([]);
@@ -114,11 +115,19 @@ const HomePage = () => {
         socket.onmessage = (event) => {
             console.log("data.type:", data.type);
             if (data.type === "plant_health") {
+                if (selectedPlant && data.status === "Healthy") {
+                    new Notification("Plant Health Alert!", {
+                        body: `Plant ${selectedPlant.name} is healthy! yay :)`
+                    });
+                    setPlantHealth("Healthy");
+                    return;
+                }
                 if (selectedPlant && data.status === "Unhealthy") {
                     new Notification("Plant Health Alert!", {
                         body: `Plant ${selectedPlant.name} is unhealthy!`
                     });
-                return;
+                    setPlantHealth("Unhealthy");
+                    return;
                 }
             }
 
@@ -233,7 +242,7 @@ const HomePage = () => {
                 }}>Enable Notifications</button> */}
 
                 <h2>{selectedPlant.name}</h2>
-                <p>Health Status: {selectedPlant.health_status === 'Healthy' ? 'Healthy' : 'Unhealthy'}</p>
+                <p>Health Status: {plantHealth || "Unknown"}</p>
                 <p>Species: {selectedPlant.species}</p>
 
                 {/* TODO: control buttons */}
