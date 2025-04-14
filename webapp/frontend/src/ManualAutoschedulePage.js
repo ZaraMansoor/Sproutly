@@ -10,7 +10,7 @@ const ManualAutoschedulePage = () => {
     const [maxTemp, setMaxTemp] = React.useState('');
     const [minHumidity, setMinHumidity] = React.useState('');
     const [maxHumidity, setMaxHumidity] = React.useState('');
-    const [lightFrequency, setLightFrequency] = React.useState(''); // every xx hours
+    const [lightIntensity, setLightIntensity] = React.useState(''); // 1~3
     const [lightHours, setLightHours] = React.useState(''); // how long the light is on
     const [waterFrequency, setWaterFrequency] = React.useState(''); // every xx hours
     const [waterAmount, setWaterAmount] = React.useState(''); // how much water to give
@@ -29,7 +29,7 @@ const ManualAutoschedulePage = () => {
     const submitManualAutoschedule = async (e) => {
         e.preventDefault();
 
-        const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightFrequency, lightHours, waterFrequency, waterAmount };
+        const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightIntensity, lightHours, waterFrequency, waterAmount };
         
         
         const response = await fetch("https://172.26.192.48:8443/manual-autoschedule/",
@@ -72,12 +72,12 @@ const ManualAutoschedulePage = () => {
                     <Form.Control type="number" onChange={(e) => setMaxHumidity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Light Frequency (Hours)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setLightFrequency(e.target.value)} required />
-                </Form.Group>
-                <Form.Group className="mb-3">
                     <Form.Label>Light Duration (Hours)</Form.Label>
                     <Form.Control type="number" onChange={(e) => setLightHours(e.target.value)} required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Light Intensity (1~3)</Form.Label>
+                    <Form.Control type="number" onChange={(e) => setLightIntensity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Water Frequency (Hours)</Form.Label>

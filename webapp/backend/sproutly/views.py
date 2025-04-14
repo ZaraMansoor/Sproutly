@@ -161,27 +161,22 @@ def update_manual_autoschedule(request):
                     max_temp = data["schedule"]["maxTemp"],
                     min_humidity = data["schedule"]["minHumidity"],
                     max_humidity = data["schedule"]["maxHumidity"],
-                    light_frequency = data["schedule"]["lightFrequency"],
                     light_hours = data["schedule"]["lightHours"],
+                    light_intensity = data["schedule"]["lightIntensity"],
                     water_frequency = data["schedule"]["waterFrequency"],
                     water_amount = data["schedule"]["waterAmount"],
                 )
                 new_autoschedule.save()
                 return JsonResponse({"status": "Success"}, status=200)
 
-            print("user_plant: ", user_plant)
             print("let's update schedule222")
-            print("min_temp: ", data["schedule"]["minTemp"])
-            print("max_temp: ", data["schedule"]["maxTemp"])
-            print("light_hours: ", data["schedule"]["lightHours"])
-            print("user_plant??: ", AutoSchedule.objects.filter(plant=user_plant))
             AutoSchedule.objects.filter(plant=user_plant).update(
                 min_temp = data["schedule"]["minTemp"],
                 max_temp = data["schedule"]["maxTemp"],
                 min_humidity = data["schedule"]["minHumidity"],
                 max_humidity = data["schedule"]["maxHumidity"],
-                light_frequency = data["schedule"]["lightFrequency"],
                 light_hours = data["schedule"]["lightHours"],
+                light_intensity = data["schedule"]["lightIntensity"],
                 water_frequency = data["schedule"]["waterFrequency"],
                 water_amount = data["schedule"]["waterAmount"],
                 # TODO: add other fields later
