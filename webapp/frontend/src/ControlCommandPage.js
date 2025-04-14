@@ -43,7 +43,7 @@ const ControlCommandPage = () => {
     const [mister, setMister] = React.useState(false);
     const [lights, setLights] = React.useState(false);
     const [heater, setHeater] = React.useState(false);
-    const [nutrientDispenser, setNutrientDispenser] = React.useState(false);
+    const [nutrientsPump, setNutrientsPump] = React.useState(false);
 
     const [lightValue, setLightValue] = React.useState(0);
 
@@ -80,9 +80,9 @@ const ControlCommandPage = () => {
             setWaterPump(false);
         }
         if (nutrients_pump_status === "on") {
-            setNutrientDispenser(true);
+            setNutrientsPump(true);
         } else if (nutrients_pump_status === "off") {
-            setNutrientDispenser(false);
+            setNutrientsPump(false);
         }
         if (mister_status === "on") {
             setMister(true);
@@ -224,12 +224,12 @@ const ControlCommandPage = () => {
                 <Form.Check 
                     type="switch"
                     id="custom-switch"
-                    label="Nutrient Dispenser"
-                    checked={nutrientDispenser}
+                    label="Nutrients Pump"
+                    checked={nutrientsPump}
                     onChange={(e) => {
-                        const nutrientDispenserState = e.target.checked;
-                        setNutrientDispenser(nutrientDispenserState);
-                        sendCommand({command: nutrientDispenserState ? "on" : "off", actuator: "nutrient_dispenser"});
+                        const nutrientsPumpState = e.target.checked;
+                        setNutrientsPump(nutrientsPumpState);
+                        sendCommand({command: nutrientsPumpState ? "on" : "off", actuator: "nutrients_pump"});
                     }}
                 />
             </Form>
