@@ -25,6 +25,7 @@ import {
     Tooltip,
     Legend,
   } from 'chart.js';
+import { get } from 'express/lib/response';
   
   ChartJS.register(
     CategoryScale,
@@ -112,9 +113,6 @@ const HomePage = () => {
 
     React.useEffect(() => {
         socket.onmessage = (event) => {
-            console.log("Sensor data chart update attempting...");
-            const data = JSON.parse(event.data);
-
             console.log("data.type:", data.type);
             if (data.type === "plant_health") {
                 if (selectedPlant && data.status === "Unhealthy") {
@@ -124,6 +122,9 @@ const HomePage = () => {
                 return;
                 }
             }
+            
+            console.log("Sensor data chart update attempting...");
+            const data = JSON.parse(event.data);
 
             const timestampedData = {
                 ...data,
@@ -194,6 +195,19 @@ const HomePage = () => {
     
 
 
+    const sendCommand = async (commandData) => {
+        try {
+            const response = await fetch("https://172.26.192.48:8443/send-command/",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(commandData),
+                });
+            console.log("Control command sent", await response.json());
+        } catch (error) {
+            console.error("Error sending control command:", error);
+        }
+    }
 
     let navigate = useNavigate();
 
@@ -225,6 +239,10 @@ const HomePage = () => {
 
                 {/* TODO: control buttons */}
 
+                <button onClick={() => {
+                    sendCommand({command: "get_plant_health_check"});
+                    console.log("Get recent health status command sent!!!");
+                }}>Get Recent Health Status</button>
                 <button onClick={() => navigate('/monitoring')}>Live Camera</button>
                 <button onClick={() => navigate('/add-plant')}>Add Plant</button>
                 <button onClick={() => navigate('/manual-autoschedule')}>Set Up Auto Control</button>
