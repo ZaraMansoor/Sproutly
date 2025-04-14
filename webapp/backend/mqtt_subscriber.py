@@ -40,6 +40,7 @@ def on_message(client, userdata, msg):
         try: # sensor data received
             # TODO: have to test
             if "heater" in data:
+                channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)(
                     "sproutly_actuator_status",
                     {
