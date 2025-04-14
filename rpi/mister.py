@@ -45,6 +45,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)
 
 try:
+    time.sleep(5)
     while True:
         print('turning on')
         GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)  # Turn on humidifier
