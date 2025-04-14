@@ -171,6 +171,9 @@ def update_manual_autoschedule(request):
 
             print("user_plant: ", user_plant)
             print("let's update schedule222")
+            print("min_temp: ", data["schedule"]["minTemp"])
+            print("max_temp: ", data["schedule"]["maxTemp"])
+            print("light_hours: ", data["schedule"]["lightHours"])
             print("user_plant??: ", AutoSchedule.objects.filter(plant=user_plant))
             AutoSchedule.objects.filter(plant=user_plant).update(
                 min_temp = data["schedule"]["minTemp"],
