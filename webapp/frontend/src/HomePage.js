@@ -25,7 +25,6 @@ import {
     Tooltip,
     Legend,
   } from 'chart.js';
-import { get } from 'express/lib/response';
   
   ChartJS.register(
     CategoryScale,
@@ -122,7 +121,7 @@ const HomePage = () => {
                 return;
                 }
             }
-            
+
             console.log("Sensor data chart update attempting...");
             const data = JSON.parse(event.data);
 
