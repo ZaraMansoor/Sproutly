@@ -136,46 +136,47 @@ const ControlCommandPage = () => {
             });
             const data = await response.json();
             console.log("Initial actuator status:", data);
-            heaterStatus = data["heater"];
-            waterPumpStatus = data["water_pump"];
-            nutrientsPumpStatus = data["nutrients_pump"];
-            misterStatus = data["mister"];
-            whiteLightStatus = data["white_light"];
-            LEDLightStatus = data["LED_light"];
-            if (heaterStatus === "on") {
+            heater_status = data["heater"];
+            water_pump_status = data["water_pump"];
+            nutrients_pump_status = data["nutrients_pump"];
+            mister_status = data["mister"];
+            white_light_status = data["white_light"];
+            LED_light_status = data["LED_light"];
+            
+            if (heater_status === "on") {
                 setHeater(true);
-            } else if (heaterStatus === "off") {
+            } else if (heater_status === "off") {
                 setHeater(false);
             }
-            if (waterPumpStatus === "on") {
+            if (water_pump_status === "on") {
                 setWaterPump(true);
-            } else if (waterPumpStatus === "off") {
+            } else if (water_pump_status === "off") {
                 setWaterPump(false);
             }
-            if (nutrientsPumpStatus === "on") {
+            if (nutrients_pump_status === "on") {
                 setNutrientDispenser(true);
-            } else if (nutrientsPumpStatus === "off") {
+            } else if (nutrients_pump_status === "off") {
                 setNutrientDispenser(false);
             }
-            if (misterStatus === "on") {
+            if (mister_status === "on") {
                 setMister(true);
-            } else if (misterStatus === "off") {
+            } else if (mister_status === "off") {
                 setMister(false);
             }
-            if (whiteLightStatus === "on") {
+            if (white_light_status === "on") {
                 setLights(true);
-            } else if (whiteLightStatus === "off") {
+            } else if (white_light_status === "off") {
                 setLights(false);
             }
-            if (LEDLightStatus === "0") {
+            if (LED_light_status === "0") {
                 setLightValue(0);
-            } else if (LEDLightStatus === "1") {
+            } else if (LED_light_status === "1") {
                 setLightValue(1);
-            } else if (LEDLightStatus === "2") {
+            } else if (LED_light_status === "2") {
                 setLightValue(2);
-            } else if (LEDLightStatus === "3") {
+            } else if (LED_light_status === "3") {
                 setLightValue(3);
-            } else if (LEDLightStatus === "4") {
+            } else if (LED_light_status === "4") {
                 setLightValue(4);
             }
             }  catch (error) {
