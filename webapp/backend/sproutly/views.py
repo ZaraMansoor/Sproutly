@@ -169,7 +169,9 @@ def update_manual_autoschedule(request):
                 new_autoschedule.save()
                 return JsonResponse({"status": "Success"}, status=200)
 
+            print("user_plant: ", user_plant)
             print("let's update schedule222")
+            print("user_plant??: ", AutoSchedule.objects.filter(plant=user_plant))
             AutoSchedule.objects.filter(plant=user_plant).update(
                 min_temp = data["schedule"]["minTemp"],
                 max_temp = data["schedule"]["maxTemp"],
