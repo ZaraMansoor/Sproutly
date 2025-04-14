@@ -46,7 +46,7 @@ GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)
 
 def pulse():
     GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)
-    time.sleep(0.1)  # 100ms pulse
+    time.sleep(0.1)
     GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)
 
 try:
