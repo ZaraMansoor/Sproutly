@@ -235,6 +235,14 @@ const HomePage = () => {
                 <SensorChart label="Temperature (°C)" dataKey="temperature_c" color="red" />
                 <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
                 <SensorChart label="Humidity (%)" dataKey="humidity" color="green" />
+                <SensorChart label="Soil Moisture (%)" dataKey="soil_moisture" color="purple" />
+                <SensorChart label="Light (lux)" dataKey="lux" color="yellow" />
+                <SensorChart label="pH" dataKey="ph" color="orange" />
+                <SensorChart label="Soil Temperature (°C)" dataKey="soil_temp" color="pink" />
+                <SensorChart label="Conductivity (uS/cm)" dataKey="conductivity" color="brown" />
+                <SensorChart label="Nitrogen (mg/kg)" dataKey="nitrogen" color="teal" />
+                <SensorChart label="Phosphorus (mg/kg)" dataKey="phosphorus" color="maroon" />
+                <SensorChart label="Potassium (mg/kg)" dataKey="potassium" color="olive" />
 
                 <h2>Ideal Plant Care Conditions for {selectedPlant.name}</h2>
                 <p>Scientific Name: {plantInfo.scientific_name}</p>
