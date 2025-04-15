@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-HUMIDIFIER_PIN = 14  
+HUMIDIFIER_PIN = 14
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)

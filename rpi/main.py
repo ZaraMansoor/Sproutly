@@ -47,6 +47,7 @@ LED_2_RELAY_PIN = 6
 LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
+HUMIDIFIER_PIN = 14
 
 # start the stream, keep track of if live streaming or not
 stream.start_stream()
@@ -95,6 +96,15 @@ actuators_status = {
   "LED_light": 0,
   "live_stream": "on",
 }
+
+# mister
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)
+def mister_pulse():
+  GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)
+  time.sleep(0.1)
+  GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)
+# JANA TODO: make sure mister starts as "off"
 
 # heater 
 heater_relay = Relay(HEATER_RELAY_PIN, active_high=False)
@@ -221,6 +231,15 @@ def on_message(client, userdata, msg):
             stream.stop_stream()
           streaming = False
           actuators_status["live_stream"] = "off"
+      elif control_command["actuator"] == "mister":
+        if control_command["command"] == "on":
+          if actuators_status["mister"] == "off":
+            mister_pulse()
+          actuators_status["mister"] = "on"
+        elif control_command["command"] == "off":
+          if actuators_status["mister"] == "on":
+            mister_pulse()
+          actuators_status["mister"] = "off"
 
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
