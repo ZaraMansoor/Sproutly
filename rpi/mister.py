@@ -16,9 +16,9 @@ try:
     while True:
         print('turning on')
         pulse()
-        time.sleep(1800)
+        time.sleep(3600)
         print('turning off')
         pulse()
-        time.sleep(1800)
+        time.sleep(3600)
 except KeyboardInterrupt:
     GPIO.cleanup()
