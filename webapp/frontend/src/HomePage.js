@@ -279,6 +279,8 @@ const HomePage = () => {
                 <p>Maximum Temperature: {plantInfo.temp_max} °F</p>
                 <p>Minimum Humidity: {plantInfo.humidity_min} %</p>
                 <p>Maximum Humidity: {plantInfo.humidity_max} %</p>
+                <p>Minimum pH: {plantInfo.ph_min}</p>
+                <p>Maximum pH: {plantInfo.ph_max}</p>
             </div>
         );
     }
