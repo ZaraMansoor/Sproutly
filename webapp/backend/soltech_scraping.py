@@ -114,6 +114,63 @@ def webscrape_plant(plant_data, plant_id):
   plant_info["humidity_max_%"] = humidity_max
 
 
+  ph_map = {
+    "African Milk Tree": [6.0, 8.0],
+    "African Violet": [6.0, 7.0],
+    "Alocasia Polly": [5.5, 6.5],
+    "Aloe Plant": [5.5, 7.0],
+    "Amaryllis": [5.5, 6.5],
+    "Anthurium": [5.0, 6.0],
+    "Areca Palm": [6.0, 6.5],
+    "Basil": [5.5, 6.5],
+    "Bird of Paradise": [6.0, 6.5],
+    "Birds Nest Fern": [5.0, 5.5],
+    "Boston Fern": [5.5, 6.5],
+    "Burro's Tail": [6.0, 7.0],
+    "Caladium": [6.0, 7.5],
+    "Calamondin": [5.5, 7.0],
+    "Calathea Medallion": [6.0, 6.5],
+    "Calathea Orbifolia": [6.5, 7.0],
+    "Calathea Rattlesnake": [6.0, 7.0],
+    "Cast Iron Plant": [5.5, 7.0],
+    "Chinese Evergreen": [5.5, 6.5],
+    "Chinese Money Plant": [6.0, 7.0],
+    "Chives": [6.0, 7.0],
+    "Christmas Cactus": [5.0, 6.5],
+    "Cilantro": [6.0, 7.0],
+    "Coral Cactus": [6.0, 7.0],
+    "Croton": [5.0, 6.0],
+    "Desert Rose": [6.0, 7.0],
+    "Dieffenbachia": [5.0, 6.0],
+    "Dill": [5.5, 6.5],
+    "Dragon Tree": [6.0, 7.0],
+    "Elephant Ear": [5.5, 7.0],
+    "English Ivy": [6.5, 7.5],
+    "Ficus Audrey": [6.0, 7.0],
+    "Fiddle Leaf Fig": [6.0, 7.0],
+    "Fishbone Cactus": [6.0, 7.5],
+    "Friendship Plant": [6.0, 6.5],
+    "Golden Pothos": [6.0, 6.5],
+    "Heartleaf Philodendron": [5.5, 6.5],
+    "Hindu Rope Plant": [6.0, 7.0],
+    "Jade Plant": [6.0, 7.0],
+    "Lavender": [6.5, 7.5],
+    "Maranta": [5.5, 6.0],
+    "Meyer Lemon Tree": [5.5, 6.5],
+    "Mini Monstera": [5.5, 7.0],
+    "Money Tree": [6.0, 7.5],
+    "Monstera Adansonii": [5.5, 7.0],
+    "Monstera deliciosa": [5.5, 7.0],
+    "Moth Orchid": [5.5, 6.5],
+    "Nerve Plant": [5.5, 7.0],
+    "Oregano": [6.0, 8.0],
+    "Oxalis": [6.0, 8.0],
+  }
+
+
+  plant_info["ph_min"] = ph_map[name][0]
+  plant_info["ph_max"] = ph_map[name][0]
+
   print(plant_info)
 
   return plant_info
