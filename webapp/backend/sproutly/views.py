@@ -307,14 +307,14 @@ def change_automatic_or_manual(request):
             print("curr_schedule!!: ", curr_schedule)
             print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
             curr_schedule.automatic_mode = data["automatic_or_manual"]
-            import traceback
-            traceback.print_exc()
             print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
             curr_schedule.save()
             print("saved!!")
 
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
 
