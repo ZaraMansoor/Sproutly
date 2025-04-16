@@ -231,6 +231,8 @@ def get_plant_info(request):
             "temp_max": plant.temp_max,
             "humidity_min": plant.humidity_min,
             "humidity_max": plant.humidity_max,
+            "ph_min": plant.ph_min,
+            "ph_max": plant.ph_max,
         }
         return JsonResponse(plant_info, safe=False)
     except Exception as e:
@@ -267,6 +269,8 @@ def get_webscraped_plant_data(request):
             plant.temp_max = scraped_data["temp_max_F"]
             plant.humidity_min = scraped_data["humidity_min_%"]
             plant.humidity_max = scraped_data["humidity_max_%"]
+            plant.ph_min = scraped_data["ph_min"]
+            plant.ph_max = scraped_data["ph_max"]
             plant.save()
 
             return JsonResponse({"status": "Success"}, status=200)
