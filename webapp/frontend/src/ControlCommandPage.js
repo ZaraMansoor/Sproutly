@@ -39,6 +39,20 @@ const ControlCommandPage = () => {
     }
 
 
+    const [automaticState, setAutomaticState] = React.useState(null);
+
+
+    React.useEffect(() => {
+        fetch("https://172.26.192.48:8443/get-automatic-or-manual/")
+            .then(result => result.json())
+            .then(data => {
+                console.log("Automatic or Manual fetched!!:", data);
+                setAutomaticState(data);
+            })
+            .catch(e => console.error("Failed to fetch automatic or manual", e));
+    })
+
+
     const [waterPump, setWaterPump] = React.useState(false);
     const [mister, setMister] = React.useState(false);
     const [lights, setLights] = React.useState(false);
@@ -182,7 +196,7 @@ const ControlCommandPage = () => {
                         setWaterPump(waterPumpState);
                         sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                     }}
-                    
+                    disabled = {!automaticState}
                 />
                 <Form.Check 
                     type="switch"
@@ -194,6 +208,7 @@ const ControlCommandPage = () => {
                         setMister(misterState);
                         sendCommand({command: misterState ? "on" : "off", actuator: "mister"});
                     }}
+                    disabled = {!automaticState}
                 />
                 <Form.Check 
                     type="switch"
@@ -205,6 +220,7 @@ const ControlCommandPage = () => {
                         setLights(lightsState);
                         sendCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
                     }}
+                    disabled = {!automaticState}
                 />
                 <div className="my-4">
                     <p>LED Brightness: {lightValue}</p>
@@ -218,6 +234,7 @@ const ControlCommandPage = () => {
                             setLightValue(newLightValue);
                             sendCommand({ command: newLightValue, actuator: "LED_light" }); 
                         }}
+                        disabled = {!automaticState}
                     />
                 </div>
                 <Form.Check 
@@ -230,6 +247,7 @@ const ControlCommandPage = () => {
                         setHeater(heaterState);
                         sendCommand({command: heaterState ? "on" : "off", actuator: "heater"});
                     }}
+                    disabled = {!automaticState}
                 />
                 <Form.Check 
                     type="switch"
@@ -241,6 +259,7 @@ const ControlCommandPage = () => {
                         setNutrientsPump(nutrientsPumpState);
                         sendCommand({command: nutrientsPumpState ? "on" : "off", actuator: "nutrients_pump"});
                     }}
+                    disabled = {!automaticState}
                 />
             </Form>
 
