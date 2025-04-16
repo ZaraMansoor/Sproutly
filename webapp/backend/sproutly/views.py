@@ -304,6 +304,7 @@ def change_automatic_or_manual(request):
 
             print("data: ", data)
             curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            print("curr_schedule!!: ", curr_schedule)
             curr_schedule.automatic_mode = data["automatic_or_manual"]
             print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
             curr_schedule.save()
