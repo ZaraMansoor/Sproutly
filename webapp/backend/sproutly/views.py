@@ -223,6 +223,7 @@ def get_plant_info(request):
 
         plant.ph_min = 6.0 # DELETE!
         plant.ph_max = 8.0 # DELETE!
+        plant.save()
 
         plant_info = {
             "scientific_name": plant.scientific_name,
