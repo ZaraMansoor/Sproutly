@@ -221,6 +221,9 @@ def get_plant_info(request):
         data = json.loads(request.body)
         plant = WebscrapedPlant.objects.get(name=data["species"])
 
+        plant.ph_min = 6.0 # DELETE!
+        plant.ph_max = 8.0 # DELETE!
+
         plant_info = {
             "scientific_name": plant.scientific_name,
             "light_description": plant.light_description,
