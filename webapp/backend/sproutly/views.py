@@ -220,7 +220,6 @@ def get_plant_info(request):
     try:
         data = json.loads(request.body)
         print("retrieving plant info")
-        print("WebscrapedPlant.objects.all(): ", WebscrapedPlant.objects.all())
         plant = WebscrapedPlant.objects.get(index=0)
         # plant = WebscrapedPlant.objects.get(name=data["species"])
         print("retrieved plant info")
