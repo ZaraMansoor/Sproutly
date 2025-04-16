@@ -282,6 +282,8 @@ def get_webscraped_plant_data(request):
             return JsonResponse({"status": "Success"}, status=200)
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
 
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
