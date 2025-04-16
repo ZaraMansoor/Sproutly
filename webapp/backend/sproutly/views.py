@@ -299,13 +299,29 @@ def get_sensor_data_history(request):
 def change_automatic_or_manual(request):
     if request.method == "POST":
         try:
+            print("entered")
+            data = json.loads(request.body)
+
+            print("data: ", data)
+            curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            curr_schedule.automatic_mode = data["automatic_or_manual"]
+            print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
+            curr_schedule.save()
+            print("saved!!")
+
+            return JsonResponse({"status": "Success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def get_automatic_or_manual(request):
+    if request.method == "POST":
+        try:
             data = json.loads(request.body)
 
             curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
-            curr_schedule.automatic_mode = data["automatic_or_manual"]
-            curr_schedule.save()
-
-            return JsonResponse({"status": "Success"}, status=200)
+            return JsonResponse({"automatic_or_manual": curr_schedule.automatic_mode}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
