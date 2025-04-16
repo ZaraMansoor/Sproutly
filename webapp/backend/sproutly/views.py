@@ -261,6 +261,8 @@ def get_webscraped_plant_data(request):
             if not scraped_data:
                 return JsonResponse({"error": "Failed to scrape data"}, status=500)
             
+            print("scraped_data", scraped_data)
+            print("scraped_data['light_intensity']", scraped_data["light_intensity"])
             plant.scientific_name = scraped_data["scientific_name"]
             plant.light_description = scraped_data["light_description"]
             plant.light_intensity = scraped_data["light_intensity"]
