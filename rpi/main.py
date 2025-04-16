@@ -487,6 +487,12 @@ try:
       # #   heater_relay.off()
       # #   actuators_status["heater"] = "off"
 
+      # if sensor_data['humidity'] < schedule["min_humidity"]:
+      #   humidifier_relay.on()
+      #   actuators_status["humidifier"] = "on"
+      # elif sensor_data['humidity'] > schedule["max_humidity"]:
+      #   humidifier_relay.off()
+      #   actuators_status["humidifier"] = "off"
 
       # light_start_datetime = datetime.combine(datetime.now().date(), datetime.strptime("09:00:00", "%H:%M:%S").time())
       # print("light_start_datetime: ", light_start_datetime)
