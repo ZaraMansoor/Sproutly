@@ -317,9 +317,11 @@ def change_automatic_or_manual(request):
 def get_automatic_or_manual(request):
     if request.method == "GET":
         try:
+            print("entered")
             data = json.loads(request.body)
-
+            print("dat!: ", data)
             curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
             return JsonResponse({"automatic_or_manual": curr_schedule.automatic_mode}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
