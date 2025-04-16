@@ -65,8 +65,8 @@ class WebscrapedPlant(models.Model):
     temp_max = models.IntegerField(blank=True, null=True) # F
     humidity_min = models.IntegerField(blank=True, null=True) # %
     humidity_max = models.IntegerField(blank=True, null=True) # %
-    ph_min = models.FloatField(blank=False, null=False) # pH
-    ph_max = models.FloatField(blank=False, null=False) # pH
+    ph_min = models.FloatField(blank=False, null=False, default=4.0) # pH
+    ph_max = models.FloatField(blank=False, null=False, default=6.0) # pH
 
     def __str__(self):
         return f'Plant(name={self.name}, scientific_name={self.scientific_name})'
