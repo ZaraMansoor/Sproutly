@@ -219,11 +219,17 @@ def get_plant_info(request):
         return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
     try:
         data = json.loads(request.body)
+        print("retrieving plant info")
         plant = WebscrapedPlant.objects.get(name=data["species"])
+        print("retrieved plant info")
 
         plant.ph_min = 6.0 # DELETE!
         plant.ph_max = 8.0 # DELETE!
         plant.save()
+
+        print("saved plant info")
+        print("plant.ph_min: ", plant.ph_min)
+        
 
         plant_info = {
             "scientific_name": plant.scientific_name,
@@ -238,6 +244,7 @@ def get_plant_info(request):
             "ph_min": plant.ph_min,
             "ph_max": plant.ph_max,
         }
+        print("plant_info: ", plant_info)
         return JsonResponse(plant_info, safe=False)
     except Exception as e:
         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
