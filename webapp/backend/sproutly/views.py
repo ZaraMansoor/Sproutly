@@ -219,6 +219,8 @@ def get_plant_info(request):
         return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
     try:
         data = json.loads(request.body)
+        print("data: ", data)
+        print("data[species]: ", data["species"])
         print("retrieving plant info")
         plant = WebscrapedPlant.objects.get(name=data["species"])
         print("retrieved plant info")
