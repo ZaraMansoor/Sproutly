@@ -315,7 +315,7 @@ def change_automatic_or_manual(request):
 
 @csrf_exempt
 def get_automatic_or_manual(request):
-    if request.method == "POST":
+    if request.method == "GET":
         try:
             data = json.loads(request.body)
 
