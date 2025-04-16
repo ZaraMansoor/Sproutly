@@ -60,13 +60,14 @@ class WebscrapedPlant(models.Model):
     light_description = models.CharField(max_length=100, blank=True, null=True)
     light_t0 = models.IntegerField(blank=True, null=True)
     light_duration = models.IntegerField(blank=True, null=True)
+    light_intensity = models.IntegerField(blank=True, null=True)
     water_description = models.CharField(max_length=100, blank=True, null=True) 
     temp_min = models.IntegerField(blank=True, null=True) # F
     temp_max = models.IntegerField(blank=True, null=True) # F
     humidity_min = models.IntegerField(blank=True, null=True) # %
     humidity_max = models.IntegerField(blank=True, null=True) # %
-    ph_min = models.FloatField(blank=False, null=False, default=4.0) # pH
-    ph_max = models.FloatField(blank=False, null=False, default=6.0) # pH
+    ph_min = models.FloatField(blank=True, null=True) # pH
+    ph_max = models.FloatField(blank=True, null=True) # pH
 
     def __str__(self):
         return f'Plant(name={self.name}, scientific_name={self.scientific_name})'

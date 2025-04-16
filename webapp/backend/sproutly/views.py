@@ -134,10 +134,12 @@ def add_user_plant(request):
                 min_humidity = webscraped_plant.humidity_min,
                 max_humidity = webscraped_plant.humidity_max,
                 # light_frequency = 0,
+                light_intensity = webscraped_plant.light_intensity,
                 light_hours = webscraped_plant.light_duration,
                 # water_frequency = 0,
                 # water_amount = 0,
             )
+            new_autoschedule.save()
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
@@ -219,24 +221,12 @@ def get_plant_info(request):
         return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
     try:
         data = json.loads(request.body)
-        print("retrieving plant info")
-        plant = WebscrapedPlant.objects.get(index=0)
-        # plant = WebscrapedPlant.objects.get(name=data["species"])
-        print("retrieved plant info")
-
-        plant.ph_min = 6.0 # DELETE!
-        plant.ph_max = 8.0 # DELETE!
-        plant.save()
-
-        print("saved plant info")
-        print("plant.ph_min: ", plant.ph_min)
-        
+        plant = WebscrapedPlant.objects.get(name=data["species"])
 
         plant_info = {
             "scientific_name": plant.scientific_name,
             "light_description": plant.light_description,
-            "light_t0": plant.light_t0,
-            "light_duration": plant.light_duration,
+            "light_intensity": plant.light_intensity,
             "water_description": plant.water_description,
             "temp_min": plant.temp_min,
             "temp_max": plant.temp_max,
@@ -245,7 +235,6 @@ def get_plant_info(request):
             "ph_min": plant.ph_min,
             "ph_max": plant.ph_max,
         }
-        print("plant_info: ", plant_info)
         return JsonResponse(plant_info, safe=False)
     except Exception as e:
         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
@@ -274,8 +263,7 @@ def get_webscraped_plant_data(request):
             
             plant.scientific_name = scraped_data["scientific_name"]
             plant.light_description = scraped_data["light_description"]
-            plant.light_t0 = scraped_data["light_t0"]
-            plant.light_duration = scraped_data["light_duration"]
+            plant.light_intensity = scraped_data["light_intensity"]
             plant.water_description = scraped_data["water"]
             plant.temp_min = scraped_data["temp_min_F"]
             plant.temp_max = scraped_data["temp_max_F"]

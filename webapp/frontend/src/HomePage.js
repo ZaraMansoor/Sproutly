@@ -273,8 +273,7 @@ const HomePage = () => {
                 <h2>Ideal Plant Care Conditions for {selectedPlant.name}</h2>
                 <p>Scientific Name: {plantInfo.scientific_name}</p>
                 <p>Light: {plantInfo.light_description}</p>
-                <p>Light Start Time: {plantInfo.light_t0}</p>
-                <p>Light Duration: {plantInfo.light_duration} hours</p>
+                <p>Light Intensity: {plantInfo.light_intensity}</p>
                 <p>Water: {plantInfo.water_description}</p>
                 <p>Minimum Temperature: {plantInfo.temp_min} °F</p>
                 <p>Maximum Temperature: {plantInfo.temp_max} °F</p>
