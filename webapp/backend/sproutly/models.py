@@ -61,7 +61,7 @@ class WebscrapedPlant(models.Model):
     light_t0 = models.IntegerField(blank=True, null=True)
     light_duration = models.IntegerField(blank=True, null=True)
     light_intensity = models.IntegerField(blank=True, null=True)
-    water_description = models.CharField(max_length=100, blank=True, null=True) 
+    water_description = models.CharField(max_length=3000, blank=True, null=True) 
     temp_min = models.IntegerField(blank=True, null=True) # F
     temp_max = models.IntegerField(blank=True, null=True) # F
     humidity_min = models.IntegerField(blank=True, null=True) # %

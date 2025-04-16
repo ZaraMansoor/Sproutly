@@ -265,18 +265,14 @@ def get_webscraped_plant_data(request):
             print("scraped_data['light_intensity']", scraped_data["light_intensity"])
             plant.scientific_name = scraped_data["scientific_name"]
             plant.light_description = scraped_data["light_description"]
-            print("here!")
             plant.light_intensity = scraped_data["light_intensity"]
-            print("here2!")
             plant.water_description = scraped_data["water"]
             plant.temp_min = scraped_data["temp_min_F"]
             plant.temp_max = scraped_data["temp_max_F"]
             plant.humidity_min = scraped_data["humidity_min_%"]
             plant.humidity_max = scraped_data["humidity_max_%"]
-            print("here3!")
             plant.ph_min = scraped_data["ph_min"]
             plant.ph_max = scraped_data["ph_max"]
-            print("here4!")
             plant.save()
 
             return JsonResponse({"status": "Success"}, status=200)
