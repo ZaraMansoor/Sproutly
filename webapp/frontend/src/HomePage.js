@@ -217,7 +217,23 @@ const HomePage = () => {
         }
     }
 
+    const automaticOrManual = async (choice) => {
+        try {
+            const response = await fetch("https://172.26.192.48:8443/automatic-or-manual/",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(choice),
+                });
+            console.log("automatic or manual sent", await response.json());
+        } catch (error) {
+            console.error("Error sending automatic or manual:", error);
+        }
+    }
+
     let navigate = useNavigate();
+
+    const [automaticMode, setAutomaticMode] = React.useState(true);
 
     const renderView = () => {
         if (!selectedPlant) {
@@ -246,6 +262,23 @@ const HomePage = () => {
                 <p>Species: {selectedPlant.species}</p>
 
                 {/* TODO: control buttons */}
+
+                <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+                    <Form>
+                        <Form.Check 
+                            type="switch"
+                            id="custom-switch"
+                            label="Auto Swtich"
+                            checked={automaticMode}
+                            onChange={(e) => {
+                                const automaticState = e.target.checked;
+                                setAutomaticMode(automaticState);
+                                sendCommand({command: automaticState ? "automatic" : "manual"});
+                                automaticOrManual({command: automaticState, plantId: selectedPlant.id});
+                            }}
+                        />
+                    </Form>
+                </div>
 
                 <button onClick={() => {
                     sendCommand({command: "get_plant_health_check"});

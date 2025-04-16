@@ -293,3 +293,19 @@ def get_sensor_data_history(request):
         d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
 
     return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def change_automatic_or_manual(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            curr_schedule.automatic_mode = data["automatic_or_manual"]
+            curr_schedule.save()
+
+            return JsonResponse({"status": "Success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
