@@ -302,14 +302,9 @@ def change_automatic_or_manual(request):
             print("entered")
             data = json.loads(request.body)
 
-            print("data: ", data)
             curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
-            print("curr_schedule!!: ", curr_schedule)
-            print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
-            curr_schedule.automatic_mode = data["automatic_or_manual"]
-            print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
+            curr_schedule.automatic_mode = data["command"]
             curr_schedule.save()
-            print("saved!!")
 
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
