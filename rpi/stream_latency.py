@@ -251,8 +251,9 @@ def capture_frames():
         timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]
 
         # Get the width and height of the text to draw the rectangle
-        text_width, text_height = draw.textsize(timestamp)
-        padding = 5  # Padding around the text
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 40)
+        text_width, text_height = draw.textsize(timestamp, font=font)
+        padding = 10
 
         # Draw the black rectangle behind the timestamp
         draw.rectangle([10, 10, 10 + text_width + 2 * padding, 10 + text_height + 2 * padding], fill="black")
