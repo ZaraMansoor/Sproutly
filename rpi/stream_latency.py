@@ -250,19 +250,21 @@ def capture_frames():
         draw = ImageDraw.Draw(img)
         timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]
 
-        # Get the width and height of the text to draw the rectangle
+        # Load a larger font
         try:
-            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 30)
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 50)  # Increase font size
         except IOError:
             font = ImageFont.load_default()
+
+        # Get the width and height of the text to draw the rectangle
         text_width, text_height = draw.textsize(timestamp, font=font)
-        padding = 10
+        padding = 20  # Increase padding for better visibility
 
         # Draw the black rectangle behind the timestamp
         draw.rectangle([10, 10, 10 + text_width + 2 * padding, 10 + text_height + 2 * padding], fill="black")
 
         # Draw the text on top of the rectangle
-        draw.text((10 + padding, 10 + padding), timestamp, fill=(255, 255, 255))
+        draw.text((10 + padding, 10 + padding), timestamp, font=font, fill=(255, 255, 255))
 
         # Save the frame periodically for debugging (if needed)
         if frame_count % 30 == 0:  # Save every 30th frame (adjust as needed)
