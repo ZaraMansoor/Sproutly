@@ -117,16 +117,19 @@ def add_user_plant(request):
 
             img_url = WebscrapedPlant.objects.get(name=data["species"]).image_url
 
+            print("let's create a new plant")
             new_plant = Plant(
                 name = data["name"],
                 species = data["species"],
                 image_url = img_url,
             )
             new_plant.save()
+            print("new plant created!")
 
             # set up initial auto-schedule
             webscraped_plant = WebscrapedPlant.objects.get(name=data["species"])
 
+            print("got a webscraped plant")
             new_autoschedule = AutoSchedule(
                 plant = new_plant,
                 min_temp = webscraped_plant.temp_min,
@@ -142,7 +145,9 @@ def add_user_plant(request):
                 # nutrients_start_time: default (9am)
                 # nutrients_amount: default (2ml)
             )
+            print("new autoschedule created!")
             new_autoschedule.save()
+            print("new autoschedule saved!")
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)

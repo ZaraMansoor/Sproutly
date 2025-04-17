@@ -11,7 +11,7 @@ const ManualAutoschedulePage = () => {
     const [minHumidity, setMinHumidity] = React.useState('');
     const [maxHumidity, setMaxHumidity] = React.useState('');
     const [lightStartTime, setLightStartTime] = React.useState('');
-    const [lightIntensity, setLightIntensity] = React.useState(''); // 1~3
+    const [lightIntensity, setLightIntensity] = React.useState(''); // 1~4
     const [lightHours, setLightHours] = React.useState(''); // how long the light is on
     const [waterFrequency, setWaterFrequency] = React.useState(''); // every xx hours
     const [waterStartTime, setWaterStartTime] = React.useState('');
@@ -79,7 +79,7 @@ const ManualAutoschedulePage = () => {
                     <Form.Control type="time" onChange={(e) => setLightStartTime(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Light Intensity (1~3)</Form.Label>
+                    <Form.Label>Light Intensity (Choose between 1~4)</Form.Label>
                     <Form.Control type="number" onChange={(e) => setLightIntensity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
