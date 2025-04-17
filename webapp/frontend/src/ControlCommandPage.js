@@ -175,10 +175,6 @@ const ControlCommandPage = () => {
         )
     }
 
-    React.useEffect(() => {
-        console.log("automaticState changed to:", automaticState);
-    }, [automaticState]);
-
     console.log("automaticState???????:", automaticState, typeof automaticState);
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
