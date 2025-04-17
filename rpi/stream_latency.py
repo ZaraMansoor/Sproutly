@@ -251,7 +251,10 @@ def capture_frames():
         timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]
 
         # Get the width and height of the text to draw the rectangle
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 40)
+        try:
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 30)
+        except IOError:
+            font = ImageFont.load_default()
         text_width, text_height = draw.textsize(timestamp, font=font)
         padding = 10
 
