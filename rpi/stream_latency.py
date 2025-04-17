@@ -113,7 +113,7 @@ function extractAndMeasureLatency() {
             .catch(error => {
                 console.error('Error:', error);
             });
-            
+
         } else {
             latencyDisplay.textContent = 'Timestamp not found';
         }
@@ -124,16 +124,23 @@ function extractAndMeasureLatency() {
 }
 
 function compareTimestamps(now, frameTimeStr) {
+    // Parse frame timestamp (HH:MM:SS.mmm)
     const [h, m, sMs] = frameTimeStr.split(':');
     const [s, ms] = sMs.split('.');
+
+    // Create a Date object for frameTime using the same date as the `now` (received_timestamp)
     const frameTime = new Date(now);
     frameTime.setUTCHours(parseInt(h));
     frameTime.setUTCMinutes(parseInt(m));
     frameTime.setUTCSeconds(parseInt(s));
     frameTime.setUTCMilliseconds(parseInt(ms));
 
+    // Now calculate the latency in milliseconds
     let latency = now - frameTime;
-    if (latency < 0) latency += 86400000; // handle wrap around midnight
+
+    // If latency is negative, it means we crossed midnight, so add 24 hours to handle the wraparound
+    if (latency < 0) latency += 86400000; // 24 hours in milliseconds
+
     return latency;
 }
 </script>
