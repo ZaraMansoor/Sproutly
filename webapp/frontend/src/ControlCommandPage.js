@@ -194,7 +194,7 @@ const ControlCommandPage = () => {
           </div>
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
             <Form>
-                <Form.Control 
+                <Form.Check
                     type="switch"
                     id="water-switch"
                     label="Water Pump"
@@ -206,7 +206,7 @@ const ControlCommandPage = () => {
                     }}
                     disabled = {automaticState === true}
                 />
-                <Form.Control
+                <Form.Check
                     type="switch"
                     id="mister-switch"
                     label="Mister"
@@ -218,7 +218,7 @@ const ControlCommandPage = () => {
                     }}
                     disabled = {automaticState === true}
                 />
-                <Form.Control
+                <Form.Check
                     type="switch"
                     id="lights-switch"
                     label="Lights"
@@ -245,7 +245,7 @@ const ControlCommandPage = () => {
                         disabled = {automaticState === true}
                     />
                 </div>
-                <Form.Control 
+                <Form.Check
                     type="switch"
                     id="heater-switch"
                     label="Heater"
@@ -257,7 +257,7 @@ const ControlCommandPage = () => {
                     }}
                     disabled = {automaticState === true}
                 />
-                <Form.Control
+                <Form.Check
                     type="switch"
                     id="nutrients-switch"
                     label="Nutrients Pump"
