@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import datetime
 
 class Plant(models.Model): # user's plant
     id = models.AutoField(primary_key=True)
@@ -21,12 +22,15 @@ class AutoSchedule(models.Model):
     max_temp = models.FloatField(blank=True, null=True) # degree fahrenheit
     min_humidity = models.FloatField(blank=True, null=True) # %
     max_humidity = models.FloatField(blank=True, null=True) # %
+    light_start_time = models.TimeField(default=datetime.time(9, 0), null=False, blank=False) # default: 9am
     light_intensity = models.IntegerField(blank=True, null=True) # 1, 2, 3, or 4
-    light_hours = models.FloatField(blank=True, null=True) # hours
-    water_frequency = models.FloatField(blank=True, null=True) # hours
-    water_amount = models.IntegerField(blank=True, null=True) # mL
+    light_hours = models.FloatField(default=9, blank=False, null=False) # hours (duration), default: 9 hours
+    water_frequency = models.FloatField(default=7, blank=False, null=False) # days
+    water_start_time = models.TimeField(default=datetime.time(9, 0), null=False, blank=False) # default: 9am
+    water_amount = models.IntegerField(default=100,blank=False, null=False) # mL, default: 100mL
+    nutrients_start_time = models.TimeField(default=datetime.time(9, 0), null=False, blank=False) # default: 9am
+    nutrients_amount = models.IntegerField(default=2, blank=False, null=False) # mL, default: 2mL per 100mL water
 
-    # nutrients_target = models.FloatField(blank=True, null=True) # mL
     
     def __str__(self):
         return f"Auto schedule for {self.plant.name}"

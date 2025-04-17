@@ -133,11 +133,14 @@ def add_user_plant(request):
                 max_temp = webscraped_plant.temp_max,
                 min_humidity = webscraped_plant.humidity_min,
                 max_humidity = webscraped_plant.humidity_max,
-                # light_frequency = 0,
+                # light_start_time: default (9am)
                 light_intensity = webscraped_plant.light_intensity,
                 light_hours = webscraped_plant.light_duration,
-                # water_frequency = 0,
-                # water_amount = 0,
+                # water_frequency: default (once a week) -> has to be changed by a user
+                # water_start_time: default (9am)
+                # water_amount: default (100ml)
+                # nutrients_start_time: default (9am)
+                # nutrients_amount: default (2ml)
             )
             new_autoschedule.save()
             return JsonResponse({"status": "Success"}, status=200)
@@ -163,10 +166,14 @@ def update_manual_autoschedule(request):
                     max_temp = data["schedule"]["maxTemp"],
                     min_humidity = data["schedule"]["minHumidity"],
                     max_humidity = data["schedule"]["maxHumidity"],
-                    light_hours = data["schedule"]["lightHours"],
+                    light_start_time = data["schedule"]["lightStartTime"],
                     light_intensity = data["schedule"]["lightIntensity"],
+                    light_hours = data["schedule"]["lightHours"],
                     water_frequency = data["schedule"]["waterFrequency"],
+                    water_start_time = data["schedule"]["waterStartTime"],
                     water_amount = data["schedule"]["waterAmount"],
+                    nutrients_start_time = data["schedule"]["nutrientsStartTime"],
+                    nutrients_amount = data["schedule"]["nutrientsAmount"],
                 )
                 new_autoschedule.save()
                 return JsonResponse({"status": "Success"}, status=200)
@@ -177,11 +184,14 @@ def update_manual_autoschedule(request):
                 max_temp = data["schedule"]["maxTemp"],
                 min_humidity = data["schedule"]["minHumidity"],
                 max_humidity = data["schedule"]["maxHumidity"],
-                light_hours = data["schedule"]["lightHours"],
+                light_start_time = data["schedule"]["lightStartTime"],
                 light_intensity = data["schedule"]["lightIntensity"],
+                light_hours = data["schedule"]["lightHours"],
                 water_frequency = data["schedule"]["waterFrequency"],
+                water_start_time = data["schedule"]["waterStartTime"],
                 water_amount = data["schedule"]["waterAmount"],
-                # TODO: add other fields later
+                nutrients_start_time = data["schedule"]["nutrientsStartTime"],
+                nutrients_amount = data["schedule"]["nutrientsAmount"],
             )
 
             return JsonResponse({"status": "Success"}, status=200)
@@ -199,10 +209,14 @@ def get_autoschedule(request, plant_id):
             "max_temp": autoschedule.max_temp,
             "min_humidity": autoschedule.min_humidity,
             "max_humidity": autoschedule.max_humidity,
+            "light_start_time": autoschedule.light_start_time,
             "light_intensity": autoschedule.light_intensity,
             "light_hours": autoschedule.light_hours,
             "water_frequency": autoschedule.water_frequency,
-            "water_amount": autoschedule.water_amount
+            "water_start_time": autoschedule.water_start_time,
+            "water_amount": autoschedule.water_amount,
+            "nutrients_start_time": autoschedule.nutrients_start_time,
+            "nutrients_amount": autoschedule.nutrients_amount
         }
         return JsonResponse(autoschedule_json, safe=False)
     except Exception as e:

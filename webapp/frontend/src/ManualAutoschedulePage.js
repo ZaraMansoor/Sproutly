@@ -10,11 +10,14 @@ const ManualAutoschedulePage = () => {
     const [maxTemp, setMaxTemp] = React.useState('');
     const [minHumidity, setMinHumidity] = React.useState('');
     const [maxHumidity, setMaxHumidity] = React.useState('');
+    const [lightStartTime, setLightStartTime] = React.useState('');
     const [lightIntensity, setLightIntensity] = React.useState(''); // 1~3
     const [lightHours, setLightHours] = React.useState(''); // how long the light is on
     const [waterFrequency, setWaterFrequency] = React.useState(''); // every xx hours
+    const [waterStartTime, setWaterStartTime] = React.useState('');
     const [waterAmount, setWaterAmount] = React.useState(''); // how much water to give
-    // add other sensors later (nutrients, etc.)
+    const [nutrientsStartTime, setNutrientsStartTime] = React.useState('');
+    const [nutrientsAmount, setNutrientsAmount] = React.useState('');
 
     let navigate = useNavigate();
     let location = useLocation();
@@ -29,7 +32,7 @@ const ManualAutoschedulePage = () => {
     const submitManualAutoschedule = async (e) => {
         e.preventDefault();
 
-        const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightIntensity, lightHours, waterFrequency, waterAmount };
+        const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightStartTime, lightIntensity, lightHours, waterFrequency, waterStartTime, waterAmount, nutrientsStartTime, nutrientsAmount };
         
         
         const response = await fetch("https://172.26.192.48:8443/manual-autoschedule/",
@@ -72,20 +75,36 @@ const ManualAutoschedulePage = () => {
                     <Form.Control type="number" onChange={(e) => setMaxHumidity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Light Duration (Hours)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setLightHours(e.target.value)} required />
+                    <Form.Label>Light Start Time</Form.Label>
+                    <Form.Control type="time" onChange={(e) => setLightStartTime(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Light Intensity (1~3)</Form.Label>
                     <Form.Control type="number" onChange={(e) => setLightIntensity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
+                    <Form.Label>Light Duration (Hours)</Form.Label>
+                    <Form.Control type="number" onChange={(e) => setLightHours(e.target.value)} required />
+                </Form.Group>
+                <Form.Group className="mb-3">
                     <Form.Label>Water Frequency (Hours)</Form.Label>
                     <Form.Control type="number" onChange={(e) => setWaterFrequency(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
+                    <Form.Label>Water Start Time</Form.Label>
+                    <Form.Control type="time" onChange={(e) => setWaterStartTime(e.target.value)} required />
+                </Form.Group>
+                <Form.Group className="mb-3">
                     <Form.Label>Water Amount (mL)</Form.Label>
                     <Form.Control type="number" onChange={(e) => setWaterAmount(e.target.value)} required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Nutrients Start Time</Form.Label>
+                    <Form.Control type="time" onChange={(e) => setNutrientsStartTime(e.target.value)} required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Nutrients Amount (mL per 100mL of water)</Form.Label>
+                    <Form.Control type="number" onChange={(e) => setNutrientsAmount(e.target.value)} required />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Set up Auto-Schedule
