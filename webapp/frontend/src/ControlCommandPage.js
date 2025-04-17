@@ -169,6 +169,8 @@ const ControlCommandPage = () => {
         getInitialActuatorStatus();
     }, []);
 
+
+    console.log("automaticState???????:", automaticState, typeof automaticState);
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
           <div className="d-flex justify-content-between align-items-center mb-4">
