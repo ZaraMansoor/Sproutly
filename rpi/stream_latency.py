@@ -62,6 +62,7 @@ PAGE = '''\
 <body>
 <h1>Sproutly Streaming</h1>
 <canvas id="videoCanvas" width="640" height="480"></canvas>
+<p><strong>Latency:</strong> <span id="latencyDisplay">Calculating...</span> ms</p>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5"></script>
 <script>
