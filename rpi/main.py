@@ -15,8 +15,10 @@ from plant_health.main import health_check
 from plant_id_api import identify_plant
 from gpiozero import OutputDevice
 import serial
-import stream
-from stream import picam2
+import stream_latency as stream
+from stream_latency import picam2
+# import stream
+# from stream import picam2
 from PIL import Image
 import io
 import RPi.GPIO as GPIO

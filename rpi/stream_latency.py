@@ -293,5 +293,3 @@ def get_latest_frame():
     with output.condition:
         output.condition.wait()
         return output.frame
-
-start_stream()
