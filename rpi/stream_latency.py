@@ -30,8 +30,8 @@ if not os.path.exists(FRAME_DIR):
 
 # adjustable settings
 RESOLUTION = (3280, 2464)
-FRAME_RATE = 30
-JPEG_QUALITY = 100 # (1 - 100)
+FRAME_RATE = 15
+JPEG_QUALITY = 75 # (1 - 100)
 
 # define daytime (bright light) settings
 DAY_SETTINGS = {
@@ -75,10 +75,9 @@ img.src = '/stream.mjpg';
 img.crossOrigin = 'Anonymous';
 
 img.onload = () => {
-    setInterval(() => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        extractAndMeasureLatency();
-    }, 1000);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    extractAndMeasureLatency();
+    img.src = '/stream.mjpg?' + new Date().getTime();
 };
 
 function extractAndMeasureLatency() {
@@ -250,6 +249,7 @@ def adjust_camera_settings():
         picam2.set_controls(DAY_SETTINGS)
         print(f"Switched to DAY mode | Avg Brightness: {avg_brightness:.2f}")
 
+FONT = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 100)
 # continuously capture JPEG frames and update the streaming output
 def capture_frames():
     frame_count = 0
@@ -262,11 +262,7 @@ def capture_frames():
 
         draw = ImageDraw.Draw(img)
         timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]
-        try:
-            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 100)  # Increase font size
-        except IOError:
-            font = ImageFont.load_default()
-        text_width, text_height = draw.textsize(timestamp, font=font)
+        text_width, text_height = draw.textsize(timestamp, font=FONT)
         padding = 30
         x = (img.width - text_width) // 2
         y = img.height - text_height - padding
@@ -274,7 +270,7 @@ def capture_frames():
             [x - padding, y - padding, x + text_width + padding, y + text_height + padding],
             fill="black"
         )
-        draw.text((x, y), timestamp, font=font, fill="white")
+        draw.text((x, y), timestamp, font=FONT, fill="white")
 
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
