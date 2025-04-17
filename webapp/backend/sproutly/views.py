@@ -297,6 +297,17 @@ def get_webscraped_plant_data(request):
             plant.ph_max = scraped_data["ph_max"]
             plant.save()
 
+            # update the autoschedule to reflect the webscraped data
+            user_plant = Plant.objects.get(species=plant.name)
+            plant_updated = AutoSchedule.objects.get(plant=user_plant)
+
+            plant_updated.min_temp = plant.temp_min
+            plant_updated.max_temp = plant.temp_max
+            plant_updated.min_humidity = plant.humidity_min
+            plant_updated.max_humidity = plant.humidity_max
+            plant_updated.light_intensity = plant.light_intensity
+            plant_updated.save()
+
             return JsonResponse({"status": "Success"}, status=200)
 
         except Exception as e:
