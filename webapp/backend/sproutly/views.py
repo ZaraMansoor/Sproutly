@@ -275,8 +275,9 @@ def get_webscraped_plant_data(request):
             plant_data.append(plant.image_url)
             plant_data.append(plant.info_url)
 
-            if plant.temp_max: # meaning there's already webscraped data stored in db
-                return JsonResponse({"status": "Success"}, status=200)
+            # TODO: Comment out for DEMOing purposes!!!
+            # if plant.temp_max: # meaning there's already webscraped data stored in db
+            #     return JsonResponse({"status": "Success"}, status=200)
 
             scraped_data = webscrape_plant(plant_data, selected_plant_index)
             if not scraped_data:
