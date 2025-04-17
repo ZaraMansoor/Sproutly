@@ -197,7 +197,7 @@ const ControlCommandPage = () => {
                         setWaterPump(waterPumpState);
                         sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                     }}
-                    disabled = {automaticState}
+                    disabled = {automaticState === true}
                 />
                 <Form.Check 
                     type="switch"
@@ -209,7 +209,7 @@ const ControlCommandPage = () => {
                         setMister(misterState);
                         sendCommand({command: misterState ? "on" : "off", actuator: "mister"});
                     }}
-                    disabled = {automaticState}
+                    disabled = {automaticState === true}
                 />
                 <Form.Check 
                     type="switch"
@@ -221,7 +221,7 @@ const ControlCommandPage = () => {
                         setLights(lightsState);
                         sendCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
                     }}
-                    disabled = {automaticState}
+                    disabled = {automaticState === true}
                 />
                 <div className="my-4">
                     <p>LED Brightness: {lightValue}</p>
@@ -235,7 +235,7 @@ const ControlCommandPage = () => {
                             setLightValue(newLightValue);
                             sendCommand({ command: newLightValue, actuator: "LED_light" }); 
                         }}
-                        disabled = {automaticState}
+                        disabled = {automaticState === true}
                     />
                 </div>
                 <Form.Check 
@@ -248,7 +248,7 @@ const ControlCommandPage = () => {
                         setHeater(heaterState);
                         sendCommand({command: heaterState ? "on" : "off", actuator: "heater"});
                     }}
-                    disabled = {automaticState}
+                    disabled = {automaticState === true}
                 />
                 <Form.Check 
                     type="switch"
@@ -260,7 +260,7 @@ const ControlCommandPage = () => {
                         setNutrientsPump(nutrientsPumpState);
                         sendCommand({command: nutrientsPumpState ? "on" : "off", actuator: "nutrients_pump"});
                     }}
-                    disabled = {automaticState}
+                    disabled = {automaticState === true}
                 />
             </Form>
 
