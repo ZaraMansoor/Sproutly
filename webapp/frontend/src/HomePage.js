@@ -269,7 +269,7 @@ const HomePage = () => {
                         <Form.Check 
                             type="switch"
                             id="custom-switch"
-                            label="Auto Swtich"
+                            label="Automatic Control Mode"
                             checked={automaticMode}
                             onChange={(e) => {
                                 const automaticState = e.target.checked;

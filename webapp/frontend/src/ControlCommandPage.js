@@ -194,9 +194,9 @@ const ControlCommandPage = () => {
           </div>
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
             <Form>
-                <Form.Check 
+                <Form.Control 
                     type="switch"
-                    id="custom-switch"
+                    id="water-switch"
                     label="Water Pump"
                     checked={waterPump}
                     onChange={(e) => {
@@ -206,9 +206,9 @@ const ControlCommandPage = () => {
                     }}
                     disabled = {automaticState === true}
                 />
-                <Form.Check 
+                <Form.Control
                     type="switch"
-                    id="custom-switch"
+                    id="mister-switch"
                     label="Mister"
                     checked={mister}
                     onChange={(e) => {
@@ -218,9 +218,9 @@ const ControlCommandPage = () => {
                     }}
                     disabled = {automaticState === true}
                 />
-                <Form.Check 
+                <Form.Control
                     type="switch"
-                    id="custom-switch"
+                    id="lights-switch"
                     label="Lights"
                     checked={lights}
                     onChange={(e) => {
@@ -245,9 +245,9 @@ const ControlCommandPage = () => {
                         disabled = {automaticState === true}
                     />
                 </div>
-                <Form.Check 
+                <Form.Control 
                     type="switch"
-                    id="custom-switch"
+                    id="heater-switch"
                     label="Heater"
                     checked={heater}
                     onChange={(e) => {
@@ -257,9 +257,9 @@ const ControlCommandPage = () => {
                     }}
                     disabled = {automaticState === true}
                 />
-                <Form.Check 
+                <Form.Control
                     type="switch"
-                    id="custom-switch"
+                    id="nutrients-switch"
                     label="Nutrients Pump"
                     checked={nutrientsPump}
                     onChange={(e) => {
