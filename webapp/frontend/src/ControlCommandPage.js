@@ -175,6 +175,10 @@ const ControlCommandPage = () => {
         )
     }
 
+    React.useEffect(() => {
+        console.log("automaticState changed to:", automaticState);
+    }, [automaticState]);
+
     console.log("automaticState???????:", automaticState, typeof automaticState);
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
@@ -193,7 +197,7 @@ const ControlCommandPage = () => {
             </Tabs>
           </div>
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-            <Form>
+            <Form disabled = {automaticState === true}>
                 <Form.Check
                     type="switch"
                     id="water-switch"
@@ -204,7 +208,6 @@ const ControlCommandPage = () => {
                         setWaterPump(waterPumpState);
                         sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                     }}
-                    disabled = {automaticState === true}
                 />
                 <Form.Check
                     type="switch"
