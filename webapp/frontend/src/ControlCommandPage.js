@@ -48,7 +48,7 @@ const ControlCommandPage = () => {
             .then(result => result.json())
             .then(data => {
                 console.log("Automatic or Manual fetched!!:", data);
-                setAutomaticState(data);
+                setAutomaticState(data["automatic_or_manual"]);
             })
             .catch(e => console.error("Failed to fetch automatic or manual", e));
     }, [])
