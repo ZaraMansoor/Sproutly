@@ -92,7 +92,7 @@ function extractAndMeasureLatency() {
             const nowUTC = new Date(now.toISOString().slice(0, -1)); // get UTC
             const latency = compareTimestamps(nowUTC, frameTimestamp);
             latencyDisplay.textContent = latency;
-            console.log(`⏱️ Latency: ${latency} ms`);
+            console.log(`Latency: ${latency} ms`);
 
             // Log latency to the backend
             fetch('https://172.26.192.48:5001/log-latency', {
@@ -105,15 +105,15 @@ function extractAndMeasureLatency() {
                     frameTimestamp: frameTimestamp,
                     latency: latency
                 })
-            }).then(response => response.json())
-              .then(data => {
-                  console.log('Response:', data);
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-              });
-
-
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            
         } else {
             latencyDisplay.textContent = 'Timestamp not found';
         }
