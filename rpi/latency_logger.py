@@ -44,6 +44,7 @@ context = ('./cert.pem', './key.pem')  # or 'adhoc' for self-signed cert
 
 @app.route('/log-latency', methods=['POST'])
 def log_latency():
+    app.logger.info("POST request received at /log-latency")
     data = request.get_json()
     print(data)
     return {"status": "ok"}
