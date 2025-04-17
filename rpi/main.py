@@ -47,7 +47,8 @@ LED_2_RELAY_PIN = 6
 LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
-HUMIDIFIER_PIN = 14
+HUMIDIFIER_PIN_1 = 14
+HUMIDIFIER_PIN_2 = 21
 
 # start the stream, keep track of if live streaming or not
 stream.start_stream()
@@ -99,11 +100,14 @@ actuators_status = {
 
 # mister
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(HUMIDIFIER_PIN, GPIO.OUT)
+GPIO.setup(HUMIDIFIER_PIN_1, GPIO.OUT)
+GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
 def mister_pulse():
-  GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)
+  GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
+  GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
   time.sleep(0.1)
-  GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)
+  GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
+  GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
 # JANA TODO: make sure mister starts as "off"
 
 # heater 
