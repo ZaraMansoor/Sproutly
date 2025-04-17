@@ -74,5 +74,5 @@ def log_latency():
 
 if __name__ == '__main__':
     # SSL context (ensure paths are correct or use 'adhoc' for self-signed cert)
-    context = 'adhoc'
+    context = ('./cert.pem', './key.pem')
     app.run(host='0.0.0.0', port=5001, ssl_context=context)
