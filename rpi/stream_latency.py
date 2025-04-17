@@ -75,9 +75,10 @@ img.src = '/stream.mjpg';
 img.crossOrigin = 'Anonymous';
 
 img.onload = () => {
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    extractAndMeasureLatency();
-    img.src = '/stream.mjpg?' + new Date().getTime();
+    setInterval(() => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        extractAndMeasureLatency();
+    }, 2000);
 };
 
 function extractAndMeasureLatency() {
