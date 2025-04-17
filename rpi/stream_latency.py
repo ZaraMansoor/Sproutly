@@ -95,7 +95,7 @@ function extractAndMeasureLatency() {
             console.log(`⏱️ Latency: ${latency} ms`);
 
             // Log latency to the backend
-            fetch('/log-latency', {
+            fetch('https://172.26.192.48:5001/log-latency', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
