@@ -42,7 +42,6 @@ const ControlCommandPage = () => {
     const [automaticState, setAutomaticState] = React.useState(null);
 
 
-    // fuck this is not right. getting this forever. also switches are not disabled correctly.
     React.useEffect(() => {
         fetch("https://172.26.192.48:8443/get-automatic-or-manual/")
             .then(result => result.json())

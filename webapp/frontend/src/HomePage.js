@@ -234,7 +234,17 @@ const HomePage = () => {
 
     let navigate = useNavigate();
 
-    const [automaticMode, setAutomaticMode] = React.useState(true);
+    const [automaticMode, setAutomaticMode] = React.useState(null);
+
+    React.useEffect(() => {
+        fetch("https://172.26.192.48:8443/get-automatic-or-manual/")
+            .then(result => result.json())
+            .then(data => {
+                console.log("Automatic or Manual fetched!!:", data);
+                setAutomaticMode(data["automatic_or_manual"]);
+            })
+            .catch(e => console.error("Failed to fetch automatic or manual", e));
+    }, [])
 
     const renderView = () => {
         if (!selectedPlant) {
@@ -318,7 +328,6 @@ const HomePage = () => {
             </div>
         );
     }
-
 
 
     return (
