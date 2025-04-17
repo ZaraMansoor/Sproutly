@@ -124,25 +124,33 @@ function extractAndMeasureLatency() {
 }
 
 function compareTimestamps(now, frameTimeStr) {
-    console.log("Received Timestamp:", now);  // Log the received timestamp
-    console.log("Frame Timestamp:", frameTimeStr);  // Log the frame timestamp
-    
+    // Convert received timestamp to UTC
+    const nowUTC = new Date(now.toISOString());  // `now` is the `received_timestamp`
+
+    console.log("Received Timestamp (UTC):", nowUTC);  // Log UTC received timestamp
+    console.log("Frame Timestamp:", frameTimeStr);  // Log frame timestamp
+
+    // Parse frame timestamp (HH:MM:SS.mmm)
     const [h, m, sMs] = frameTimeStr.split(':');
     const [s, ms] = sMs.split('.');
 
-    const frameTime = new Date(now);
+    // Create a Date object for frameTime using the same date as the `now` (received_timestamp)
+    const frameTime = new Date(nowUTC);
     frameTime.setUTCHours(parseInt(h));
     frameTime.setUTCMinutes(parseInt(m));
     frameTime.setUTCSeconds(parseInt(s));
     frameTime.setUTCMilliseconds(parseInt(ms));
 
-    let latency = now - frameTime;
+    // Now calculate the latency in milliseconds
+    let latency = nowUTC - frameTime;
 
-    if (latency < 0) latency += 86400000;
+    // If latency is negative, it means we crossed midnight, so add 24 hours to handle the wraparound
+    if (latency < 0) latency += 86400000; // 24 hours in milliseconds
 
     console.log(`Latency: ${latency} ms`);
     return latency;
 }
+
 </script>
 </body>
 </html>
