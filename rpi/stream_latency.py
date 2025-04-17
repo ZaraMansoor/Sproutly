@@ -97,13 +97,22 @@ function extractAndMeasureLatency() {
             // Log latency to the backend
             fetch('https://172.26.192.48:5001/log-latency', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
                     timestamp: new Date().toISOString(),
                     frameTimestamp: frameTimestamp,
                     latency: latency
                 })
-            });
+            }).then(response => response.json())
+              .then(data => {
+                  console.log('Response:', data);
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+
 
         } else {
             latencyDisplay.textContent = 'Timestamp not found';
