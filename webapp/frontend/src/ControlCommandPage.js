@@ -169,6 +169,11 @@ const ControlCommandPage = () => {
         getInitialActuatorStatus();
     }, []);
 
+    if (automaticState === null) {
+        return (
+            <p>Loading...</p>
+        )
+    }
 
     console.log("automaticState???????:", automaticState, typeof automaticState);
     return (
