@@ -138,7 +138,7 @@ def add_user_plant(request):
                 max_humidity = webscraped_plant.humidity_max,
                 # light_start_time: default (9am)
                 light_intensity = webscraped_plant.light_intensity,
-                light_hours = webscraped_plant.light_duration,
+                # light_hours: default (9 hours)
                 # water_frequency: default (once a week) -> has to be changed by a user
                 # water_start_time: default (9am)
                 # water_amount: default (100ml)
