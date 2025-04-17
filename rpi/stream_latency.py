@@ -24,7 +24,7 @@ from PIL import ImageDraw, ImageFont
 from datetime import datetime, timezone
 import os 
 
-FRAME_DIR = './'
+FRAME_DIR = './stream_latency'
 if not os.path.exists(FRAME_DIR):
     os.makedirs(FRAME_DIR)
 
