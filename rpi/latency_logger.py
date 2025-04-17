@@ -18,22 +18,18 @@ def log_latency():
         return jsonify({"status": "error", "reason": "no data"}), 400
 
     try:
-        received_iso = data['timestamp']          # "2025-04-17T21:21:08.536Z"
-        frame_ts_str = data['frameTimestamp']     # "21:21:02.949"
+        received_iso = data['timestamp']
+        frame_ts_str = data['frameTimestamp']
 
-        # Convert received ISO timestamp to datetime object
         received_dt = datetime.fromisoformat(received_iso.replace("Z", "+00:00"))
-        received_str = received_dt.strftime('%H:%M:%S.%f')[:-3]  # Format: HH:MM:SS.mmm
+        received_str = received_dt.strftime('%H:%M:%S.%f')[:-3]
 
-        # Convert frame timestamp to datetime object on same date as received_dt
         h, m, s_ms = frame_ts_str.split(':')
         s, ms = s_ms.split('.')
         frame_dt = received_dt.replace(hour=int(h), minute=int(m), second=int(s), microsecond=int(ms) * 1000)
 
-        # Calculate latency in milliseconds
         latency = int((received_dt - frame_dt).total_seconds() * 1000)
 
-        # Write to CSV
         with open('latency_log.csv', 'a') as f:
             f.write(f"{received_str},{frame_ts_str},{latency}\n")
 

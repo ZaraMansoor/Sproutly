@@ -94,7 +94,6 @@ function extractAndMeasureLatency() {
             latencyDisplay.textContent = latency;
             console.log(`Latency: ${latency} ms`);
 
-            // Log latency to the backend
             fetch('https://172.26.192.48:5001/log-latency', {
                 method: 'POST',
                 headers: {
@@ -126,9 +125,6 @@ function extractAndMeasureLatency() {
 function compareTimestamps(now, frameTimeStr) {
     const nowUTC = new Date(now);
 
-    console.log("Received Timestamp (UTC):", nowUTC.toISOString());
-    console.log("Frame Timestamp:", frameTimeStr);
-
     const [h, m, sMs] = frameTimeStr.split(':');
     const [s, ms] = sMs.split('.');
 
@@ -142,7 +138,6 @@ function compareTimestamps(now, frameTimeStr) {
 
     if (latency < 0) latency += 86400000;
 
-    console.log(`Latency: ${latency} ms`);
     return latency;
 }
 
@@ -284,12 +279,6 @@ def capture_frames():
 
         # Draw the text on top of the rectangle
         draw.text((10 + padding, 10 + padding), timestamp, font=font, fill=(255, 255, 255))
-
-        # Save the frame periodically for debugging (if needed)
-        if frame_count % 30 == 0:  # Save every 30th frame (adjust as needed)
-            frame_filename = os.path.join(FRAME_DIR, f"frame_{frame_count}.jpg")
-            img.save(frame_filename)
-            print(f"Saved frame {frame_count} to {frame_filename}")
 
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
