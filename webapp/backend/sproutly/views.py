@@ -150,6 +150,8 @@ def add_user_plant(request):
             print("new autoschedule saved!")
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
         
     return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
