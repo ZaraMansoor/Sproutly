@@ -246,15 +246,22 @@ def capture_frames():
         image_stream.seek(0)
         img = Image.open(image_stream)
 
+        # Draw timestamp with a black background
         draw = ImageDraw.Draw(img)
         timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]
-        try:
-            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 30)
-        except IOError:
-            font = ImageFont.load_default()
-        draw.text((10, 10), timestamp, font=font, fill=(255, 255, 255))
 
-        if frame_count % 30 == 0:
+        # Get the width and height of the text to draw the rectangle
+        text_width, text_height = draw.textsize(timestamp)
+        padding = 5  # Padding around the text
+
+        # Draw the black rectangle behind the timestamp
+        draw.rectangle([10, 10, 10 + text_width + 2 * padding, 10 + text_height + 2 * padding], fill="black")
+
+        # Draw the text on top of the rectangle
+        draw.text((10 + padding, 10 + padding), timestamp, fill=(255, 255, 255))
+
+        # Save the frame periodically for debugging (if needed)
+        if frame_count % 30 == 0:  # Save every 30th frame (adjust as needed)
             frame_filename = os.path.join(FRAME_DIR, f"frame_{frame_count}.jpg")
             img.save(frame_filename)
             print(f"Saved frame {frame_count} to {frame_filename}")
