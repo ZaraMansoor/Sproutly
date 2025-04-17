@@ -34,7 +34,7 @@ from flask import Flask, request
 import ssl
 
 app = Flask(__name__)
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     return "Welcome to the Latency Logger API!"
 
