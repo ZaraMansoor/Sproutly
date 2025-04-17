@@ -67,10 +67,20 @@ def home():
 # Route to log latency
 @app.route('/log-latency', methods=['POST'])
 def log_latency():
-    app.logger.info("POST request received at /log-latency")
-    data = request.get_json()  # Get the JSON data
-    print(data)  # Print it to the console for debugging
-    return {"status": "ok"}
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "reason": "no data"}), 400
+
+    try:
+        received = data['timestamp']
+        frame_ts = data['frameTimestamp']
+        latency = data['latency']
+        with open('latency_log.csv', 'a') as f:
+            f.write(f"{received},{frame_ts},{latency}\n")
+        return jsonify({"status": "ok"}), 200
+    except KeyError:
+#         return jsonify({"status": "error", "reason": "missing fields"}), 400
+
 
 if __name__ == '__main__':
     # SSL context (ensure paths are correct or use 'adhoc' for self-signed cert)
