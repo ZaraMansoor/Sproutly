@@ -20,8 +20,13 @@ import numpy as np
 from libcamera import Transform
 import threading
 import ssl
-from PIL import ImageDraw
+from PIL import ImageDraw, ImageFont
 from datetime import datetime, timezone
+import os 
+
+FRAME_DIR = './'
+if not os.path.exists(FRAME_DIR):
+    os.makedirs(FRAME_DIR)
 
 # adjustable settings
 RESOLUTION = (3280, 2464)
@@ -233,6 +238,7 @@ def adjust_camera_settings():
 
 # continuously capture JPEG frames and update the streaming output
 def capture_frames():
+    frame_count = 0
     while True:
         adjust_camera_settings()
         image_stream = io.BytesIO()
@@ -242,11 +248,22 @@ def capture_frames():
 
         draw = ImageDraw.Draw(img)
         timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]
-        draw.text((10, 10), timestamp, fill=(255, 255, 255))
+        try:
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 30)
+        except IOError:
+            font = ImageFont.load_default()
+        draw.text((10, 10), timestamp, font=font, fill=(255, 255, 255))
+
+        if frame_count % 30 == 0:
+            frame_filename = os.path.join(FRAME_DIR, f"frame_{frame_count}.jpg")
+            img.save(frame_filename)
+            print(f"Saved frame {frame_count} to {frame_filename}")
 
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
             output.update_frame(buf.getvalue())
+        
+        frame_count += 1
 
 def start_stream():
     global SERVER
