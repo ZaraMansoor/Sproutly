@@ -34,6 +34,9 @@ from flask import Flask, request
 import ssl
 
 app = Flask(__name__)
+@app.route('/')
+def home():
+    return "Welcome to the Latency Logger API!"
 
 # Define your SSL context with the certificate and key file paths.
 # Replace these with the actual paths to your certificate and private key.
