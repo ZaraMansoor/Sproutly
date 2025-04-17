@@ -260,25 +260,21 @@ def capture_frames():
         image_stream.seek(0)
         img = Image.open(image_stream)
 
-        # Draw timestamp with a black background
         draw = ImageDraw.Draw(img)
         timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S.%f')[:-3]
-
-        # Load a larger font
         try:
-            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 50)  # Increase font size
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 100)  # Increase font size
         except IOError:
             font = ImageFont.load_default()
-
-        # Get the width and height of the text to draw the rectangle
         text_width, text_height = draw.textsize(timestamp, font=font)
-        padding = 20  # Increase padding for better visibility
-
-        # Draw the black rectangle behind the timestamp
-        draw.rectangle([10, 10, 10 + text_width + 2 * padding, 10 + text_height + 2 * padding], fill="black")
-
-        # Draw the text on top of the rectangle
-        draw.text((10 + padding, 10 + padding), timestamp, font=font, fill=(255, 255, 255))
+        padding = 30
+        x = (img.width - text_width) // 2
+        y = img.height - text_height - padding
+        draw.rectangle(
+            [x - padding, y - padding, x + text_width + padding, y + text_height + padding],
+            fill="black"
+        )
+        draw.text((x, y), timestamp, font=font, fill="white")
 
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
