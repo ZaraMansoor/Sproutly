@@ -1,38 +1,49 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 import ssl
+from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# Define the home route
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return "Welcome to the Latency Logger API!"
 
-# Route to log latency
 @app.route('/log-latency', methods=['POST'])
 def log_latency():
     data = request.get_json()
-    
+
     if not data:
         return jsonify({"status": "error", "reason": "no data"}), 400
 
     try:
-        received = data['timestamp']
-        frame_ts = data['frameTimestamp']
-        latency = data['latency']
-        
-        # Open the CSV file and append latency data
+        received_iso = data['timestamp']          # "2025-04-17T21:21:08.536Z"
+        frame_ts_str = data['frameTimestamp']     # "21:21:02.949"
+
+        # Convert received ISO timestamp to datetime object
+        received_dt = datetime.fromisoformat(received_iso.replace("Z", "+00:00"))
+        received_str = received_dt.strftime('%H:%M:%S.%f')[:-3]  # Format: HH:MM:SS.mmm
+
+        # Convert frame timestamp to datetime object on same date as received_dt
+        h, m, s_ms = frame_ts_str.split(':')
+        s, ms = s_ms.split('.')
+        frame_dt = received_dt.replace(hour=int(h), minute=int(m), second=int(s), microsecond=int(ms) * 1000)
+
+        # Calculate latency in milliseconds
+        latency = int((received_dt - frame_dt).total_seconds() * 1000)
+
+        # Write to CSV
         with open('latency_log.csv', 'a') as f:
-            f.write(f"{received},{frame_ts},{latency}\n")
-        
-        return jsonify({"status": "ok"}), 200
+            f.write(f"{received_str},{frame_ts_str},{latency}\n")
+
+        return jsonify({"status": "ok", "latency": latency}), 200
+
     except KeyError as e:
-        # Return error if missing keys
         return jsonify({"status": "error", "reason": f"missing field: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"status": "error", "reason": str(e)}), 400
 
 if __name__ == '__main__':
-    # SSL context (ensure paths are correct or use 'adhoc' for self-signed cert)
     context = ('./cert.pem', './key.pem')
     app.run(host='0.0.0.0', port=5001, ssl_context=context)
