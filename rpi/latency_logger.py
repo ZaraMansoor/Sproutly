@@ -30,25 +30,49 @@ from OpenSSL import SSL
 #     app.run(host='0.0.0.0', port=5001, ssl_context=context)
 
 
+# from flask import Flask, request
+# import ssl
+
+# app = Flask(__name__)
+# @app.route('/', methods=['GET', 'POST'])
+# def home():
+#     return "Welcome to the Latency Logger API!"
+
+# # Define your SSL context with the certificate and key file paths.
+# # Replace these with the actual paths to your certificate and private key.
+# context = ('./cert.pem', './key.pem')  # or 'adhoc' for self-signed cert
+
+# @app.route('/log-latency', methods=['POST'])
+# def log_latency():
+#     app.logger.info("POST request received at /log-latency")
+#     data = request.get_json()
+#     print(data)
+#     return {"status": "ok"}
+
+# if __name__ == '__main__':
+#     # Make sure you're passing the right context
+#     app.run(host='0.0.0.0', port=5001, ssl_context=context)
+
+
 from flask import Flask, request
 import ssl
 
 app = Flask(__name__)
+
+# Define the home route
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return "Welcome to the Latency Logger API!"
 
-# Define your SSL context with the certificate and key file paths.
-# Replace these with the actual paths to your certificate and private key.
-context = ('./cert.pem', './key.pem')  # or 'adhoc' for self-signed cert
-
+# Route to log latency
 @app.route('/log-latency', methods=['POST'])
 def log_latency():
     app.logger.info("POST request received at /log-latency")
-    data = request.get_json()
-    print(data)
+    data = request.get_json()  # Get the JSON data
+    print(data)  # Print it to the console for debugging
     return {"status": "ok"}
 
 if __name__ == '__main__':
-    # Make sure you're passing the right context
+    # SSL context (ensure paths are correct or use 'adhoc' for self-signed cert)
+    context = 'adhoc'
     app.run(host='0.0.0.0', port=5001, ssl_context=context)
