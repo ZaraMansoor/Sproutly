@@ -56,7 +56,7 @@ const HomePage = () => {
         })
         .then(result => result.json())
         .then(data => {
-            setNumberOfPlants(data);
+            setNumberOfPlants(data.number_of_plants);
         }) 
         .catch(e => console.error("Failed to fetch number of plants", e));
     }, [selectedPlant]);

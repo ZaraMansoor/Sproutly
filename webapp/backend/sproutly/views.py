@@ -406,7 +406,7 @@ def change_number_of_plants(request):
 
 @csrf_exempt
 def get_number_of_plants(request):
-    if request.method == "GET":
+    if request.method == "POST":
         try:
             data = json.loads(request.body)
             curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
