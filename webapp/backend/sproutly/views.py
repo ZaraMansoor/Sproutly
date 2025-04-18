@@ -9,7 +9,7 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sproutly_root = os.path.abspath(os.path.join(current_dir, '../../../..'))
 
-rpi_path = os.path.join(sproutly_root, 'rpi')
+rpi_path = os.path.join(sproutly_root, 'Sproutly/rpi')
 print("rpi_path: ", rpi_path)
 print("Files:", os.listdir(rpi_path))
 
