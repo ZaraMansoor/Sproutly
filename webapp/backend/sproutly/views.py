@@ -396,7 +396,7 @@ def change_number_of_plants(request):
             print("fetched_plant22: ", fetched_plant)
             curr_schedule = AutoSchedule.objects.get(plant=fetched_plant)
             print("curr_schedule22: ", curr_schedule)
-            curr_schedule.number_of_plants = data["number_of_plants"]
+            curr_schedule.number_of_plants = data["numberOfPlants"]
             curr_schedule.save()
 
             return JsonResponse({"status": "Success"}, status=200)
