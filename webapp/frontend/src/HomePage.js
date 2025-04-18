@@ -291,9 +291,11 @@ const HomePage = () => {
         if (numberOfPlantsResult.status === "Success") {
             alert("Successfully changed number of plants!");
             navigate('/');
+            return;
         } else if (numberOfPlantsResult.status === "Error") {
             alert("Failed to change number of plants.");
             navigate('/');
+            return;
         }
     }
 
