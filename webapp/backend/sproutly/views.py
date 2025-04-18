@@ -268,6 +268,7 @@ def get_webscraped_plant_data(request):
         try:
             data = json.loads(request.body)
             selected_plant_index = int(data["index"])
+            plant_name = data["plantName"]
 
             plant = WebscrapedPlant.objects.get(index=selected_plant_index)
             plant_data = []
@@ -299,7 +300,7 @@ def get_webscraped_plant_data(request):
 
             print("plant!!: ", plant)
             # update the autoschedule to reflect the webscraped data
-            user_plant = Plant.objects.get(species=plant.name)
+            user_plant = Plant.objects.get(name=plant_name)
             print("user_plant11: ", user_plant)
             plant_updated = AutoSchedule.objects.get(plant=user_plant)
             print("plant_updated22: ", plant_updated)
