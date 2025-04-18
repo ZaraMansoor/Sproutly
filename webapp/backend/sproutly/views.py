@@ -99,6 +99,7 @@ def add_user_plant(request):
         try:
             data = json.loads(request.body)
 
+            user_plant_name = data["name"]
             species_selected = data["species"]
             number_of_plants = data["numberOfPlants"]
 
@@ -120,19 +121,19 @@ def add_user_plant(request):
 
                     if lowercase_best_match in lowercase_plant_in_db or lowercase_plant_in_db in lowercase_best_match:
                         # (1) if exists, add to database
-                        img_url = WebscrapedPlant.objects.get(name=plant_in_db.species).image_url
+                        img_url = WebscrapedPlant.objects.get(name=plant_in_db.name).image_url
 
                         print("let's create a new plant (1)")
                         new_plant = Plant(
-                            name = plant_in_db.name,
-                            species = plant_in_db.species,
+                            name = user_plant_name,
+                            species = plant_in_db.name,
                             image_url = img_url,
                         )
                         print("new plant created11!")
                         new_plant.save()
                         print("new plant saved11!")
 
-                        webscraped_plant = WebscrapedPlant.objects.get(name=plant_in_db.species)
+                        webscraped_plant = WebscrapedPlant.objects.get(name=plant_in_db.name)
                         print("got a webscraped plant")
 
                         # set up initial auto-schedule
