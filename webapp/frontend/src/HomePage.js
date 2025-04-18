@@ -15,6 +15,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import socket from './socket';
 import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import {
     Chart as ChartJS,
