@@ -18,7 +18,7 @@ print(f'device: {device}')
 
 # function to train and compare models
 def compare_sensor_models():
-    parser = argparse.ArgumentParser(description='Compare sesnsor models for plant health classification.')
+    parser = argparse.ArgumentParser(description='Compare sensor models for plant health classification.')
     parser.add_argument('--dataset', type=str, default='sensor_data', help='Dataset')
     parser.add_argument('--output', type=str, default='results/compare_sensor_models', help='Output directory')
 

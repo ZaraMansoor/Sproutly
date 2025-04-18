@@ -121,3 +121,69 @@ def split_dataset(dataset, val=False, val_size=0.15, test_size=0.1, random_seed=
         val_dataset = None
     
     return train_dataset, val_dataset, test_dataset
+
+
+
+class FusionDataset(Dataset):
+    def __init__(self, csv_path, image_dir, transform=None, greyscale=False):
+        df = pd.read_csv(csv_path)
+        self.image_dir = image_dir
+        self.transform = transform
+        self.greyscale = greyscale
+
+        # change column names to match online sensor data columns
+        df = df.rename(columns={
+            'Soil Moisture (%)': 'Soil_Moisture',
+            'Temperature (°C)': 'Ambient_Temperature',
+            'Humidity (%)': 'Humidity',
+            'Light (lux)': 'Light_Intensity',
+            'Soil pH': 'Soil_pH',
+            'Nitrogen (mg/kg)': 'Nitrogen_Level',
+            'Phosphorus (mg/kg)': 'Phosphorus_Level',
+            'Potassium (mg/kg)': 'Potassium_Level',
+            'Health': 'Plant_Health_Status',
+            'Image Path': 'image_path'
+        })
+
+        # make health labels binary
+        self.health_class = df['Plant_Health_Status'].apply(lambda x: 0 if str(x).strip().lower() == 'healthy' else 1)
+
+        # extract features
+        self.sensor_columns = [
+            'Soil_Moisture',
+            'Ambient_Temperature',
+            'Humidity',
+            'Light_Intensity',
+            'Soil_pH',
+            'Nitrogen_Level',
+            'Phosphorus_Level',
+            'Potassium_Level'
+        ]
+
+        self.features = df[self.sensor_columns]
+        self.image_paths = df['image_path']
+
+    def __len__(self):
+        return len(self.features)
+
+    def __getitem__(self, idx):
+        sample = self.features.iloc[idx]
+
+        # load and transform image
+        image_path = os.path.join(self.image_dir, self.image_paths.iloc[idx])
+        image = Image.open(image_path).convert('RGB')
+
+        # convert to greyscale but still keep 3 channels
+        if self.greyscale:
+            image = image.convert('L')
+            image = image.convert('RGB')
+
+        # apply transformations if provided
+        if self.transform:
+            image = self.transform(image)
+
+        # sensor features
+        sensor_data = torch.tensor(sample.values, dtype=torch.float32)
+        health_class = torch.tensor(self.health_class.iloc[idx], dtype=torch.long)
+
+        return image, sensor_data, health_class
