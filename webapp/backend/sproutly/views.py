@@ -6,10 +6,14 @@ https://docs.python.org/3/library/re.html
 import sys
 import os
 
-rpi_path = os.path.abspath(os.path.join(__file__, '../../../../rpi'))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, '../../../..'))
+rpi_path = os.path.join(project_root, 'rpi')
 sys.path.append(rpi_path)
 
-# from plant_id_api import identify_plant
+import plant_id_api
+
+from plant_id_api import identify_plant
 # TODO: rpi???
 
 from django.shortcuts import render
@@ -103,13 +107,14 @@ def add_user_plant(request):
             species_selected = data["species"]
             number_of_plants = data["numberOfPlants"]
 
-            # TODO: if no species selected, set autoschedule! (FORGOT TO DO THIS AHHHH)
             if data["species"] == "no-species":
                 # plant species detection
                 # TODO: change this to rpi code
-                # best_match, common_names = identify_plant()
-                best_match = "Aloe Plant"
-                common_names = ['Whale Fin Plant', 'Sansevieria Masoniana']
+                best_match, common_names = identify_plant()
+
+                # TODO: comment out for TESTING
+                # best_match = "Aloe Plant"
+                # common_names = ['Whale Fin Plant', 'Sansevieria Masoniana']
                 lowercase_best_match = lowercase_species(best_match)
                 lowercase_common_names = [lowercase_species(name) for name in common_names]
 
