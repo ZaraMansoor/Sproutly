@@ -100,7 +100,7 @@ def add_user_plant(request):
             data = json.loads(request.body)
 
             species_selected = data["species"]
-            number_of_plants = data["number_of_plants"]
+            number_of_plants = data["numberOfPlants"]
 
             # TODO: if no species selected, set autoschedule! (FORGOT TO DO THIS AHHHH)
             if data["species"] == "no-species":

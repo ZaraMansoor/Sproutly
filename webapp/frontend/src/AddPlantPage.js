@@ -69,7 +69,7 @@ const AddPlantPage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ index: plantIndex, plantName: plantName }),
+                body: JSON.stringify({ index: plantIndex, plantName: plantName, numberOfPlants: numberOfPlants }),
             }
         );
 
