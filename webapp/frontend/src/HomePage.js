@@ -342,7 +342,7 @@ const HomePage = () => {
                 <p>Current Number of Plants: {numberOfPlants}</p>
                 <Form onSubmit={submitNumberOfPlants}>
                     <Form.Label>Change Number of Plants</Form.Label>
-                    <Form.Select onChange={(e) => setNumberOfPlants(e.target.value)} required>
+                    <Form.Select required>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
