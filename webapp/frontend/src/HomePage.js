@@ -44,6 +44,8 @@ const HomePage = () => {
 
     const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
 
+    const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(null);
+
     React.useEffect(() => {
         if (!selectedPlant) {
             return;
@@ -281,7 +283,7 @@ const HomePage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plantId: selectedPlant.id, numberOfPlants: numberOfPlants }),
+                body: JSON.stringify({ plantId: selectedPlant.id, numberOfPlants: selectedNumberOfPlants }),
             }
         );
 
@@ -342,7 +344,7 @@ const HomePage = () => {
                 <p>Current Number of Plants: {numberOfPlants}</p>
                 <Form onSubmit={submitNumberOfPlants}>
                     <Form.Label>Change Number of Plants</Form.Label>
-                    <Form.Select required>
+                    <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>

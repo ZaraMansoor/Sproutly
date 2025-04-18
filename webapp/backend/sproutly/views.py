@@ -398,6 +398,7 @@ def change_number_of_plants(request):
             print("curr_schedule22: ", curr_schedule)
             curr_schedule.number_of_plants = data["numberOfPlants"]
             curr_schedule.save()
+            print("curr_schedule.number_of_plants: ", curr_schedule.number_of_plants)
 
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
