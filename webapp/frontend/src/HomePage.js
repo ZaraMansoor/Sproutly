@@ -49,6 +49,8 @@ const HomePage = () => {
             return;
         }
 
+        console.log("Selected plant:", selectedPlant);
+
         fetch("https://172.26.192.48:8443/get-number-of-plants/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

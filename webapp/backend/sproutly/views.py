@@ -409,7 +409,9 @@ def get_number_of_plants(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
+            print("data!! here: ", data)
             curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            print("curr_schedule: ", curr_schedule)
             return JsonResponse({"number_of_plants": curr_schedule.number_of_plants}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
