@@ -383,3 +383,34 @@ def get_automatic_or_manual(request):
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+
+
+@csrf_exempt
+def change_number_of_plants(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            curr_schedule.number_of_plants = data["number_of_plants"]
+            curr_schedule.save()
+
+            return JsonResponse({"status": "Success"}, status=200)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def get_number_of_plants(request):
+    if request.method == "GET":
+        try:
+            data = json.loads(request.body)
+            curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            return JsonResponse({"number_of_plants": curr_schedule.number_of_plants}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)

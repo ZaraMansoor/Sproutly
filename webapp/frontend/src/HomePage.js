@@ -39,6 +39,25 @@ import {
 
 const HomePage = () => {
 
+    const [numberOfPlants, setNumberOfPlants] = React.useState(null);
+
+    React.useEffect(() => {
+        if (!selectedPlant) {
+            return;
+        }
+
+        fetch("https://172.26.192.48:8443/get-number-of-plants/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plantId: selectedPlant.id })
+        })
+        .then(result => result.json())
+        .then(data => {
+            setNumberOfPlants(data);
+        }) 
+        .catch(e => console.error("Failed to fetch number of plants", e));
+    }, [selectedPlant]);
+
     const [plants, setPlants] = React.useState([]);
     
     React.useEffect(() => {
@@ -246,6 +265,33 @@ const HomePage = () => {
             .catch(e => console.error("Failed to fetch automatic or manual", e));
     }, [])
 
+
+    const submitNumberOfPlants = async (e) => {
+        e.preventDefault();
+
+        if (!numberOfPlants) {
+            alert("error with number of plants");
+            return;
+        }
+
+        const numberOfPlantsResponse = await fetch("https://172.26.192.48:8443/change-number-of-plants/",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ numberOfPlants: numberOfPlants }),
+            }
+        );
+
+        const numberOfPlantsResult = await numberOfPlantsResponse.json();
+        if (numberOfPlantsResult.status === "Success") {
+            alert("Successfully changed number of plants!");
+            navigate('/');
+        } else if (numberOfPlantsResult.status === "Error") {
+            alert("Failed to change number of plants.");
+            navigate('/');
+        }
+    }
+
     const renderView = () => {
         if (!selectedPlant) {
             return (
@@ -290,6 +336,18 @@ const HomePage = () => {
                         />
                     </Form>
                 </div>
+                <p>Current Number of Plants: {numberOfPlants}</p>
+                <Form onSubmit={submitNumberOfPlants}>
+                    <Form.Label>Change Number of Plants</Form.Label>
+                    <Form.Select onChange={(e) => setNumberOfPlants(e.target.value)} required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </Form.Select>
+                    <Button variant="primary" type="submit">
+                        Submit
+                    </Button>
+                </Form>
 
                 <button onClick={() => {
                     sendCommand({command: "get_plant_health_check"});
