@@ -290,6 +290,7 @@ const HomePage = () => {
         const numberOfPlantsResult = await numberOfPlantsResponse.json();
         if (numberOfPlantsResult.status === "Success") {
             alert("Successfully changed number of plants!");
+            setNumberOfPlants(selectedNumberOfPlants);
             navigate('/');
             return;
         } else if (numberOfPlantsResult.status === "Error") {
