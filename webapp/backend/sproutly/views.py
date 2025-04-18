@@ -122,12 +122,15 @@ def add_user_plant(request):
                         # (1) if exists, add to database
                         img_url = WebscrapedPlant.objects.get(name=plant_in_db.species).image_url
 
+                        print("let's create a new plant (1)")
                         new_plant = Plant(
                             name = plant_in_db.name,
                             species = plant_in_db.species,
                             image_url = img_url,
                         )
+                        print("new plant created11!")
                         new_plant.save()
+                        print("new plant saved11!")
 
                         webscraped_plant = WebscrapedPlant.objects.get(name=plant_in_db.species)
                         print("got a webscraped plant")
@@ -142,11 +145,14 @@ def add_user_plant(request):
                                 return JsonResponse({"status": "detected plant found", "species": plant_in_db.name, "number_of_plants": number_of_plants}, status=200)
                     
                 # (2) if doesn't exist, allow manual auto scheduling
+                print("let's create a new plant (2)")
                 new_plant = Plant(
                     name = data["name"],
                     species = best_match
                 )
+                print("new plant created22!")
                 new_plant.save()
+                print("new plant saved22!")
 
                 return JsonResponse({"status": "detected plant not found", "plantId": new_plant.id, "number_of_plants": number_of_plants}, status=200)
 
@@ -184,7 +190,7 @@ def update_manual_autoschedule(request):
         try:
             data = json.loads(request.body)
 
-            number_of_plants = data["number_of_plants"]
+            number_of_plants = data["numberOfPlants"]
 
             user_plant = Plant.objects.get(id=data["plantId"])
 
