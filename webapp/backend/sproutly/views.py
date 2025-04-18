@@ -9,6 +9,14 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, '../../../..'))
 rpi_path = os.path.join(project_root, 'rpi')
+
+print("rpi_path: ", rpi_path)
+
+if os.path.exists(rpi_path):
+    print("Contents of rpi_path:", os.listdir(rpi_path))
+else:
+    print("rpi_path does not exist.............")
+
 sys.path.append(rpi_path)
 
 import plant_id_api
