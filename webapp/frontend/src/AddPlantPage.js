@@ -52,7 +52,8 @@ const AddPlantPage = () => {
         if (userPlantResult.status === "detected plant not found") {
             navigate('/manual-autoschedule', {
                 state: {
-                    plantId: userPlantResult.plantId
+                    plantId: userPlantResult.plantId,
+                    numberOfPlants: numberOfPlants
                 }
             });
             return;

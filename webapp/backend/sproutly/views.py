@@ -184,11 +184,14 @@ def update_manual_autoschedule(request):
         try:
             data = json.loads(request.body)
 
+            number_of_plants = data["number_of_plants"]
+
             user_plant = Plant.objects.get(id=data["plantId"])
 
             if not AutoSchedule.objects.filter(plant=user_plant).exists():
                 new_autoschedule = AutoSchedule(
                     plant = user_plant,
+                    number_of_plants = number_of_plants,
                     min_temp = data["schedule"]["minTemp"],
                     max_temp = data["schedule"]["maxTemp"],
                     min_humidity = data["schedule"]["minHumidity"],

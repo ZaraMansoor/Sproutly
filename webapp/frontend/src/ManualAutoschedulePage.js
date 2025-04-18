@@ -39,7 +39,7 @@ const ManualAutoschedulePage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ schedule: scheduleSelected, plantId: plantId }),
+                body: JSON.stringify({ schedule: scheduleSelected, plantId: plantId, numberOfPlants: location.state.numberOfPlants }),
             }
         );
 
