@@ -63,6 +63,9 @@ const AddPlantPage = () => {
             return;
         }
 
+        if (userPlantResult.status === "detected plant found") {
+            selectedPlant = webscrapedPlantData.find((plant) => plant.name === userPlantResult.species);
+        }
         const plantIndex = selectedPlant.index;
 
         const scrapeResponse = await fetch("https://172.26.192.48:8443/scrape-plant/",
