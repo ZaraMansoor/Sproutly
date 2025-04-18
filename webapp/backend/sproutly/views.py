@@ -107,7 +107,7 @@ def add_user_plant(request):
                 # plant species detection
                 # TODO: change this to rpi code
                 # best_match, common_names = identify_plant()
-                best_match = "Dracaena masoniana (Chahin.) Byng & Christenh."
+                best_match = "Aloe Plant"
                 common_names = ['Whale Fin Plant', 'Sansevieria Masoniana']
                 lowercase_best_match = lowercase_species(best_match)
                 lowercase_common_names = [lowercase_species(name) for name in common_names]
