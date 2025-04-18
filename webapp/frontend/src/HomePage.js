@@ -281,7 +281,7 @@ const HomePage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ numberOfPlants: numberOfPlants }),
+                body: JSON.stringify({ plantId: selectedPlant.id, numberOfPlants: numberOfPlants }),
             }
         );
 
