@@ -68,12 +68,41 @@ def get_user_plants(request):
 def lowercase_species(species):
     return re.sub(r'[^\w\s]', '', species.lower())
 
+
+
+def set_up_autoschedule(number_of_plants, new_plant, webscraped_plant):
+
+    new_autoschedule = AutoSchedule(
+        number_of_plants = number_of_plants,
+        plant = new_plant,
+        min_temp = webscraped_plant.temp_min,
+        max_temp = webscraped_plant.temp_max,
+        min_humidity = webscraped_plant.humidity_min,
+        max_humidity = webscraped_plant.humidity_max,
+        # light_start_time: default (9am)
+        light_intensity = webscraped_plant.light_intensity,
+        # light_hours: default (9 hours)
+        # water_frequency: default (once a week) -> has to be changed by a user
+        # water_start_time: default (9am)
+        # water_amount: default (100ml)
+        # nutrients_start_time: default (9am)
+        # nutrients_amount: default (2ml)
+    )
+    print("new autoschedule created!")
+    new_autoschedule.save()
+    print("new autoschedule saved!")
+    
+
 @csrf_exempt
 def add_user_plant(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
 
+            species_selected = data["species"]
+            number_of_plants = data["number_of_plants"]
+
+            # TODO: if no species selected, set autoschedule! (FORGOT TO DO THIS AHHHH)
             if data["species"] == "no-species":
                 # plant species detection
                 # TODO: change this to rpi code
@@ -90,7 +119,7 @@ def add_user_plant(request):
                     lowercase_plant_in_db = lowercase_species(plant_in_db.name)
 
                     if lowercase_best_match in lowercase_plant_in_db or lowercase_plant_in_db in lowercase_best_match:
-                        # if exists, add to database
+                        # (1) if exists, add to database
                         img_url = WebscrapedPlant.objects.get(name=plant_in_db.species).image_url
 
                         new_plant = Plant(
@@ -99,21 +128,27 @@ def add_user_plant(request):
                             image_url = img_url,
                         )
                         new_plant.save()
-                        
+
+                        webscraped_plant = WebscrapedPlant.objects.get(name=plant_in_db.species)
+                        print("got a webscraped plant")
+
+                        # set up initial auto-schedule
+                        set_up_autoschedule(number_of_plants, new_plant, webscraped_plant)
+
                         return JsonResponse({"status": "detected plant found", "species": plant_in_db.name}, status=200)
                     else:
                         for common_name in lowercase_common_names:
                             if common_name in lowercase_plant_in_db or lowercase_plant_in_db in common_name:
-                                return JsonResponse({"status": "detected plant found", "species": plant_in_db.name}, status=200)
+                                return JsonResponse({"status": "detected plant found", "species": plant_in_db.name, "number_of_plants": number_of_plants}, status=200)
                     
-                # if doesn't exist, allow manual auto scheduling
+                # (2) if doesn't exist, allow manual auto scheduling
                 new_plant = Plant(
                     name = data["name"],
                     species = best_match
                 )
                 new_plant.save()
 
-                return JsonResponse({"status": "detected plant not found", "plantId": new_plant.id}, status=200)
+                return JsonResponse({"status": "detected plant not found", "plantId": new_plant.id, "number_of_plants": number_of_plants}, status=200)
 
             img_url = WebscrapedPlant.objects.get(name=data["species"]).image_url
 
@@ -126,28 +161,12 @@ def add_user_plant(request):
             new_plant.save()
             print("new plant created!")
 
-            # set up initial auto-schedule
-            webscraped_plant = WebscrapedPlant.objects.get(name=data["species"])
-
+            webscraped_plant = WebscrapedPlant.objects.get(name=species_selected)
             print("got a webscraped plant")
-            new_autoschedule = AutoSchedule(
-                plant = new_plant,
-                min_temp = webscraped_plant.temp_min,
-                max_temp = webscraped_plant.temp_max,
-                min_humidity = webscraped_plant.humidity_min,
-                max_humidity = webscraped_plant.humidity_max,
-                # light_start_time: default (9am)
-                light_intensity = webscraped_plant.light_intensity,
-                # light_hours: default (9 hours)
-                # water_frequency: default (once a week) -> has to be changed by a user
-                # water_start_time: default (9am)
-                # water_amount: default (100ml)
-                # nutrients_start_time: default (9am)
-                # nutrients_amount: default (2ml)
-            )
-            print("new autoschedule created!")
-            new_autoschedule.save()
-            print("new autoschedule saved!")
+
+            # set up initial auto-schedule
+            set_up_autoschedule(number_of_plants, new_plant, webscraped_plant)
+
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
             import traceback
@@ -156,6 +175,7 @@ def add_user_plant(request):
         
     return JsonResponse({"status": "Error", "error": "Invalid request"}, status=400)
 
+    
 
 @csrf_exempt
 def update_manual_autoschedule(request):
@@ -212,6 +232,7 @@ def get_autoschedule(request, plant_id):
     try:
         autoschedule = AutoSchedule.objects.get(plant=Plant.objects.get(id=plant_id))
         autoschedule_json = {
+            "number_of_plants": autoschedule.number_of_plants,
             "min_temp": autoschedule.min_temp,
             "max_temp": autoschedule.max_temp,
             "min_humidity": autoschedule.min_humidity,

@@ -8,6 +8,7 @@ const AddPlantPage = () => {
 
     const [plantName, setPlantName] = React.useState('');
     const [plantSpecies, setPlantSpecies] = React.useState('');
+    const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
     let navigate = useNavigate();
 
@@ -43,7 +44,7 @@ const AddPlantPage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: plantName, species: plantSpecies }),
+                body: JSON.stringify({ name: plantName, species: plantSpecies, numberOfPlants: numberOfPlants }),
             }
         );
 
@@ -104,6 +105,14 @@ const AddPlantPage = () => {
                                 {species.name}
                             </option>
                         ))}
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Number of plants in your greenhouse</Form.Label>
+                    <Form.Select onChange={(e) => setNumberOfPlants(e.target.value)} required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
                     </Form.Select>
                 </Form.Group>
                 <Button variant="primary" type="submit">

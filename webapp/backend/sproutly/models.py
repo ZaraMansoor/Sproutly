@@ -17,6 +17,8 @@ class AutoSchedule(models.Model):
     plant = models.OneToOneField(Plant, on_delete=models.CASCADE, related_name='auto_schedule')
 
     automatic_mode = models.BooleanField(default=True)
+    # TODO: change to blank=False and null=False later!
+    number_of_plants = models.IntegerField(default=1,blank=True, null=True) # 1, 2, or 3
     
     min_temp = models.FloatField(blank=True, null=True) # degree fahrenheit
     max_temp = models.FloatField(blank=True, null=True) # degree fahrenheit
