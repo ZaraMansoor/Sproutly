@@ -42,6 +42,8 @@ const HomePage = () => {
 
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
+    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
+
     React.useEffect(() => {
         if (!selectedPlant) {
             return;
@@ -76,8 +78,6 @@ const HomePage = () => {
     }, []);
 
 
-
-    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
     const [currView, setCurrView] = React.useState('home'); // default
 
     React.useEffect(() => {
