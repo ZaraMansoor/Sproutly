@@ -14,6 +14,7 @@ import MonitoringPage from './MonitoringPage';
 import AddPlantPage from './AddPlantPage';
 import ControlCommandPage from './ControlCommandPage';
 import ManualAutoschedulePage from './ManualAutoschedulePage';
+import DetectionResultPage from './DetectionResultPage';
 
 function App() {
   return (
