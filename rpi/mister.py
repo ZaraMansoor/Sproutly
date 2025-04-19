@@ -9,10 +9,10 @@ GPIO.setup(HUMIDIFIER_PIN_1, GPIO.OUT)
 GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
 
 def pulse_r_high():
-    GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+    GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
 
 def pulse_r_low():
-    GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+    GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
 
 def pulse_r():
     GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
