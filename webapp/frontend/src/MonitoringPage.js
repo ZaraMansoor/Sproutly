@@ -59,26 +59,36 @@ const MonitoringPage = () => {
     const [lights, setLights] = React.useState(false);
 
 
-    const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+    const websocketRef = React.useRef(null);
 
-    let live_stream_status = "null";
-    let white_light_status = "null";    
-    websocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log("Received data from websocket:", data);
-        live_stream_status = data["live_stream"];
-        white_light_status = data["white_light"];
-        if (live_stream_status === "on") {
-            setCamera(true);
-        } else if (live_stream_status === "off") {
-            setCamera(false);
+    React.useEffect(() => {
+        const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+        websocketRef.current = websocket;
+
+        let live_stream_status = "null";
+        let white_light_status = "null";    
+        websocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("Received data from websocket:", data);
+            live_stream_status = data["live_stream"];
+            white_light_status = data["white_light"];
+            if (live_stream_status === "on") {
+                setCamera(true);
+            } else if (live_stream_status === "off") {
+                setCamera(false);
+            }
+            if (white_light_status === "on") {
+                setLights(true);
+            } else if (white_light_status === "off") {
+                setLights(false);
+            }
         }
-        if (white_light_status === "on") {
-            setLights(true);
-        } else if (white_light_status === "off") {
-            setLights(false);
-        }
-    }
+
+        return () => {
+            websocket.close(); 
+        };
+    }, []);
+    
     
     React.useEffect(() => {
         const getInitialActuatorStatus = async () => {
