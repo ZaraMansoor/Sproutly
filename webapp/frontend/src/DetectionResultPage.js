@@ -3,6 +3,8 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { userPlantResult, numberOfPlants } from './AddPlantPage';
+import { Console } from 'console';
 
 const DetectionResultPage = () => {
     
