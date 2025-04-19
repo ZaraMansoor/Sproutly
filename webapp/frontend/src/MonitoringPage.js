@@ -161,22 +161,12 @@ const MonitoringPage = () => {
                     <Card className="shadow-sm">
                         <Card.Body>
                             <h2 className="mb-3">{selectedPlant.name} Live Feed</h2>
-                            {camera ? (
-                                <img
-                                    src={`https://${RPI_IP_ADDRESS}:8444/stream.mjpg`}
-                                    alt="Live Camera"
-                                    width="640"
-                                    height="480"
-                                />
-                            ) : (
-                                <img
-                                    src="~/Desktop/Sproutly/webapp/frontend/src/black.jpg"
-                                    alt="Live Camera"
-                                    width="640"
-                                    height="480"
-                                    style={{ backgroundColor: "black" }}
-                                />
-                            )}
+                            <img
+                                src={`https://${RPI_IP_ADDRESS}:8444/stream.mjpg`}
+                                alt="Live Camera"
+                                width="640"
+                                height="480"
+                            />
                         </Card.Body>
                     </Card>
                 </div>)}
