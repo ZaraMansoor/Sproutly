@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { userPlantResult, numberOfPlants } from './AddPlantPage';
 
 const DetectionResultPage = () => {
     
     let navigate = useNavigate();
+    let location = useLocation();
 
     const [bestMatch, setBestMatch] = React.useState([]);
     const [commonNames, setCommonNames] = React.useState([]);
@@ -32,7 +32,7 @@ const DetectionResultPage = () => {
             <div className="d-flex justify-content-center mb-4">
                 <Button onClick={() => navigate('/manual-autoschedule', { 
                     state: {
-                        plantId: userPlantResult.plantId, numberOfPlants: numberOfPlants 
+                        plantId: location.state.plantId, numberOfPlants: location.state.numberOfPlants 
                     } 
                 })}>
                     <i className="bi bi-arrow-left"></i>
