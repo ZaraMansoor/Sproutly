@@ -15,8 +15,8 @@ def pulse_r():
 
 def pulse_l():
     GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
-    time.sleep(0.1)
-    GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
+    # time.sleep(0.1)
+    # GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
 
 def pulse():
     GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
@@ -33,14 +33,14 @@ while True:
             print("all OFF")
         elif user_input == '1':
             pulse_l()
-            print("water pump is ON")
+            print("mister l is pulsed")
         elif user_input == '2':
             pulse_r()
-            print("nutrients pump is ON")
+            print("mister r is pulsed")
         elif user_input == '3':
             pulse_l()
             pulse_r()
-            print("all ON")
+            print("both pulsed")
         elif user_input == 'exit':
             print("Exiting program...")
             break
