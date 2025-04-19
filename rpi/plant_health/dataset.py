@@ -162,6 +162,8 @@ class FusionDataset(Dataset):
 
         self.features = df[self.sensor_columns]
         self.image_paths = df['image_path']
+        self.plant_species = df['Plant Species']
+        self.plant_ids = df['Plant ID']
 
     def __len__(self):
         return len(self.features)
@@ -185,5 +187,7 @@ class FusionDataset(Dataset):
         # sensor features
         sensor_data = torch.tensor(sample.values, dtype=torch.float32)
         health_class = torch.tensor(self.health_class.iloc[idx], dtype=torch.long)
+        plant_species = self.plant_species.iloc[idx]
+        plant_ids = self.plant_ids.iloc[idx]
 
-        return image, sensor_data, health_class
+        return image, sensor_data, health_class, plant_species, plant_ids

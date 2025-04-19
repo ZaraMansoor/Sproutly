@@ -20,7 +20,7 @@ print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
 print(f"device: {DEVICE}")
 
 BATCH_SIZE = 32
-OUTPUT_DIR = 'results/fusion_alt'
+OUTPUT_DIR = 'results/fusion_id_3'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # load image model
@@ -46,7 +46,7 @@ def extract_fused_features(dataloader):
     all_labels = []
     with torch.no_grad():
         for batch in dataloader:
-            image, sensor, labels = batch 
+            image, sensor, labels, _, _ = batch 
             image = image.to(DEVICE)
             sensor = sensor.to(DEVICE)
             labels = labels.to(DEVICE)
@@ -75,37 +75,110 @@ def extract_fused_features(dataloader):
     return np.concatenate(fused_feats, axis=0), np.concatenate(all_labels, axis=0)
 
 # build datasets with extracted features
+# def build_fused_datasets():
+#     csv_path = 'datasets/rpi/sensor_log.csv'
+#     image_dir = 'datasets/rpi/images'
+#     transform = transforms.Compose([
+#         transforms.Resize((224, 224)),
+#         transforms.ToTensor(),
+#         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+#     ])
+    
+#     dataset = FusionDataset(csv_path=csv_path, image_dir=image_dir, transform=transform, greyscale=False)
+#     labels = [sample[2] for sample in dataset]
+    
+#     # split indices
+#     train_idx, test_idx = train_test_split(
+#         list(range(len(dataset))),
+#         test_size=0.2,
+#         stratify=labels,
+#         random_state=42
+#     )
+#     train_dataset = Subset(dataset, train_idx)
+#     test_dataset = Subset(dataset, test_idx)
+
+#     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+#     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
+    
+#     # extract fused features from both train and test loaders
+#     train_fused_feats, train_labels = extract_fused_features(train_loader)
+#     test_fused_feats, test_labels = extract_fused_features(test_loader)
+    
+#     print("Successfully Built Dataset")
+#     return train_fused_feats, train_labels, test_fused_feats, test_labels
+
+# def build_fused_datasets():
+#     csv_path = 'datasets/rpi/sensor_log.csv'
+#     image_dir = 'datasets/rpi/images'
+#     transform = transforms.Compose([
+#         transforms.Resize((224, 224)),
+#         transforms.ToTensor(),
+#         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+#     ])
+#     dataset = FusionDataset(csv_path=csv_path, image_dir=image_dir, transform=transform, greyscale=False)
+
+#     # split based on species
+#     train_indices = []
+#     test_indices = []
+#     for idx in range(len(dataset)):
+#         _, _, _, species = dataset[idx]
+#         if str(species).strip().lower() == 'african violet':
+#             test_indices.append(idx)
+#         else:
+#             train_indices.append(idx)
+
+#     print(f"Train size: {len(train_indices)}, Test size (African Violet): {len(test_indices)}")
+
+#     train_dataset = Subset(dataset, train_indices)
+#     test_dataset = Subset(dataset, test_indices)
+
+#     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+#     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
+
+#     # extract fused features from both train and test loaders
+#     train_fused_feats, train_labels = extract_fused_features(train_loader)
+#     test_fused_feats, test_labels = extract_fused_features(test_loader)
+    
+#     print("Successfully Built Dataset (Species Split)")
+#     return train_fused_feats, train_labels, test_fused_feats, test_labels
+
 def build_fused_datasets():
-    csv_path = 'datasets/rpi/sensor_log.csv'
+    csv_path = 'datasets/rpi/updated_sensor_log.csv'
     image_dir = 'datasets/rpi/images'
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
-    
     dataset = FusionDataset(csv_path=csv_path, image_dir=image_dir, transform=transform, greyscale=False)
-    labels = [sample[2] for sample in dataset]
-    
-    # split indices
-    train_idx, test_idx = train_test_split(
-        list(range(len(dataset))),
-        test_size=0.2,
-        stratify=labels,
-        random_state=42
-    )
-    train_dataset = Subset(dataset, train_idx)
-    test_dataset = Subset(dataset, test_idx)
+
+    # split based on plant id
+    train_indices = []
+    test_indices = []
+    for idx in range(len(dataset)):
+        _, _, _, _, plant_ids = dataset[idx]
+        if str(plant_ids) in ['Snake Plant Healthy 2', 'African Violet Unhealthy 3', 
+                              'Peperomia Unhealthy 2', 'African Violet Healthy 2', 
+                              'Peperomia Healthy 2']:
+            test_indices.append(idx)
+        else:
+            train_indices.append(idx)
+
+    print(f"Train size: {len(train_indices)}, Test size: {len(test_indices)}")
+
+    train_dataset = Subset(dataset, train_indices)
+    test_dataset = Subset(dataset, test_indices)
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
-    
+
     # extract fused features from both train and test loaders
     train_fused_feats, train_labels = extract_fused_features(train_loader)
     test_fused_feats, test_labels = extract_fused_features(test_loader)
     
-    print("Successfully Built Dataset")
+    print("Successfully Built Dataset (Species Split)")
     return train_fused_feats, train_labels, test_fused_feats, test_labels
+
 
 # save the datasets as .pkl files
 def save_fused_datasets():
@@ -138,7 +211,9 @@ def save_fused_datasets():
 def train(X_train, y_train, X_test, y_test):
     print("Entered Training")
     # train
-    model = XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+    class_weights = np.bincount(y_train)
+    scale_pos_weight = class_weights[0] / class_weights[1] if class_weights[1] > 0 else 1
+    model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', scale_pos_weight=scale_pos_weight)
     model.fit(X_train, y_train)
     
     # save the trained model

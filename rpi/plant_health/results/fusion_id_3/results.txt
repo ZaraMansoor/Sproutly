@@ -1,0 +1,20 @@
+Evaluation Results:
+              precision    recall  f1-score   support
+
+     healthy       0.92      0.95      0.94       102
+   unhealthy       0.95      0.93      0.94       110
+
+    accuracy                           0.94       212
+   macro avg       0.94      0.94      0.94       212
+weighted avg       0.94      0.94      0.94       212
+
+Confusion Matrix:
+                  Predicted Healthy  Predicted Unhealthy
+Actual Healthy                   97                    5
+Actual Unhealthy                  8                  102
+
+True Positive Rate (TPR): 0.9273
+True Negative Rate (TNR): 0.9510
+False Positive Rate (FPR): 0.0490
+False Negative Rate (FNR): 0.0727
+
