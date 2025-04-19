@@ -35,7 +35,7 @@ class FusionModel(nn.Module):
         image_model.load_state_dict(torch.load(image_model_pth, map_location=DEVICE))
         self.image_encoder = nn.Sequential(*list(image_model.children())[:-1])
 
-        sensor_encoder = SensorModel()
+        sensor_encoder = SensorModel(input_dim=8)
         sensor_encoder.load_state_dict(torch.load(sensor_model_pth, map_location=DEVICE))
         self.sensor_encoder = sensor_encoder
         

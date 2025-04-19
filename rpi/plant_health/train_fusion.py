@@ -62,7 +62,7 @@ test_dataset = Subset(dataset, test_idx)
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-model = FusionModel('results/compare_models/plantdoc_dataset/ResNet18/best.pth', 'results/sensor/best.pth')
+model = FusionModel('results/compare_models/plantdoc_dataset/ResNet18/best.pth', 'results/sensor/sensor_model.pth')
 model = model.to(DEVICE)
 
 # freeze image and sensor encoders
