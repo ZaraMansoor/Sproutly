@@ -2,6 +2,7 @@
 rpi/plant_health/datasets/HousePlants
 rpi/plant_health/datasets/HousePlants2
 rpi/plant_health/datasets/PlantDoc
+rpi/plant_health/datasets/rpi
 __pycache__/
 *.pth
 *.pkl

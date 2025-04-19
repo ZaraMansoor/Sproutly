@@ -145,16 +145,12 @@ def save_metrics(preds, labels, file_path):
         print(f"Metrics saved to {file_path}")
 
 if __name__ == "__main__":
-    # Load test dataset
     test_dataset = load_test_dataset('datasets/rpi/test_dataset.pkl')
 
-    # Load trained model
     model = load_model('results/fusion/best.pth')
     model = model.to(DEVICE)
 
-    # Perform the test and get predictions
     predictions, true_labels = test(model, test_dataset, DEVICE)
 
-    # Save predictions to a CSV file
     save_predictions(predictions, true_labels, 'results/fusion/test_predictions.csv')
     save_metrics(predictions, true_labels, 'results/fusion')

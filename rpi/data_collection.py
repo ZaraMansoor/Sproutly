@@ -52,6 +52,7 @@ WHITE_LIGHT_RELAY_PIN = 16
 streaming = False
 
 HEALTH = "healthy"
+PLANT_SPECIES = "Hedera Ivy"
 
 # collect data once every 15 minutes
 last_data_send_time = datetime.now() - timedelta(seconds=885)
@@ -371,7 +372,7 @@ def save_sensor_data_to_csv(sensor_data, csv_path, image_path):
         "Timestamp", "Image Path", "Health", "Temperature (°C)", 
         "Temperature (°F)", "Humidity (%)", "Soil Moisture (%)", 
         "Light (lux)", "Soil pH", "Soil Temp (°C)", "Soil Moisture 7-in-1 (RH%)", 
-        "Conductivity (µS/cm)", "Nitrogen (mg/kg)", "Phosphorus (mg/kg)", "Potassium (mg/kg)"
+        "Conductivity (µS/cm)", "Nitrogen (mg/kg)", "Phosphorus (mg/kg)", "Potassium (mg/kg), Plant Species"
       ]
       writer.writerow(headers)
 
@@ -401,6 +402,7 @@ def save_sensor_data_to_csv(sensor_data, csv_path, image_path):
       sensor_data['nitrogen'],
       sensor_data['phosphorus'],
       sensor_data['potassium'],
+      PLANT_SPECIES
     ]
     writer.writerow(row)
 
