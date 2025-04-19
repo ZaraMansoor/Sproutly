@@ -56,6 +56,7 @@ const MonitoringPage = () => {
     const RPI_IP_ADDRESS = "172.26.192.48";
 
     const [camera, setCamera] = React.useState(true);
+    const [lights, setLights] = React.useState(false);
 
 
     const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
@@ -107,6 +108,17 @@ const MonitoringPage = () => {
                         const cameraState = e.target.checked;
                         setCamera(cameraState);
                         sendCameraCommand({command: cameraState ? "on" : "off", actuator: "live_stream"});
+                    }}
+                />
+                <Form.Check
+                    type="switch"
+                    id="lights-switch"
+                    label="Lights"
+                    checked={lights}
+                    onChange={(e) => {
+                        const lightsState = e.target.checked;
+                        setLights(lightsState);
+                        sendCameraCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
                     }}
                 />
             </Form>
