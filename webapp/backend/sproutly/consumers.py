@@ -12,6 +12,7 @@ class SensorConsumer(AsyncWebsocketConsumer):
         print("WebSocket attempted!")
         await self.channel_layer.group_add("sproutly_sensor_data", self.channel_name)
         await self.channel_layer.group_add("sproutly_health_status", self.channel_name)
+        await self.channel_layer.group_add("sproutly_plant_detection", self.channel_name)
         await self.accept()
         print("WebSocket connected!")
 
@@ -19,6 +20,7 @@ class SensorConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard("sproutly_sensor_data", self.channel_name)
         await self.channel_layer.group_discard("sproutly_health_status", self.channel_name)
+        await self.channel_layer.group_discard("sproutly_plant_detection", self.channel_name)
         print(f"WebSocket disconnected! {close_code}")
 
     # received message from websocket. send to frontend
@@ -35,6 +37,13 @@ class SensorConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps(event["data"]))
         except Exception as e:
             print("Error sending health status:", e)
+
+    async def plantDetectionUpdate(self, event):
+        try:
+            print("Sending plant detection:", event["data"])
+            await self.send(text_data=json.dumps(event["data"]))
+        except Exception as e:
+            print("Error sending plant detection:", e)
 
 
 # TODO: have to test
