@@ -87,7 +87,7 @@ def on_message(client, userdata, msg):
         except KeyError as e: # health status received
             channel_layer = get_channel_layer()
 
-            if 'plant_id' in data:
+            if 'best_match' in data:
                 async_to_sync(channel_layer.group_send)(
                     "sproutly_plant_detection",
                     {
