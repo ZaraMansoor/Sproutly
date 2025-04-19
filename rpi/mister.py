@@ -8,15 +8,27 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(HUMIDIFIER_PIN_1, GPIO.OUT)
 GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
 
+def pulse_r_high():
+    GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+
+def pulse_r_low():
+    GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+
 def pulse_r():
     GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
     time.sleep(0.1)
     GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
 
+def pulse_l_high():
+    GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+
+def pulse_l_low():
+    GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
+
 def pulse_l():
     GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
-    # time.sleep(0.1)
-    # GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
+    time.sleep(0.1)
+    GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
 
 def pulse():
     GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
@@ -30,17 +42,17 @@ while True:
         user_input = input("0 = all off; 1 = mister 1 on; 2 = mister 2 on; 3 = both misters on").strip().lower()
 
         if user_input == '0':
-            print("all OFF")
+            pulse_l_high()
+            print("mister l is high")
         elif user_input == '1':
-            pulse_l()
-            print("mister l is pulsed")
+            pulse_l_low()
+            print("mister l is low")
         elif user_input == '2':
-            pulse_r()
-            print("mister r is pulsed")
+            pulse_r_high()
+            print("mister r is high")
         elif user_input == '3':
-            pulse_l()
-            pulse_r()
-            print("both pulsed")
+            pulse_r_low()
+            print("mister r is low")
         elif user_input == 'exit':
             print("Exiting program...")
             break
