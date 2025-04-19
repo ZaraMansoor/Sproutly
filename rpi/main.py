@@ -415,6 +415,11 @@ sensor_data = {
   "potassium": 0,
 }
 
+water_pump_started = False
+water_pump_start_time = None
+
+nutrients_pump_started = False
+nutrients_pump_start_time = None
 try:
   while True:
     try:
@@ -476,89 +481,65 @@ try:
       
       # TODO: test later!!!!!
 
-      # # auto control running
-      # plant_id = 1 # hardcoded
-      # print("hereeee")
-      # schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
-      # print("here22")
-      # # TODO: send auto control command
-      # # lights, water are turned on every noon
-      # curr_time = datetime.now().time()
-      # print("curr_time: ", curr_time)
+      # auto control running
+      plant_id = 1 # hardcoded
+      schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
+      curr_time = datetime.now().time()
 
-      # # if sensor_data['temperature_f'] < schedule["min_temp"]:
-      # #   heater_relay.on()
-      # #   actuators_status["heater"] = "on"
-      # # elif sensor_data['temperature_f'] > schedule["max_temp"]:
-      # #   heater_relay.off()
-      # #   actuators_status["heater"] = "off"
+      # Heater
+      if sensor_data['temperature_f'] < schedule["min_temp"]:
+        heater_relay.on()
+        actuators_status["heater"] = "on"
+      elif sensor_data['temperature_f'] > schedule["max_temp"]:
+        heater_relay.off()
+        actuators_status["heater"] = "off"
 
-      # if sensor_data['humidity'] < schedule["min_humidity"]:
-      #   humidifier_relay.on()
-      #   actuators_status["humidifier"] = "on"
-      # elif sensor_data['humidity'] > schedule["max_humidity"]:
-      #   humidifier_relay.off()
-      #   actuators_status["humidifier"] = "off"
+      # Mister
+      if sensor_data['humidity'] < schedule["min_humidity"]:
+        if actuators_status["mister"] == "off":
+          mister_pulse()
+        actuators_status["mister"] = "on"
+      elif sensor_data['humidity'] > schedule["max_humidity"]:
+        if actuators_status["mister"] == "on":
+          mister_pulse()
+        actuators_status["mister"] = "off"
 
-      # light_start_datetime = datetime.combine(datetime.now().date(), datetime.strptime("09:00:00", "%H:%M:%S").time())
-      # print("light_start_datetime: ", light_start_datetime)
-      # light_off_time = (light_start_datetime + timedelta(hours=schedule["light_hours"])).time() 
-      # print("light_off_time: ", light_off_time)
+      # Lights
+      light_start_time = datetime.strptime(schedule["light_start_time"], "%H:%M:%S").time()
+      light_end_time = (datetime.combine(datetime.today(), light_start_time) + timedelta(hours=schedule["light_hours"])).time()
 
-      # if (curr_time >= datetime.strptime("09:00:00", "%H:%M:%S").time() and 
-      #   curr_time <= light_off_time):
-      #   water_pump_relay.on()
-      #   actuators_status["water_pump"] = "on"
-      #   if schedule["light_intensity"] == 1:
-      #     led_1_relay.on()
-      #     actuators_status["LED_light"] = 1
-      #   elif schedule["light_intensity"] == 2:
-      #     led_1_relay.on()
-      #     led_2_relay.on()
-      #     actuators_status["LED_light"] = 2
-      #   elif schedule["light_intensity"] == 3:
-      #     led_1_relay.on()
-      #     led_2_relay.on()
-      #     led_3_relay.on()
-      #     actuators_status["LED_light"] = 3
-      #   elif schedule["light_intensity"] == 4:
-      #     led_1_relay.on()
-      #     led_2_relay.on()
-      #     led_3_relay.on()
-      #     led_4_relay.on()
-      #     actuators_status["LED_light"] = 4
-      #   # TODO: add more actuators later
+      if light_start_time <= curr_time <= light_end_time:
+        control_leds(schedule["light_intensity"])
+        actuators_status["LED_light"] = schedule["light_intensity"]
+      else:
+        control_leds(0)
+        actuators_status["LED_light"] = 0
 
-      
-      # # TODO: fix water pump code
-      # # water_off_time = datetime.strptime("11:33:00", "%H:%M:%S").time() + timedelta(hours=schedule["water_frequency"]) # FIX!!! bug
-      # # if curr_time == water_off_time:
-      # #   water_pump_relay.off()
-      # #   actuators_status["water_pump"] = "off" # TODO: water pump how many ml??
-      
+      # Water and Nutrients
+      water_duration = (100 / 250) * schedule["water_amount"] * schedule["number_of_plants"]
+      nutrients_duration = (100 / 250) * schedule["nutrients_amount"] * (schedule["water_amount"] / 100) * schedule["number_of_plants"]
 
-      # if curr_time >= light_off_time:
-      #   if actuators_status["LED_light"] == 1:
-      #     led_1_relay.off()
-      #     actuators_status["LED_light"] = 0
-      #   elif actuators_status["LED_light"] == 2:
-      #     led_1_relay.off()
-      #     led_2_relay.off()
-      #     actuators_status["LED_light"] = 0
-      #   elif actuators_status["LED_light"] == 3:
-      #     led_1_relay.off()
-      #     led_2_relay.off()
-      #     led_3_relay.off()
-      #     actuators_status["LED_light"] = 0
-      #   elif actuators_status["LED_light"] == 4:
-      #     led_1_relay.off()
-      #     led_2_relay.off()
-      #     led_3_relay.off()
-      #     led_4_relay.off()
-      #     actuators_status["LED_light"] = 0
+      if curr_time.strftime("%H:%M:%S") == schedule["water_start_time"]:
+        water_pump_relay.on()
+        actuators_status["water_pump"] = "on"
+        water_pump_start_time = datetime.now()
+        water_pump_started = True
 
-  
+      if curr_time.strftime("%H:%M:%S") == schedule["nutrients_start_time"]:
+        nutrients_pump_relay.on()
+        actuators_status["nutrients_pump"] = "on"
+        nutrients_pump_start_time = datetime.now()
+        nutrients_pump_started = True
+        
+      if water_pump_started and (datetime.now() - water_pump_start_time).total_seconds() >= water_duration:
+        water_pump_relay.off()
+        actuators_status["water_pump"] = "off"
+        water_pump_started = False
 
+      if nutrients_pump_started and (datetime.now() - nutrients_pump_start_time).total_seconds() >= nutrients_duration:
+        nutrients_pump_relay.off()
+        actuators_status["nutrients_pump"] = "off"
+        nutrients_pump_started = False
 
     except RuntimeError as err:
       print(err.args[0])
