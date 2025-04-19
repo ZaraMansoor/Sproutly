@@ -437,3 +437,17 @@ def get_number_of_plants(request):
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def get_detection_result(request):
+    if request.method == "GET":
+        try:
+            best_match = PlantDetectionData.objects.latest('timestamp').best_match
+            common_names = PlantDetectionData.objects.latest('timestamp').common_names
+            print("best_match22: ", best_match)
+            print("common_names22: ", common_names)
+            return JsonResponse({"best_match": best_match, "common_names": common_names}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
