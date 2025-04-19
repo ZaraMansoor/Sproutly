@@ -6,13 +6,6 @@ Using Pl@ntNet API
 '''
 
 import requests
-import json
-import io
-from pprint import pprint
-from picamera2 import Picamera2
-from PIL import Image
-import matplotlib.pyplot as plt
-
 API_KEY = "2b10KGTzAgqcb5baVQciCheRU"  # Set your API_KEY here
 PROJECT = "all"  # try "weurope" or "canada"
 api_endpoint = f"https://my-api.plantnet.org/v2/identify/{PROJECT}?api-key={API_KEY}"
