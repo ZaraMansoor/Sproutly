@@ -55,6 +55,7 @@ while True:
             print("mister r is low")
         elif user_input == 'exit':
             print("Exiting program...")
+            GPIO.cleanup()
             break
         else:
             print("Invalid input. Please type 'ON', 'OFF', or 'exit'.")
