@@ -57,7 +57,6 @@ const MonitoringPage = () => {
 
     const [camera, setCamera] = React.useState(true);
 
-    // TODO: have to test
 
     const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
 
@@ -72,8 +71,6 @@ const MonitoringPage = () => {
             setCamera(false);
         }
     }
-
-    // TODO: have to test
     
     React.useEffect(() => {
         const getInitialActuatorStatus = async () => {
@@ -104,7 +101,7 @@ const MonitoringPage = () => {
                 <Form.Check 
                     type="switch"
                     id="custom-switch"
-                    label="Camera Swtich"
+                    label="Camera Switch"
                     checked={camera}
                     onChange={(e) => {
                         const cameraState = e.target.checked;

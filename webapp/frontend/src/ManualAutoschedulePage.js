@@ -87,7 +87,7 @@ const ManualAutoschedulePage = () => {
                     <Form.Control type="number" onChange={(e) => setLightHours(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Water Frequency (Hours)</Form.Label>
+                    <Form.Label>Water Frequency (Days)</Form.Label>
                     <Form.Control type="number" onChange={(e) => setWaterFrequency(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
