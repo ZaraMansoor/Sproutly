@@ -4,20 +4,24 @@ Sensor Model Evaluation Results:
 Evaluation Results:
               precision    recall  f1-score   support
 
-     healthy       0.25      1.00      0.40        30
-   unhealthy       0.00      0.00      0.00        90
+     healthy       0.93      0.93      0.93        30
+   unhealthy       0.98      0.98      0.98        90
 
-    accuracy                           0.25       120
-   macro avg       0.12      0.50      0.20       120
-weighted avg       0.06      0.25      0.10       120
+    accuracy                           0.97       120
+   macro avg       0.96      0.96      0.96       120
+weighted avg       0.97      0.97      0.97       120
 
 Confusion Matrix:
                   Predicted Healthy  Predicted Unhealthy
-Actual Healthy                   30                    0
-Actual Unhealthy                 90                    0
+Actual Healthy                   28                    2
+Actual Unhealthy                  2                   88
 
-True Positive Rate (TPR): 0.0000
-True Negative Rate (TNR): 1.0000
-False Positive Rate (FPR): 0.0000
-False Negative Rate (FNR): 1.0000
+True Positive Rate (TPR): 0.9778
+True Negative Rate (TNR): 0.9333
+False Positive Rate (FPR): 0.0667
+False Negative Rate (FNR): 0.0222
 
+
+
+
+Note: this is the best
