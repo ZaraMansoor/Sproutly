@@ -108,7 +108,7 @@ def add_user_plant(request):
                 print("sent get_plant_id request to rpi")
 
                 # wait? sleep?
-                time.sleep(5) 
+                time.sleep(3) 
 
                 print("let's check if we have received detection data from rpi")
                 best_match = PlantDetectionData.objects.latest('timestamp').best_match
