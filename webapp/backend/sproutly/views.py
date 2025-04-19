@@ -3,29 +3,14 @@ References:
 https://docs.python.org/3/library/re.html
 '''
 
-import sys
-import os
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sproutly_root = os.path.abspath(os.path.join(current_dir, '../../../..'))
-
-rpi_path = os.path.join(sproutly_root, 'Sproutly/rpi')
-# print("rpi_path: ", rpi_path)
-# print("Files:", os.listdir(rpi_path))
-
-sys.path.append(rpi_path)
-
-import plant_id_api
-
-from plant_id_api import identify_plant
-# TODO: rpi???
 
 from django.shortcuts import render
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from sproutly.models import WebscrapedPlant, Plant, AutoSchedule
+from sproutly.models import WebscrapedPlant, Plant, AutoSchedule, PlantDetectionData
 from soltech_scraping import webscrape_plant
 import time
 from sproutly.models import SensorData
@@ -113,8 +98,22 @@ def add_user_plant(request):
 
             if data["species"] == "no-species":
                 # plant species detection
-                # TODO: change this to rpi code
-                best_match, common_names = identify_plant()
+
+                # send a get_plant_id request to rpi (to get detected plant species data)
+                publish.single(
+                    topic="django/sproutly/mqtt",
+                    payload=json.dumps({"command": "get_plant_id"}),
+                    hostname="broker.emqx.io"
+                )
+                print("sent get_plant_id request to rpi")
+
+                # wait? sleep?
+                time.sleep(3) 
+
+                print("let's check if we have received detection data from rpi")
+                best_match = PlantDetectionData.objects.latest('timestamp').best_match
+                common_names = PlantDetectionData.objects.latest('timestamp').common_names
+                print("type(common_names): ", type(common_names))
 
                 # TODO: comment out for TESTING
                 # best_match = "Aloe Plant"
@@ -435,6 +434,20 @@ def get_number_of_plants(request):
             curr_schedule = AutoSchedule.objects.get(plant=fetched_plant)
             print("curr_schedule: ", curr_schedule)
             return JsonResponse({"number_of_plants": curr_schedule.number_of_plants}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def get_detection_result(request):
+    if request.method == "GET":
+        try:
+            best_match = PlantDetectionData.objects.latest('timestamp').best_match
+            common_names = PlantDetectionData.objects.latest('timestamp').common_names
+            print("best_match22: ", best_match)
+            print("common_names22: ", common_names)
+            return JsonResponse({"best_match": best_match, "common_names": common_names}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)

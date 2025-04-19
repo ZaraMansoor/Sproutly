@@ -50,10 +50,10 @@ const AddPlantPage = () => {
 
         const userPlantResult = await userPlantResponse.json();
         if (userPlantResult.status === "detected plant not found") {
-            navigate('/manual-autoschedule', {
+            navigate('/detection-result', {
                 state: {
                     plantId: userPlantResult.plantId,
-                    numberOfPlants: numberOfPlants
+                    numberOfPlants: numberOfPlants,
                 }
             });
             return;
@@ -77,10 +77,13 @@ const AddPlantPage = () => {
         );
 
         const scrapeResult = await scrapeResponse.json();
-        if (scrapeResult.status === "Success") {
+        if (scrapeResult.status === "Success" && userPlantResult.status === "detected plant found") {
+            alert("Your plant has been detected as: " + scrapeResult.species + ". Successfully added your new plant!");
+            navigate('/');
+        } else if (scrapeResult.status === "Success" && userPlantResult.status !== "detected plant found") {
             alert("Successfully added your new plant!");
             navigate('/');
-        } else if (scrapeResult.status === "Error") {
+        }else if (scrapeResult.status === "Error") {
             alert("Failed to add your new plant.");
         }
     };

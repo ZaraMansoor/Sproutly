@@ -56,21 +56,39 @@ const MonitoringPage = () => {
     const RPI_IP_ADDRESS = "172.26.192.48";
 
     const [camera, setCamera] = React.useState(true);
+    const [lights, setLights] = React.useState(false);
 
 
-    const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+    const websocketRef = React.useRef(null);
 
-    let live_stream_status = "null";
-    websocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log("Received data from websocket:", data);
-        live_stream_status = data["live_stream"];
-        if (live_stream_status === "on") {
-            setCamera(true);
-        } else if (live_stream_status === "off") {
-            setCamera(false);
+    React.useEffect(() => {
+        const websocket = new WebSocket('wss://172.26.192.48:8443/ws/sproutly/actuator/');
+        websocketRef.current = websocket;
+
+        let live_stream_status = "null";
+        let white_light_status = "null";    
+        websocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("Received data from websocket:", data);
+            live_stream_status = data["live_stream"];
+            white_light_status = data["white_light"];
+            if (live_stream_status === "on") {
+                setCamera(true);
+            } else if (live_stream_status === "off") {
+                setCamera(false);
+            }
+            if (white_light_status === "on") {
+                setLights(true);
+            } else if (white_light_status === "off") {
+                setLights(false);
+            }
         }
-    }
+
+        return () => {
+            websocket.close(); 
+        };
+    }, []);
+    
     
     React.useEffect(() => {
         const getInitialActuatorStatus = async () => {
@@ -107,6 +125,17 @@ const MonitoringPage = () => {
                         const cameraState = e.target.checked;
                         setCamera(cameraState);
                         sendCameraCommand({command: cameraState ? "on" : "off", actuator: "live_stream"});
+                    }}
+                />
+                <Form.Check
+                    type="switch"
+                    id="lights-switch"
+                    label="Lights"
+                    checked={lights}
+                    onChange={(e) => {
+                        const lightsState = e.target.checked;
+                        setLights(lightsState);
+                        sendCameraCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
                     }}
                 />
             </Form>

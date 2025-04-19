@@ -14,7 +14,7 @@ from asgiref.sync import async_to_sync
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
 django.setup()
 
-from sproutly.models import SensorData, Plant
+from sproutly.models import SensorData, Plant, PlantDetectionData
 
 
 MQTT_SERVER = "broker.emqx.io"
@@ -87,21 +87,43 @@ def on_message(client, userdata, msg):
         except KeyError as e: # health status received
             channel_layer = get_channel_layer()
 
-            async_to_sync(channel_layer.group_send)(
-                "sproutly_health_status",
-                {
-                    "type": "healthUpdate",
-                    "data": data,
-                }
-            )
-            print("Received Health/plant_id Data:", data)
+            if 'best_match' in data:
+                async_to_sync(channel_layer.group_send)(
+                    "sproutly_plant_detection",
+                    {
+                        "type": "plantDetectionUpdate",
+                        "data": data,
+                    }
+                )
+                print("Received Plant Detection Data:", data)
+
+                PlantDetectionData.objects.create(
+                    # plant = Plant.objects.get(id=data["plant_id"]),
+                    # TODO: change this later
+                    # plant = Plant.objects.get(id=1),
+                    best_match = data["best_match"],
+                    common_names = data["common_names"],
+                )
+                print("Saved Plant Detection Data:", data)
 
 
             if 'status' in data:
-                Plant.objects.filter(id=1).update(
+                async_to_sync(channel_layer.group_send)(
+                    "sproutly_health_status",
+                    {
+                        "type": "healthUpdate",
+                        "data": data,
+                    }
+                )
+                print("Received Health Data:", data)
+
+                Plant.objects.filter(id=1).update( # TODO: hard coded
                     health_status=data["status"]
                 )
                 print("Updated Plant Health Status:", data["status"])
+
+            
+
         
         except Exception as e:
             print("Error saving sensor data!:", e)

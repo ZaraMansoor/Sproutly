@@ -79,3 +79,14 @@ class WebscrapedPlant(models.Model):
 
     def __str__(self):
         return f'Plant(name={self.name}, scientific_name={self.scientific_name})'
+
+
+class PlantDetectionData(models.Model):
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='plant_detection_data', null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    best_match = models.CharField(max_length=100, blank=False, null=False)
+    common_names = models.JSONField(default=list, blank=False, null=False)
+
+    def __str__(self):
+        return f"Plant detection data for {self.plant.name}: best_match={self.best_match}, common_names={self.common_names}"

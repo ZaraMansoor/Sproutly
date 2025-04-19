@@ -14,6 +14,7 @@ import MonitoringPage from './MonitoringPage';
 import AddPlantPage from './AddPlantPage';
 import ControlCommandPage from './ControlCommandPage';
 import ManualAutoschedulePage from './ManualAutoschedulePage';
+import DetectionResultPage from './DetectionResultPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/monitoring" element={<MonitoringPage />} />
             <Route path="/add-plant" element={<AddPlantPage />} />
+            <Route path="/detection-result" element={<DetectionResultPage />} />
             <Route path="/manual-autoschedule" element={<ManualAutoschedulePage />} />
             <Route path="/control-command" element={<ControlCommandPage />} />
           </Routes>
