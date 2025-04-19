@@ -170,7 +170,7 @@ const MonitoringPage = () => {
                                 />
                             ) : (
                                 <img
-                                    src="/black.jpg"
+                                    src="black.jpg"
                                     alt="Live Camera"
                                     width="640"
                                     height="480"
