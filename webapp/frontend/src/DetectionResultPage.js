@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { userPlantResult, numberOfPlants } from './AddPlantPage';
-import { Console } from 'console';
 
 const DetectionResultPage = () => {
     
@@ -19,7 +18,7 @@ const DetectionResultPage = () => {
             .then(data => {
                 setBestMatch(data.best_match);
                 setCommonNames(data.common_names);
-                Console.log("Detection result:", data);
+                console.log("Detection result:", data);
             })
             .catch(e => console.error("Failed to fetch plant detection result", e));
     }, []);
