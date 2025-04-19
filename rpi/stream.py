@@ -208,6 +208,11 @@ def start_stream():
 def stop_stream():
     global SERVER
 
+    black_img = Image.new('RGB', RESOLUTION, (0, 0, 0))
+    with io.BytesIO() as buf:
+        black_img.save(buf, format='JPEG', quality=JPEG_QUALITY)
+        output.update_frame(buf.getvalue())
+
     if SERVER:
         SERVER.shutdown()
         SERVER.server_close()
