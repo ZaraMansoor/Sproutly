@@ -115,6 +115,7 @@ def mister_pulse():
   time.sleep(0.1)
   GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
   GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+mister_pulse()
 
 # heater 
 heater_relay = Relay(HEATER_RELAY_PIN, active_high=False)
