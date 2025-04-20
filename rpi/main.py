@@ -112,7 +112,7 @@ GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
 def mister_pulse():
   GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
   GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
-  time.sleep(0.1)
+  time.sleep(0.5)
   GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
   GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
 mister_pulse()
