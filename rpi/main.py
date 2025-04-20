@@ -90,7 +90,7 @@ else:
   print("Failed to connect to soil sensor.")
 
 # automatic control
-automatic = False
+automatic = True
 
 # actuators
 actuators_status = {
@@ -195,7 +195,10 @@ def on_message(client, userdata, msg):
       send_plant_id(client)
     elif control_command["command"] == "get_actuators_status":
       send_actuators_status(client)
-    # elif control_command["command"] == "automatic_or_manual":
+    elif control_command["command"] == "automatic":
+      automatic = True
+    elif control_command["command"] == "manual":
+      automatic = False
     elif "actuator" in control_command:
       if control_command["actuator"] == "heater":
         if control_command["command"] == "on":
@@ -279,9 +282,11 @@ def send_sensor_data(client, sensor_data):
     print(f"Error in sending sensor data: {e}")
 
 
+health_status = None
 def send_plant_health(client):
   global last_health_check_time
   global streaming
+  global health_status
   try:
     # turn white light on and wait for 2 seconds for camera to adjust
     control_leds(0)
@@ -548,6 +553,13 @@ try:
           nutrients_pump_relay.off()
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
+
+      # Send actuator status to arduino
+      is_light_on = (actuators_status["LED_light"] > 0) or (actuators_status["white_light"] == "on")
+      is_water_on = actuators_status["water_pump"] == "on"
+      is_heater_on = actuators_status["heater"] == "on"
+      plant_healthy = health_status == "Healthy"
+      actuator_data = f"{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
 
     except RuntimeError as err:
       print(err.args[0])
