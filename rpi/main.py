@@ -560,6 +560,8 @@ try:
       is_heater_on = actuators_status["heater"] == "on"
       plant_healthy = health_status == "Healthy"
       actuator_data = f"{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
+      ser.write(actuator_data.encode('utf-8'))
+      print("Sent:", actuator_data)
 
     except RuntimeError as err:
       print(err.args[0])
