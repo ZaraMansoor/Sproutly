@@ -570,7 +570,7 @@ try:
     except RuntimeError as err:
       print(err.args[0])
 
-    time.sleep(2.0)
+    time.sleep(1.0)
 
 except KeyboardInterrupt:
   if soil_connected:
