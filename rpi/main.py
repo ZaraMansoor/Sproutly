@@ -107,13 +107,14 @@ actuators_status = {
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(HUMIDIFIER_PIN_1, GPIO.OUT)
 GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
+GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
+GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
 def mister_pulse():
-  GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
-  GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
-  time.sleep(0.1)
   GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
   GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
-# JANA TODO: make sure mister starts as "off"
+  time.sleep(0.1)
+  GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
+  GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
 
 # heater 
 heater_relay = Relay(HEATER_RELAY_PIN, active_high=False)
