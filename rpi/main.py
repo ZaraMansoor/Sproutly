@@ -74,6 +74,10 @@ dht_instance = dht11.DHT11(pin=17)
 ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 ser.reset_input_buffer()
 
+# sent actuator status to arduino 2
+ser2 = serial.Serial('/dev/ttyACM1', 19200, timeout=1)
+ser2.reset_input_buffer()
+
 # 7-in-1 soil sensor 
 soil_client = ModbusSerialClient(
   port="/dev/ttyUSB0",                   # Serial port for rpi
@@ -560,7 +564,7 @@ try:
       is_heater_on = actuators_status["heater"] == "on"
       plant_healthy = health_status == "Healthy"
       actuator_data = f"{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
-      ser.write(actuator_data.encode('utf-8'))
+      ser2.write(actuator_data.encode('utf-8'))
       print("Sent:", actuator_data)
 
     except RuntimeError as err:

@@ -4,7 +4,7 @@ import time
 
 if __name__ == '__main__':
   # ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
-  ser = serial.Serial('/dev/tty.usbmodem1101', 115200)
+  ser = serial.Serial('/dev/tty.usbmodem1201', 19200)
   time.sleep(2)
   ser.reset_input_buffer()
 
