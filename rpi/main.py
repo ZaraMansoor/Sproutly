@@ -265,6 +265,8 @@ def on_message(client, userdata, msg):
             mister_pulse()
           actuators_status["mister"] = "off"
 
+    send_LED_actuator_status(actuators_status, health_status)
+
   except json.JSONDecodeError as e:
     print("JSON Decode Error:", e)
     print("Invalid JSON received:", raw_payload)
@@ -325,6 +327,7 @@ def send_plant_health(client):
     print("Published plant health status:", payload)
 
     last_health_check_time = datetime.now()
+    send_LED_actuator_status(actuators_status, health_status)
 
   except Exception as e:
     print(f"Error in health check: {e}")
@@ -411,6 +414,16 @@ def get_soil_sensor_data(sensor_data):
     sensor_data["potassium"] = npk_response.registers[2]
   
   return (sensor_data)
+
+def send_LED_actuator_status(actuators_status, health_status):
+  # Send actuator status to arduino
+  is_light_on = (actuators_status["LED_light"] > 0) or (actuators_status["white_light"] == "on")
+  is_water_on = actuators_status["water_pump"] == "on"
+  is_heater_on = actuators_status["heater"] == "on"
+  plant_healthy = health_status == "Healthy"
+  actuator_data = f"{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
+  ser2.write(actuator_data.encode('utf-8'))
+  print("Sent:", actuator_data)
 
 # initialize MQTT client
 client = mqtt.Client()
@@ -558,19 +571,12 @@ try:
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
 
-      # Send actuator status to arduino
-      is_light_on = (actuators_status["LED_light"] > 0) or (actuators_status["white_light"] == "on")
-      is_water_on = actuators_status["water_pump"] == "on"
-      is_heater_on = actuators_status["heater"] == "on"
-      plant_healthy = health_status == "Healthy"
-      actuator_data = f"{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
-      ser2.write(actuator_data.encode('utf-8'))
-      print("Sent:", actuator_data)
+        send_LED_actuator_status(actuators_status, health_status)
 
     except RuntimeError as err:
       print(err.args[0])
 
-    time.sleep(1.0)
+    time.sleep(2.0)
 
 except KeyboardInterrupt:
   if soil_connected:
