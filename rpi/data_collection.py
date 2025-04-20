@@ -48,8 +48,8 @@ LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 
 # start the stream, keep track of if live streaming or not
-# stream.start_stream()
-streaming = False
+stream.start_stream()
+streaming = True
 
 HEALTH = "healthy"
 PLANT_SPECIES = "Hedera Ivy"
@@ -58,7 +58,7 @@ PLANT_SPECIES = "Hedera Ivy"
 last_data_send_time = datetime.now() - timedelta(seconds=885)
 
 # collect image data once every 15 minutes
-last_led_time = datetime.now() - timedelta(hours=1)
+last_led_time = datetime.now()
 
 # reset serial buffer data every 2.3 seconds
 last_reset_time = datetime.now() - timedelta(seconds=2.3)
