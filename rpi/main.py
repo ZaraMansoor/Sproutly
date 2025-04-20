@@ -90,7 +90,7 @@ else:
   print("Failed to connect to soil sensor.")
 
 # automatic control
-automatic = True
+automatic = False
 
 # actuators
 actuators_status = {
