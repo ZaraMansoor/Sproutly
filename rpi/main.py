@@ -110,13 +110,15 @@ GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
 GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
 GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
 def mister_pulse():
+  time.sleep(0.1)
   GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
-  time.sleep(0.3)
+  time.sleep(0.1)
   GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
-  time.sleep(0.3)
+  time.sleep(0.1)
   GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
-  time.sleep(0.3)
+  time.sleep(0.1)
   GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+  time.sleep(0.1)
 mister_pulse()
 
 # heater 
