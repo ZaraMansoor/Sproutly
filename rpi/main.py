@@ -571,7 +571,7 @@ try:
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
 
-        send_LED_actuator_status(actuators_status, health_status)
+      send_LED_actuator_status(actuators_status, health_status)
 
     except RuntimeError as err:
       print(err.args[0])
