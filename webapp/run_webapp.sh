@@ -1,4 +1,6 @@
 #!/bin/bash
+source ~/venv/bin/activate
+
 cd backend
 daphne -e ssl:8443:privateKey=key.pem:certKey=cert.pem webapps.asgi:application > backend.log 2>&1 &
 
