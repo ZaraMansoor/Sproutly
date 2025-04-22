@@ -522,7 +522,7 @@ try:
           "min_humidity": 60,
           "max_humidity": 80,
           "light_start_time": "09:00:00",
-          "light_hours": 10,
+          "light_hours": 8,
           "light_intensity": 4,
           "water_amount": 250, 
           "water_start_time": "09:00:00",
