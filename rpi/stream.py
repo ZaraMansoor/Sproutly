@@ -172,7 +172,7 @@ def capture_frames():
     
     def create_new_writer():
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        filename = f'stream_{timestamp}.mp4'
+        filename = f'videos/stream_{timestamp}.mp4'
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         return cv2.VideoWriter(filename, fourcc, FRAME_RATE, RESOLUTION)
 
