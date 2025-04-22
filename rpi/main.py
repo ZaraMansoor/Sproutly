@@ -521,13 +521,13 @@ try:
           "max_temp": 75,
           "min_humidity": 60,
           "max_humidity": 80,
-          "light_start_time": "08:00:00",
-          "light_hours": 8,
+          "light_start_time": "09:00:00",
+          "light_hours": 10,
           "light_intensity": 4,
           "water_amount": 250, 
-          "water_start_time": "08:00:00",
+          "water_start_time": "09:00:00",
           "nutrients_amount": 2, 
-          "nutrients_start_time": "08:00:00",
+          "nutrients_start_time": "09:00:00",
 
         }
         curr_time = datetime.now().time()
