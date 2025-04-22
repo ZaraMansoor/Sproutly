@@ -513,7 +513,22 @@ try:
       if (automatic):
         # auto control running
         plant_id = 1 # hardcoded
-        schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
+        # schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
+        schedule = {
+          "number_of_plants": 3,
+          "min_temp": 60,
+          "max_temp": 75,
+          "min_humidity": 60,
+          "max_humidity": 80,
+          "light_start_time": "08:00:00",
+          "light_hours": 8,
+          "light_intensity": 4,
+          "water_amount": 250, 
+          "water_start_time": "08:00:00",
+          "nutrients_amount": 2, 
+          "nutrients_start_time": "08:00:00",
+
+        }
         curr_time = datetime.now().time()
 
         # Heater
