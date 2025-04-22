@@ -49,8 +49,9 @@ LED_2_RELAY_PIN = 6
 LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
-HUMIDIFIER_PIN_1 = 14
-HUMIDIFIER_PIN_2 = 21
+# HUMIDIFIER_PIN_1 = 14
+# HUMIDIFIER_PIN_2 = 21
+MISTER_RELAY_PIN = 14
 
 # start the stream, keep track of if live streaming or not
 stream.start_stream()
@@ -108,22 +109,24 @@ actuators_status = {
 }
 
 # mister
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(HUMIDIFIER_PIN_1, GPIO.OUT)
-GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
-GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
-GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
-def mister_pulse():
-  time.sleep(0.1)
-  GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
-  time.sleep(0.2)
-  GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
-  time.sleep(0.2)
-  GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
-  time.sleep(0.2)
-  GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
-  time.sleep(0.1)
-mister_pulse()
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(HUMIDIFIER_PIN_1, GPIO.OUT)
+# GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
+# GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
+# GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+# def mister_pulse():
+#   time.sleep(0.1)
+#   GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
+#   time.sleep(0.2)
+#   GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
+#   time.sleep(0.2)
+#   GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
+#   time.sleep(0.2)
+#   GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
+#   time.sleep(0.1)
+# mister_pulse()
+mister_relay = Relay(MISTER_RELAY_PIN, active_high=False)
+mister_relay.off()
 
 # heater 
 heater_relay = Relay(HEATER_RELAY_PIN, active_high=False)
@@ -257,12 +260,10 @@ def on_message(client, userdata, msg):
           actuators_status["live_stream"] = "off"
       elif control_command["actuator"] == "mister":
         if control_command["command"] == "on":
-          if actuators_status["mister"] == "off":
-            mister_pulse()
+          mister_relay.on()
           actuators_status["mister"] = "on"
         elif control_command["command"] == "off":
-          if actuators_status["mister"] == "on":
-            mister_pulse()
+          mister_relay.off()
           actuators_status["mister"] = "off"
 
     send_LED_actuator_status(actuators_status, health_status)
@@ -581,4 +582,7 @@ try:
 except KeyboardInterrupt:
   if soil_connected:
     soil_client.close()
+  if (streaming):
+    stream.stop_stream()
+  time.sleep(1)
   GPIO.cleanup()
