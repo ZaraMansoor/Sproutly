@@ -543,11 +543,11 @@ try:
         # Mister
         if sensor_data['humidity'] < schedule["min_humidity"]:
           if actuators_status["mister"] == "off":
-            mister_pulse()
+            mister_relay.on()
           actuators_status["mister"] = "on"
         elif sensor_data['humidity'] > schedule["max_humidity"]:
           if actuators_status["mister"] == "on":
-            mister_pulse()
+            mister_relay.off()
           actuators_status["mister"] = "off"
 
         # Lights
