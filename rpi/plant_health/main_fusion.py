@@ -12,7 +12,7 @@ model_path = "plant_health/results/fusion.pkl"
 
 # load image model
 image_model_pth = 'plant_health/results/resnet.pth'
-image_model = models.resnet18(pretrained=False)
+image_model = models.resnet18(weights=None)
 num_features = image_model.fc.in_features
 image_model.fc = nn.Linear(num_features, 2)
 image_model.load_state_dict(torch.load(image_model_pth, map_location=DEVICE))
@@ -58,18 +58,13 @@ def health_check(image, sensor_data):
     if sensor_feat.dim() == 1:
         sensor_feat = sensor_feat.unsqueeze(0)
     
-    print(f"img_feat.shape: {img_feat.shape}, sensor_feat.shape: {sensor_feat.shape}")
-    
     # concatenate image and sensor features along dimension 1
     fused = torch.cat((img_feat, sensor_feat), dim=1)
-    fused_feats = fused.cpu().numpy()
-
-    print(f"fused_feats.shape: {fused_feats.shape}")
+    fused_feats = fused.detach().cpu().numpy()
 
     # classify into healthy or unhealthy
     pred = fusion_model.predict(fused_feats)
     pred = pred[0]
-    print(f"pred.shape: {pred.shape}, pred: {pred}")
 
     health_status = "Healthy" if pred == 0 else "Unhealthy"
     
