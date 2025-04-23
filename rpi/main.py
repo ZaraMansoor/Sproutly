@@ -415,7 +415,7 @@ def send_LED_actuator_status(actuators_status, health_status):
   is_water_on = actuators_status["water_pump"] == "on"
   is_heater_on = actuators_status["heater"] == "on"
   plant_healthy = health_status == "Healthy"
-  actuator_data = f"{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
+  actuator_data = f"D:{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
   ser2.write(actuator_data.encode('utf-8'))
   print("Sent:", actuator_data)
 
