@@ -2,7 +2,7 @@ import os
 import pickle
 import torch
 import torchvision.transforms as transforms
-from fusion import FusionModel
+from plant_health.fusion import FusionModel
 import numpy as np
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
