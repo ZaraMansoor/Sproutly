@@ -2,7 +2,7 @@ import os
 import torch
 import torch.nn as nn
 import numpy as np
-from dataset import SensorDataset
+from plant_health.dataset import SensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
 import pandas as pd
