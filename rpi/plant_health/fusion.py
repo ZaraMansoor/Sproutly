@@ -22,7 +22,9 @@ class FusionModel(nn.Module):
     
     def forward(self, image, sensor):
         img_feat = self.image_encoder(image).squeeze()
+        print(f"img_feat.shape: {img_feat.shape}")
         _, sensor_feat = self.sensor_encoder(sensor)
+        print(f"sensor_feat.shape: {sensor_feat.shape}")
         
         fused = torch.cat((img_feat, sensor_feat), dim=1)
         return fused
