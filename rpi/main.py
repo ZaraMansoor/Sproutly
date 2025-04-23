@@ -50,7 +50,7 @@ LED_2_RELAY_PIN = 6
 LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
-MISTER_RELAY_PIN = 14
+MISTER_RELAY_PIN = 21
 NUTRIENTS_PUMP_RELAY_PIN = 24
 
 # start the stream, keep track of if live streaming or not
