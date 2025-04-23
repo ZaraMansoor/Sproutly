@@ -11,7 +11,8 @@ import paho.mqtt.client as mqtt
 import json
 import sys
 from datetime import datetime, timedelta
-from plant_health.main import health_check
+# from plant_health.main import health_check
+from plant_health.main_fusion import health_check
 from plant_id_api import identify_plant
 from gpiozero import OutputDevice
 import serial
@@ -49,9 +50,8 @@ LED_2_RELAY_PIN = 6
 LED_3_RELAY_PIN = 5
 LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
-# HUMIDIFIER_PIN_1 = 14
-# HUMIDIFIER_PIN_2 = 21
 MISTER_RELAY_PIN = 14
+NUTRIENTS_PUMP_RELAY_PIN = 24
 
 # start the stream, keep track of if live streaming or not
 stream.start_stream()
@@ -61,7 +61,7 @@ streaming = True
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
 
 # check plant health once a day
-last_health_check_time = datetime.now() - timedelta(days=1)
+last_health_check_time = datetime.now() - timedelta(days=1) + timedelta(seconds=3)
 
 # reset serial buffer data every 2.3 seconds
 last_reset_time = datetime.now() - timedelta(seconds=2.3)
@@ -109,22 +109,6 @@ actuators_status = {
 }
 
 # mister
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(HUMIDIFIER_PIN_1, GPIO.OUT)
-# GPIO.setup(HUMIDIFIER_PIN_2, GPIO.OUT)
-# GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
-# GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
-# def mister_pulse():
-#   time.sleep(0.1)
-#   GPIO.output(HUMIDIFIER_PIN_1, GPIO.LOW)
-#   time.sleep(0.2)
-#   GPIO.output(HUMIDIFIER_PIN_1, GPIO.HIGH)
-#   time.sleep(0.2)
-#   GPIO.output(HUMIDIFIER_PIN_2, GPIO.LOW)
-#   time.sleep(0.2)
-#   GPIO.output(HUMIDIFIER_PIN_2, GPIO.HIGH)
-#   time.sleep(0.1)
-# mister_pulse()
 mister_relay = Relay(MISTER_RELAY_PIN, active_high=False)
 mister_relay.off()
 
@@ -137,7 +121,6 @@ water_pump_relay = Relay(WATER_PUMP_RELAY_PIN, active_high=False)
 water_pump_relay.off()
 
 # nutrients pump 
-NUTRIENTS_PUMP_RELAY_PIN = 24
 nutrients_pump_relay = Relay(NUTRIENTS_PUMP_RELAY_PIN, active_high=False)
 nutrients_pump_relay.off()
 
@@ -312,7 +295,17 @@ def send_plant_health(client):
       image = image.convert('RGB')
       picam2.stop()
 
-    health_status = health_check(image)
+    ordered_data = [
+      sensor_data["soil_moisture"],
+      sensor_data["temperature_c"],
+      sensor_data["humidity"],
+      sensor_data["lux"],
+      sensor_data["ph"],
+      sensor_data["nitrogen"],
+      sensor_data["phosphorus"],
+      sensor_data["potassium"],
+    ]
+    health_status = health_check(image, ordered_data)
 
     # turn white light off
     white_light_relay.off()
