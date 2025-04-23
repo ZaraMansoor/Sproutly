@@ -424,6 +424,7 @@ def send_LED_actuator_status(actuators_status, health_status):
       print("Received from Arduino:", line)
     except UnicodeDecodeError:
       print("Could not decode incoming serial data.")
+  print("returning")
 
 # initialize MQTT client
 client = mqtt.Client()
