@@ -410,21 +410,23 @@ def get_soil_sensor_data(sensor_data):
   return (sensor_data)
 
 def send_LED_actuator_status(actuators_status, health_status):
-  # Send actuator status to arduino
-  is_light_on = (actuators_status["LED_light"] > 0) or (actuators_status["white_light"] == "on")
-  is_water_on = actuators_status["water_pump"] == "on"
-  is_heater_on = actuators_status["heater"] == "on"
-  plant_healthy = health_status == "Healthy"
-  actuator_data = f"D:{int(is_light_on)},{int(is_water_on)},{int(is_heater_on)},{int(plant_healthy)}"
-  ser2.write(actuator_data.encode('utf-8'))
-  print("Sent:", actuator_data)
-  if ser2.in_waiting > 0:
+  status_map = {
+    "light": "lightOn" if actuators_status["LED_light"] > 0 or actuators_status["white_light"] == "on" else "lightOff",
+    "water": "waterOn" if actuators_status["water_pump"] == "on" else "waterOff",
+    "heater": "heaterOn" if actuators_status["heater"] == "on" else "heaterOff",
+    "health": "healthy" if health_status == "Healthy" else "unhealthy"
+  }
+
+  for cmd in status_map.values():
     try:
-      line = ser2.readline().decode('utf-8').strip()
-      print("Received from Arduino:", line)
+      ser2.write(f"{cmd}\n".encode('utf-8'))
+      print("Sent to Arduino:", cmd)
+      if ser2.in_waiting > 0:
+        response = ser2.readline().decode('utf-8').strip()
+        print("Received from Arduino:", response)
     except UnicodeDecodeError:
       print("Could not decode incoming serial data.")
-  print("returning")
+
 
 # initialize MQTT client
 client = mqtt.Client()
