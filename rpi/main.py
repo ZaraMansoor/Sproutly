@@ -72,11 +72,11 @@ GPIO.setmode(GPIO.BCM)
 dht_instance = dht11.DHT11(pin=17)
 
 # soil moisture and light sensor data from arduino
-ser = serial.Serial('/dev/ttyACM1', 115200, timeout=1)
+ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 ser.reset_input_buffer()
 
 # sent actuator status to arduino 2
-ser2 = serial.Serial('/dev/ttyACM0', 19200, timeout=1)
+ser2 = serial.Serial('/dev/ttyACM1', 19200, timeout=1)
 ser2.reset_input_buffer()
 
 # 7-in-1 soil sensor 
