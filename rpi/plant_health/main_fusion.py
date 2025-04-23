@@ -63,7 +63,7 @@ def health_check(image, sensor_data):
     
     # concatenate image and sensor features along dimension 1
     fused = torch.cat((img_feat, sensor_feat), dim=1)
-    fused_feats = fused.cpu().numpy()
+    fused_feats = fused.detach().cpu().numpy()
 
     print(f"fused_feats.shape: {fused_feats.shape}")
 
