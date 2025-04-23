@@ -31,14 +31,18 @@ def health_check(image, sensor_data):
     image_tensor = transform(image).unsqueeze(0).to(device)
     sensor_tensor = torch.tensor(sensor_data, dtype=torch.float).unsqueeze(0).to(device)
 
+    print(f"image_tensor.shape: {image_tensor.shape}, sensor_tensor.shape: {sensor_tensor.shape}")
+
     # find the concatenated sensor and image features
     with torch.no_grad():
         fused = model(image_tensor, sensor_tensor)
+        print(f"fused.shape: {fused.shape}")
         fused = fused.cpu().numpy()
     
     # classify into healthy or unhealthy
     pred = fusion_model.predict(fused)
     pred = pred[0]
+    print(f"pred.shape: {pred.shape}, pred: {pred}")
 
     health_status = "Healthy" if pred == 0 else "Unhealthy"
     
