@@ -30,6 +30,8 @@ def health_check(image, sensor_data):
     # transform image
     image_tensor = transform(image).unsqueeze(0).to(device)
     sensor_tensor = torch.tensor(sensor_data, dtype=torch.float).unsqueeze(0).to(device)
+    if sensor_tensor.dim() == 2:  
+        sensor_tensor = sensor_tensor.unsqueeze(1)
 
     print(f"image_tensor.shape: {image_tensor.shape}, sensor_tensor.shape: {sensor_tensor.shape}")
 
