@@ -43,6 +43,7 @@ def health_check(image, sensor_data):
     sensor_data = torch.tensor(sensor_data, dtype=torch.float32)
     image = image.unsqueeze(0).to(DEVICE)
     sensor = sensor_data.unsqueeze(0).to(DEVICE)
+    print(f"image.shape: {image.shape}, sensor.shape: {sensor.shape}")
     
     # make sensor data match sensor model expected input
     if sensor.dim() == 2:  
