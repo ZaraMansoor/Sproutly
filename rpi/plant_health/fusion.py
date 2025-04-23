@@ -24,6 +24,7 @@ class FusionModel(nn.Module):
         img_feat = self.image_encoder(image).squeeze()
         print(f"img_feat.shape: {img_feat.shape}")
         _, sensor_feat = self.sensor_encoder(sensor)
+        sensor_feat = sensor_feat.squeeze()
         print(f"sensor_feat.shape: {sensor_feat.shape}")
         
         fused = torch.cat((img_feat, sensor_feat), dim=1)
