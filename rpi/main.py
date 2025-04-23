@@ -418,14 +418,8 @@ def send_LED_actuator_status(actuators_status, health_status):
   }
 
   for cmd in status_map.values():
-    try:
-      ser2.write(f"{cmd}\n".encode('utf-8'))
-      print("Sent to Arduino:", cmd)
-      if ser2.in_waiting > 0:
-        response = ser2.readline().decode('utf-8').strip()
-        print("Received from Arduino:", response)
-    except UnicodeDecodeError:
-      print("Could not decode incoming serial data.")
+    ser2.write(f"{cmd}\n".encode('utf-8'))
+    print("Sent to Arduino:", cmd)
 
 
 # initialize MQTT client
