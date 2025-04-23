@@ -39,7 +39,7 @@ transform = transforms.Compose([
 ])
 
 def health_check(image, sensor_data):
-    image = torch.tensor(image)
+    image = transform(image)
     sensor_data = torch.tensor(sensor_data, dtype=torch.float32)
     image = image.unsqueeze(0).to(DEVICE)
     sensor = sensor_data.unsqueeze(0).to(DEVICE)
