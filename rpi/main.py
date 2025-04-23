@@ -419,8 +419,6 @@ def send_LED_actuator_status(actuators_status, health_status):
 
   for cmd in status_map.values():
     ser2.write(f"{cmd}\n".encode('utf-8'))
-    print("Sent to Arduino:", cmd)
-
 
 # initialize MQTT client
 client = mqtt.Client()
