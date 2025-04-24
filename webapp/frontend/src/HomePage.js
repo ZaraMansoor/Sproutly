@@ -362,7 +362,15 @@ const HomePage = () => {
                     console.log("Get recent health status command sent!!!");
                 }}>Get Recent Health Status</button>
                 <button onClick={() => navigate('/monitoring')}>Live Camera</button>
-                <button onClick={() => navigate('/add-plant')}>Add Plant</button>
+                <button onClick={() => {
+                    navigate('/add-plant', {
+                        state: {
+                            plantId: selectedPlant.id,
+                            numberOfPlants: numberOfPlants
+                        }
+                    })
+                    console.log("Add plant button clicked!! plantId and numberOfPlants: ", selectedPlant.id, numberOfPlants);
+                }}>Add Plant</button>
                 <button onClick={() => navigate('/manual-autoschedule')}>Set Up Auto Control</button>
                 <button onClick={() => navigate('/control-command')}>Turn On/Off Actuators</button>
                 
