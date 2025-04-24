@@ -203,6 +203,7 @@ const ControlCommandPage = () => {
                         setWaterPump(waterPumpState);
                         sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                     }}
+                    disabled = {automaticState === true}
                 />
                 <Form.Check
                     type="switch"
