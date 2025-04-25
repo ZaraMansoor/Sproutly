@@ -68,4 +68,4 @@ if __name__ == "__main__":
     files = [
       ('images', ('image.jpg', image_stream, 'image/jpeg'))
     ]
-    identify_plant()
+    identify_plant(files)
