@@ -363,7 +363,9 @@ def get_webscraped_plant_data(request):
 
 @csrf_exempt
 def get_sensor_data_history(request):
-    data = list(SensorData.objects.all().values())
+    data = list(SensorData.objects.order_by("timestamp")[:1440])
+
+    print("data::::: ", data)
     
     for d in data:
         d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
@@ -451,3 +453,19 @@ def get_detection_result(request):
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+
+# @csrf_exempt
+# def update_current_plant(request):
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)
+#             fetched_plant = Plant.objects.get(id=data["plantId"])
+#             if CurrPlant.objects.filter(user_id=1).exists():
+#                 CurrPlant.objects.filter(user_id=1).delete()
+#             new_current_plant = CurrPlant.objects.create(user_id=1, current_plant=fetched_plant)
+#             new_current_plant.save()
+#             return JsonResponse({"status": "Success"}, status=200)
+#         except Exception as e:
+#             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+#     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
