@@ -597,10 +597,12 @@ def main():
 
   try:
     client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
-    client.loop_forever()  # blocks here, MQTT runs forever
+    client.loop_start()  # blocks here, MQTT runs forever
   except KeyboardInterrupt:
     print("Exiting...")
     running = False
+    client.loop_stop()
+    client.disconnect() 
     control_thread.join()
     if soil_connected:
       soil_client.close()
