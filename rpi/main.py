@@ -446,7 +446,7 @@ nutrients_pump_started = False
 nutrients_pump_start_time = None
 
 def control_loop():
-  global running, soil_client, stream
+  global running, soil_client, stream, sensor_data, last_reset_time
   while running:
     try: 
       # get dht11 sensor data
