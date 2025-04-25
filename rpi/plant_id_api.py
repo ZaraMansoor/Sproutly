@@ -20,6 +20,8 @@ def identify_plant(files):
     if response.status_code == 200:
         best_match = json_result.get("bestMatch", "Unknown")
         common_names = json_result["results"][0]["species"].get("commonNames", [])
+        print(f"best_match: {best_match}")
+        print(f"common_names: {common_names}")
         return best_match, common_names
 
 if __name__ == "__main__":
