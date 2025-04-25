@@ -363,7 +363,9 @@ def get_webscraped_plant_data(request):
 
 @csrf_exempt
 def get_sensor_data_history(request):
-    data = list(SensorData.objects.order_by("timestamp")[:1440])
+    print("")
+    data = list(SensorData.objects.all().order_by("timestamp").values())
+    data = data[:1440]
 
     print("data::::: ", data)
     
