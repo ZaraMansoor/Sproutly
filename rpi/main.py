@@ -359,6 +359,7 @@ def send_plant_id(client):
     control_leds(last_led_state)
     
     best_match, common_names = identify_plant(files)
+    print("typeeeee: ", type(best_match), type(common_names))
   
     payload = json.dumps({
       "type": "plant_id",
