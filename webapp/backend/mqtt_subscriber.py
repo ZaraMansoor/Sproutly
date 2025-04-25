@@ -31,7 +31,6 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     try:
         raw_payload = msg.payload.decode()
-        print("Raw MQTT Payload:", raw_payload)
 
         data = json.loads(raw_payload) 
         print("Received data!!!:", data)
