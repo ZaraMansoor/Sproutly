@@ -366,8 +366,6 @@ def get_sensor_data_history(request):
     print("")
     data = list(SensorData.objects.all().order_by("timestamp").values())
     data = data[:1440]
-
-    print("data::::: ", data)
     
     for d in data:
         d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
