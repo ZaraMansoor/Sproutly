@@ -68,4 +68,7 @@ if __name__ == "__main__":
     files = [
       ('images', ('image.jpg', image_stream, 'image/jpeg'))
     ]
-    identify_plant(files)
+    best_match, common_names = identify_plant(files)
+
+    print(f"best_match: {best_match}")
+    print(f"common_names: {common_names}")
