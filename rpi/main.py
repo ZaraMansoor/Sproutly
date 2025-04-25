@@ -488,15 +488,21 @@ def control_loop():
 
       # check if 1 minute has passed since last sensor data was sent
       if datetime.now() - last_sensor_send_time >= timedelta(minutes=1):
+        print("Sending sensor data")
         send_sensor_data(client, sensor_data)
+        print("Sent sensor data")
       
       # check if 24 hours have passed since last health check
       if datetime.now() - last_health_check_time >= timedelta(days=1):
+        print("Sending health data")
         send_plant_health(client)
+        print("Sent health data")
       
       # check if 2.3 seconds have passed since serial buffer reset
       if datetime.now() - last_reset_time >= timedelta(seconds=2.3):
+        print("reseting ip buffer")
         ser.reset_input_buffer()
+        print("reset ip buffer")
         last_reset_time = datetime.now()
 
       # Automatic or manual control
@@ -504,22 +510,22 @@ def control_loop():
         print("Auto mode - processing sensors and relays...")
         # auto control running
         plant_id = 1 # hardcoded
-        # schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
-        schedule = {
-          "number_of_plants": 3,
-          "min_temp": 60,
-          "max_temp": 75,
-          "min_humidity": 60,
-          "max_humidity": 80,
-          "light_start_time": "09:00:00",
-          "light_hours": 8,
-          "light_intensity": 4,
-          "water_amount": 250, 
-          "water_start_time": "09:00:00",
-          "nutrients_amount": 2, 
-          "nutrients_start_time": "09:00:00",
+        schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
+        # schedule = {
+        #   "number_of_plants": 3,
+        #   "min_temp": 60,
+        #   "max_temp": 75,
+        #   "min_humidity": 60,
+        #   "max_humidity": 80,
+        #   "light_start_time": "09:00:00",
+        #   "light_hours": 8,
+        #   "light_intensity": 4,
+        #   "water_amount": 250, 
+        #   "water_start_time": "09:00:00",
+        #   "nutrients_amount": 2, 
+        #   "nutrients_start_time": "09:00:00",
 
-        }
+        # }
         curr_time = datetime.now().time()
 
         # Heater
@@ -600,7 +606,7 @@ def main():
     client.loop_start()
     while running:
       time.sleep(1)
-      
+
   except KeyboardInterrupt:
     print("Exiting...")
     running = False
