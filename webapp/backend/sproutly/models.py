@@ -6,7 +6,7 @@ class Plant(models.Model): # user's plant
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=100)
-    image_url = models.URLField(blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True, default='https://soltech.com/cdn/shop/files/Schefflera_2048x.jpg?v=1685990757')
     health_status = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
