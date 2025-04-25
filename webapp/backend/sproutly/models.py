@@ -12,6 +12,11 @@ class Plant(models.Model): # user's plant
     def __str__(self):
         return f'Plant(name={self.name}, species={self.species}, health_status="{self.health_status}")'
 
+class CurrPlant(models.Model):
+    # if using oauth later, comment out
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_id = models.IntegerField(default=1, blank=False, null=False)
+    current_plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
 
 class AutoSchedule(models.Model):
     plant = models.OneToOneField(Plant, on_delete=models.CASCADE, related_name='auto_schedule')
@@ -53,8 +58,8 @@ class SensorData(models.Model):
     phosphorus = models.FloatField(null=True, blank=True) # mg/kg
     potassium = models.FloatField(null=True, blank=True) # mg/kg
 
-    def __str__(self):
-        return f"Sensor data for {self.plant.name}: temperature_c={self.temperature_c}, temperature_f={self.temperature_f}, humidity={self.humidity}"
+    # def __str__(self):
+    #     return f"Sensor data for {self.plant.name}: temperature_c={self.temperature_c}, temperature_f={self.temperature_f}, humidity={self.humidity}"
 
 
 class WebscrapedPlant(models.Model):
