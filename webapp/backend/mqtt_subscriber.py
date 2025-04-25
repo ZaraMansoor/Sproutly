@@ -142,4 +142,5 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)
-client.loop_forever()
+# client.loop_forever()
+client.loop_start()
