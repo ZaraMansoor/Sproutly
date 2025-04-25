@@ -100,11 +100,27 @@ def add_user_plant(request):
                 # plant species detection
 
                 # send a get_plant_id request to rpi (to get detected plant species data)
-                publish.single(
-                    topic="django/sproutly/mqtt",
-                    payload=json.dumps({"command": "get_plant_id"}),
-                    hostname="broker.emqx.io"
-                )
+                # publish.single(
+                #     topic="django/sproutly/mqtt",
+                #     payload=json.dumps({"command": "get_plant_id"}),
+                #     hostname="broker.emqx.io"
+                # ) buggy!!!!!! :(
+
+                message = {
+                    "command": "get_plant_id",
+                }
+
+                print(f"publishing to {CONTROL_TOPIC}: {json.dumps(message)}")
+
+                client = mqtt.Client()
+                client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)
+                client.loop_start()
+                client.publish(CONTROL_TOPIC, json.dumps(message))
+                time.sleep(1)
+                client.disconnect()
+
+
+
                 print("sent get_plant_id request to rpi")
 
                 # wait? sleep?
