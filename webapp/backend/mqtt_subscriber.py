@@ -10,6 +10,7 @@ import os
 import django
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+import time
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
 django.setup()
@@ -144,3 +145,11 @@ client.on_message = on_message
 client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)
 # client.loop_forever()
 client.loop_start()
+
+
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    client.loop_stop()
+    client.disconnect()
