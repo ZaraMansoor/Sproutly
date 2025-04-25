@@ -597,7 +597,10 @@ def main():
 
   try:
     client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
-    client.loop_start()  # blocks here, MQTT runs forever
+    client.loop_start()
+    while running:
+      time.sleep(1)
+      
   except KeyboardInterrupt:
     print("Exiting...")
     running = False
