@@ -26,17 +26,15 @@ import RPi.GPIO as GPIO
 import dht11
 from pymodbus.client import ModbusSerialClient
 import requests
+import threading
 
-libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
-if os.path.exists(libdir):
-  sys.path.append(libdir)
-
-from waveshare_TSL2591 import TSL2591
-
+# ---- Relay Class ----
+# turns on and off relays through rpi gpio
 class Relay(OutputDevice):
   def __init__(self, pin, active_high=False):
     super().__init__(pin, active_high=active_high)
 
+# ---- Globals ----
 # MQTT configuration
 MQTT_SERVER = "broker.emqx.io"  # use your broker address
 MQTT_PORT = 1883
@@ -96,8 +94,9 @@ else:
 
 # automatic control
 automatic = False
+running = True
 
-# actuators
+# Actuators
 actuators_status = {
   "heater": "off",
   "water_pump": "off",
@@ -161,6 +160,7 @@ def control_leds(num_leds):
   else:
     led_4_relay.off()
 
+# ---- Control and MQTT Functions ----
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
   if rc == 0:
@@ -255,6 +255,10 @@ def on_message(client, userdata, msg):
     print("JSON Decode Error:", e)
     print("Invalid JSON received:", raw_payload)
 
+# initialize MQTT client
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
 
 def send_sensor_data(client, sensor_data):
   global last_sensor_send_time
@@ -313,8 +317,8 @@ def send_plant_health(client):
     control_leds(last_led_state)
     
     payload = json.dumps({
-        "type": "plant_health",
-        "status": health_status
+      "type": "plant_health",
+      "status": health_status
     })
     
     client.publish(MQTT_TOPIC, payload)
@@ -359,7 +363,6 @@ def send_plant_id(client):
     control_leds(last_led_state)
     
     best_match, common_names = identify_plant(files)
-    print("typeeeee: ", type(best_match), type(common_names))
   
     payload = json.dumps({
       "type": "plant_id",
@@ -421,14 +424,6 @@ def send_LED_actuator_status(actuators_status, health_status):
   for cmd in status_map.values():
     ser2.write(f"{cmd}\n".encode('utf-8'))
 
-# initialize MQTT client
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
-
-client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
-client.loop_start()
-
 sensor_data = {
   "temperature_c": 0,
   "temperature_f": 0,
@@ -449,9 +444,11 @@ water_pump_start_time = None
 
 nutrients_pump_started = False
 nutrients_pump_start_time = None
-try:
-  while True:
-    try:
+
+def control_loop():
+  global running, soil_client, stream
+  while running:
+    try: 
       # get dht11 sensor data
       try:
         dht_result = dht_instance.read()
@@ -503,10 +500,9 @@ try:
         ser.reset_input_buffer()
         last_reset_time = datetime.now()
 
-      
-      # TODO: test later!!!!!
-
-      if (automatic):
+      # Automatic or manual control
+      if automatic:
+        print("Auto mode - processing sensors and relays...")
         # auto control running
         plant_id = 1 # hardcoded
         # schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
@@ -582,17 +578,39 @@ try:
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
 
-      send_LED_actuator_status(actuators_status, health_status)
+        send_LED_actuator_status(actuators_status, health_status)
+      else:
+        print("Manual mode - waiting for controls")
 
     except RuntimeError as err:
       print(err.args[0])
 
-    time.sleep(2.0)
+    time.sleep(2)
+  print("[THREAD] Control loop exited.")
 
-except KeyboardInterrupt:
-  if soil_connected:
-    soil_client.close()
-  if (streaming):
-    stream.stop_stream()
-  time.sleep(1)
-  GPIO.cleanup()
+def main():
+  global running, soil_client, stream
+
+  client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
+  client.loop_start()
+
+  # start control loop in a background thread
+  control_thread = threading.Thread(target=control_loop)
+  control_thread.daemon = True
+  control_thread.start()
+
+  try:
+    client.loop_forever()  # blocks here, MQTT runs forever
+  except KeyboardInterrupt:
+    print("Exiting...")
+    running = False
+    control_thread.join()
+    if soil_connected:
+      soil_client.close()
+    if (streaming):
+      stream.stop_stream()
+    time.sleep(1)
+    GPIO.cleanup()
+
+if __name__ == "__main__":
+  main()
