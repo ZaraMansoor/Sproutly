@@ -34,7 +34,7 @@ def on_message(client, userdata, msg):
         print("Raw MQTT Payload:", raw_payload)
 
         data = json.loads(raw_payload) 
-        print("Received Sensor/Health Data:", data)
+        print("Received data!!!:", data)
 
 
         try: # sensor data received
