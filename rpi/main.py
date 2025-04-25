@@ -27,6 +27,7 @@ import dht11
 from pymodbus.client import ModbusSerialClient
 import requests
 import threading
+import csv
 
 # ---- Relay Class ----
 # turns on and off relays through rpi gpio
@@ -50,6 +51,7 @@ LED_4_RELAY_PIN = 19
 WHITE_LIGHT_RELAY_PIN = 16
 MISTER_RELAY_PIN = 21
 NUTRIENTS_PUMP_RELAY_PIN = 24
+log_file_path = "sensor_actuator_log.csv"
 
 # start the stream, keep track of if live streaming or not
 stream.start_stream()
@@ -161,6 +163,26 @@ def control_leds(num_leds):
     led_4_relay.off()
 
 # ---- Control and MQTT Functions ----
+
+def initialize_csv():
+  with open(log_file_path, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow([
+      "timestamp",
+      *sensor_data.keys(),
+      *actuators_status.keys()
+    ])
+
+def log_data():
+  with open(log_file_path, mode='a', newline='') as file:
+    writer = csv.writer(file)
+    row = [
+      datetime.now().isoformat(),
+      *[sensor_data[key] for key in sensor_data],
+      *[actuators_status[key] for key in actuators_status]
+    ]
+    writer.writerow(row)
+
 # callback for when the MQTT client connects to the broker
 def on_connect(client, userdata, flags, rc):
   if rc == 0:
@@ -590,12 +612,13 @@ def control_loop():
     except RuntimeError as err:
       print(err.args[0])
 
-    time.sleep(2)
+    log_data()
+    time.sleep(1)
   print("[THREAD] Control loop exited.")
 
 def main():
   global running, soil_client, stream
-
+  initialize_csv()
   # start control loop in a background thread
   control_thread = threading.Thread(target=control_loop)
   control_thread.daemon = True
