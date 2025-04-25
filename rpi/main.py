@@ -591,15 +591,13 @@ def control_loop():
 def main():
   global running, soil_client, stream
 
-  client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
-  client.loop_start()
-
   # start control loop in a background thread
   control_thread = threading.Thread(target=control_loop)
   control_thread.daemon = True
   control_thread.start()
 
   try:
+    client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
     client.loop_forever()  # blocks here, MQTT runs forever
   except KeyboardInterrupt:
     print("Exiting...")
