@@ -87,6 +87,26 @@ def set_up_autoschedule(number_of_plants, new_plant, webscraped_plant):
     
 
 @csrf_exempt
+def add_to_database(plant_in_db, user_plant_name, number_of_plants):
+    img_url = WebscrapedPlant.objects.get(name=plant_in_db.name).image_url
+
+    print("let's create a new plant (1)")
+    new_plant = Plant(
+        name = user_plant_name,
+        species = plant_in_db.name,
+        image_url = img_url,
+    )
+    print("new plant created11!")
+    new_plant.save()
+    print("new plant saved11!")
+
+    webscraped_plant = WebscrapedPlant.objects.get(name=plant_in_db.name)
+    print("got a webscraped plant")
+
+    # set up initial auto-schedule
+    set_up_autoschedule(number_of_plants, new_plant, webscraped_plant)
+
+@csrf_exempt
 def add_user_plant(request):
     if request.method == "POST":
         try:
@@ -139,28 +159,13 @@ def add_user_plant(request):
 
                     if lowercase_best_match in lowercase_plant_in_db or lowercase_plant_in_db in lowercase_best_match:
                         # (1) if exists, add to database
-                        img_url = WebscrapedPlant.objects.get(name=plant_in_db.name).image_url
-
-                        print("let's create a new plant (1)")
-                        new_plant = Plant(
-                            name = user_plant_name,
-                            species = plant_in_db.name,
-                            image_url = img_url,
-                        )
-                        print("new plant created11!")
-                        new_plant.save()
-                        print("new plant saved11!")
-
-                        webscraped_plant = WebscrapedPlant.objects.get(name=plant_in_db.name)
-                        print("got a webscraped plant")
-
-                        # set up initial auto-schedule
-                        set_up_autoschedule(number_of_plants, new_plant, webscraped_plant)
+                        add_to_database(plant_in_db, user_plant_name, number_of_plants)
 
                         return JsonResponse({"status": "detected plant found", "species": plant_in_db.name}, status=200)
                     else:
                         for common_name in lowercase_common_names:
                             if common_name in lowercase_plant_in_db or lowercase_plant_in_db in common_name:
+                                add_to_database(plant_in_db, user_plant_name, number_of_plants)
                                 return JsonResponse({"status": "detected plant found", "species": plant_in_db.name, "number_of_plants": number_of_plants}, status=200)
                     
                 # (2) if doesn't exist, allow manual auto scheduling
@@ -349,7 +354,6 @@ def get_webscraped_plant_data(request):
 
             print("plant!!: ", plant)
 
-            time.sleep(5) # wait for plant save to finish?
             # update the autoschedule to reflect the webscraped data
             user_plant = Plant.objects.get(name=plant_name)
             print("user_plant11: ", user_plant)
