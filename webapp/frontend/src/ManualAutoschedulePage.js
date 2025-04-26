@@ -36,18 +36,18 @@ const ManualAutoschedulePage = () => {
             .then(result => result.json())
             .then(data => {
                 console.log("Auto schedule fetched:", data);
-                setMinTemp(data.minTemp?.toString() || '');
-                setMaxTemp(data.maxTemp?.toString() || '');
-                setMinHumidity(data.minHumidity?.toString() || '');
-                setMaxHumidity(data.maxHumidity?.toString() || '');
-                setLightStartTime(data.lightStartTime?.toString() || '');
-                setLightIntensity(data.lightIntensity?.toString() || '');
-                setLightHours(data.lightHours?.toString() || '');
-                setWaterFrequency(data.waterFrequency?.toString() || '');
-                setWaterStartTime(data.waterStartTime?.toString() || '');
-                setWaterAmount(data.waterAmount?.toString() || '');
-                setNutrientsStartTime(data.nutrientsStartTime?.toString() || '');
-                setNutrientsAmount(data.nutrientsAmount?.toString() || '');
+                setMinTemp(data.min_temp?.toString() || '');
+                setMaxTemp(data.max_temp?.toString() || '');
+                setMinHumidity(data.min_humidity?.toString() || '');
+                setMaxHumidity(data.max_humidity?.toString() || '');
+                setLightStartTime(data.light_start_time?.toString() || '');
+                setLightIntensity(data.light_intensity?.toString() || '');
+                setLightHours(data.light_hours?.toString() || '');
+                setWaterFrequency(data.water_frequency?.toString() || '');
+                setWaterStartTime(data.water_start_time?.toString() || '');
+                setWaterAmount(data.water_amount?.toString() || '');
+                setNutrientsStartTime(data.nutrients_start_time?.toString() || '');
+                setNutrientsAmount(data.nutrients_amount?.toString() || '');
                 console.log("minTemp:", minTemp);
                 console.log("waterStartTime:", waterStartTime);
                 setLoading(false);
