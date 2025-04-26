@@ -44,6 +44,7 @@ const HomePage = () => {
 
     const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
 
+    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(null);
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(null);
 
     React.useEffect(() => {
@@ -307,7 +308,7 @@ const HomePage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plantId: selectedPlant.id }),
+                body: JSON.stringify({ plantId: selectedCurrPlantId }),
             }
         );
 
@@ -348,11 +349,10 @@ const HomePage = () => {
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
                     <Form onSubmit={updateCurrPlant}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Current Plant</Form.Label>
-                            <Form.Select required>
-                                <option value="">Select plant that is currently in your greenhouse</option>
+                            <Form.Label>Current Plant (Select plant that is currently in your greenhouse)</Form.Label>
+                            <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
                                 {plants.map((plant) => (
-                                    <option key={plant.id} value={plant.name}>
+                                    <option key={plant.id} value={plant.id}>
                                         {plant.name}
                                     </option>
                                 ))}
