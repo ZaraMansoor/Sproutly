@@ -20,23 +20,23 @@ print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
 print(f"device: {DEVICE}")
 
 BATCH_SIZE = 32
-OUTPUT_DIR = 'results/fusion_id_3'
+OUTPUT_DIR = 'results/fusion_id_all_unfreeze_5'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # load image model
 image_model_pth = 'results/compare_models/plantdoc_dataset/ResNet18/best.pth'
-image_model = models.resnet18(pretrained=False)
+image_model = models.resnet18(weights=None)
 num_features = image_model.fc.in_features
 image_model.fc = nn.Linear(num_features, 2)
-image_model.load_state_dict(torch.load(image_model_pth, map_location=DEVICE))
-image_encoder = nn.Sequential(*list(image_model.children())[:-1]).to(DEVICE)
+image_model.load_state_dict(torch.load(image_model_pth, map_location=DEVICE, weights_only=True))
+image_encoder = image_model.to(DEVICE)
 image_encoder.eval()
 print("Successfully Loaded Image Model")
 
 # load sensor model
 sensor_model_pth = 'results/sensor/sensor_model.pth'
 sensor_encoder = SensorModel(input_dim=8).to(DEVICE)
-sensor_encoder.load_state_dict(torch.load(sensor_model_pth, map_location=DEVICE))
+sensor_encoder.load_state_dict(torch.load(sensor_model_pth, map_location=DEVICE, weights_only=True))
 sensor_encoder.eval()
 print("Successfully Loaded Sensor Model")
 
@@ -75,7 +75,7 @@ def extract_fused_features(dataloader):
     return np.concatenate(fused_feats, axis=0), np.concatenate(all_labels, axis=0)
 
 
-def build_fused_datasets():
+def get_datasets():
     csv_path = 'datasets/rpi/updated_sensor_log.csv'
     image_dir = 'datasets/rpi/images'
     transform = transforms.Compose([
@@ -92,7 +92,7 @@ def build_fused_datasets():
         _, _, _, _, plant_ids = dataset[idx]
         if str(plant_ids) in ['Snake Plant Healthy 2', 'African Violet Unhealthy 3', 
                               'Peperomia Unhealthy 2', 'African Violet Healthy 2', 
-                              'Peperomia Healthy 2']:
+                              'Peperomia Healthy 2', 'Hedera Ivy Healthy 1']:
             test_indices.append(idx)
         else:
             train_indices.append(idx)
@@ -105,6 +105,10 @@ def build_fused_datasets():
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
+    return train_loader, test_loader
+
+
+def build_fused_datasets(train_loader, test_loader):
     # extract fused features from both train and test loaders
     train_fused_feats, train_labels = extract_fused_features(train_loader)
     test_fused_feats, test_labels = extract_fused_features(test_loader)
@@ -222,7 +226,84 @@ def train(X_train, y_train, X_test, y_test):
         
         print(f"Metrics saved to {OUTPUT_DIR}")
 
+
+def fine_tune_models(image_model, sensor_model, dataloader, epochs=15, lr=1e-4):
+    print("Starting Fine-tuning of Image and Sensor Models Separately...")
+
+    # set models to train
+    image_model.train()
+    sensor_model.train()
+
+    # define optimizers
+    image_optimizer = torch.optim.Adam(image_model.parameters(), lr=1e-5)
+    sensor_optimizer = torch.optim.Adam(sensor_model.parameters(), lr=5e-4)
+
+    # loss functions
+    image_criterion = nn.CrossEntropyLoss()
+    sensor_criterion = nn.BCELoss()
+
+    for epoch in range(epochs):
+        running_loss_img = 0.0
+        running_loss_sensor = 0.0
+
+        for batch in dataloader:
+            images, sensors, labels, _, _ = batch
+            images = images.to(DEVICE)
+            sensors = sensors.to(DEVICE)
+            labels = labels.to(DEVICE)
+
+            if sensors.dim() == 2:
+                sensors = sensors.unsqueeze(1)
+
+            # train image model
+            image_optimizer.zero_grad()
+            img_preds = image_model(images)
+            img_loss = image_criterion(img_preds, labels)
+            img_loss.backward()
+            image_optimizer.step()
+
+            # train sensor model
+            sensor_optimizer.zero_grad()
+            sensor_preds, _ = sensor_model(sensors)
+            sensor_loss = sensor_criterion(sensor_preds.squeeze(), labels.float())
+            sensor_loss.backward()
+            sensor_optimizer.step()
+            
+            running_loss_img += img_loss.item()
+            running_loss_sensor += sensor_loss.item()
+
+        if epoch == 0:
+            print(f"img_preds.shape: {img_preds.shape}")
+            print(f"sensor_preds.shape: {sensor_preds.squeeze().shape}")
+
+        print(f"Epoch [{epoch+1}/{epochs}], Image Loss: {running_loss_img/len(dataloader):.6f}, Sensor Loss: {running_loss_sensor/len(dataloader):.6f}")
+
+    print("Finished Fine-tuning Models.")
+
+    image_model_path = os.path.join(OUTPUT_DIR, 'image_model.pth')
+    sensor_model_path = os.path.join(OUTPUT_DIR, 'sensor_model.pth')
+
+    torch.save(image_model.state_dict(), image_model_path)
+    torch.save(sensor_model.state_dict(), sensor_model_path)
+
+    print(f"Saved fine-tuned image model to {image_model_path}")
+    print(f"Saved fine-tuned sensor model to {sensor_model_path}")
+
+    # remove classifier head, set to eval
+    image_encoder = nn.Sequential(*list(image_model.children())[:-1]).to(DEVICE)
+    image_encoder.eval()
+    sensor_model.eval()
+
 if __name__ == "__main__":
-    train_feats, train_labels, test_feats, test_labels = save_fused_datasets()
+    # get train and test datasets
+    train_loader, test_loader = get_datasets()
+
+    # fine-tune
+    fine_tune_models(image_encoder, sensor_encoder, train_loader, epochs=15, lr=1e-4)
+
+    # extract features
+    train_feats, train_labels, test_feats, test_labels = build_fused_datasets(train_loader, test_loader)
+
+    # train classifier
     train(train_feats, train_labels, test_feats, test_labels)
 

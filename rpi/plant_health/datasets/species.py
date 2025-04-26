@@ -15,10 +15,8 @@ def get_plant_species(image_name):
         return 'African Violet'
     elif 484 <= number <= 563:
         return 'Peperomia'
-    elif 564 <= number <= 589:
+    elif 564 <= number:
         return 'Hedera Ivy'
-    else:
-        return 'Unknown'
 
 df['Plant Species'] = df['Image Path'].apply(get_plant_species)
 df.to_csv('rpi/updated_sensor_log.csv', index=False)

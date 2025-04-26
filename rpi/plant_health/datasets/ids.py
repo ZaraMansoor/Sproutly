@@ -27,8 +27,12 @@ def get_plant_species(image_name):
         return 'Peperomia Healthy 1'
     elif 535 <= number <= 563:
         return 'Peperomia Healthy 2'
-    elif 564 <= number <= 588:
+    elif 564 <= number <= 600:
         return 'Hedera Ivy Healthy 1'
+    elif 601 <= number <= 657:
+        return 'Hedera Ivy Healthy 2'
+    elif 658 <= number <= 746:
+        return 'Hedera Ivy Unhealthy 1'
     else:
         return 'Unknown'
 
