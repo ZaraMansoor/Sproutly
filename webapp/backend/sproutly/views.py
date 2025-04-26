@@ -477,18 +477,24 @@ def update_current_plant(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            print("data!! here: ", data)
             fetched_plant = Plant.objects.get(id=data["plantId"])
-            print("here1")
             if CurrPlant.objects.filter(user_id=1).exists():
-                print("here2")
                 CurrPlant.objects.filter(user_id=1).delete()
-                print("here3")
             new_current_plant = CurrPlant.objects.create(user_id=1, current_plant=fetched_plant)
-            print("here4")
             new_current_plant.save()
-            print("here5")
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def get_current_plant(request):
+    try:
+        if CurrPlant.objects.filter(user_id=1).exists():
+            current_plant = CurrPlant.objects.get(user_id=1).current_plant
+            return JsonResponse({"current_plant_name": current_plant.name}, status=200)
+        else:
+            return JsonResponse({"status": "Error", "error": "No current plant"}, status=500)
+    except Exception as e:
+        return JsonResponse({"status": "Error", "error": str(e)}, status=500)

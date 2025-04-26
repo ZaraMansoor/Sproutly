@@ -44,7 +44,7 @@ const HomePage = () => {
 
     const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
 
-    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(1);
+    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(null);
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(null);
 
     React.useEffect(() => {
@@ -119,6 +119,15 @@ const HomePage = () => {
         .catch(e => console.error("Failed to fetch plant info", e));
     }, [selectedPlant]);
 
+
+    React.useEffect(() => {
+        fetch("https://172.26.192.48:8443/get-current-plant/")
+            .then(result => result.json())
+            .then(data => {
+                setSelectedCurrPlantId(data.id);
+            })
+            .catch(e => console.error("Failed to fetch current plant", e));
+    })
 
     const [plantHealth, setPlantHealth] = React.useState([]);
 
@@ -347,6 +356,7 @@ const HomePage = () => {
                 }}>Enable Notifications</button> */}
 
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+                    <h2>Current Plant in the Greenhouse: {}</h2>
                     <Form onSubmit={updateCurrPlant}>
                         <Form.Group className="mb-3">
                             <Form.Label>Current Plant (Select plant that is currently in your greenhouse)</Form.Label>
