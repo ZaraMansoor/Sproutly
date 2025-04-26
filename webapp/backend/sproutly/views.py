@@ -100,12 +100,6 @@ def add_user_plant(request):
                 # plant species detection
 
                 # send a get_plant_id request to rpi (to get detected plant species data)
-                # publish.single(
-                #     topic="django/sproutly/mqtt",
-                #     payload=json.dumps({"command": "get_plant_id"}),
-                #     hostname="broker.emqx.io"
-                # ) buggy!!!!!! :(
-
                 message = {
                     "command": "get_plant_id",
                 }
@@ -124,7 +118,7 @@ def add_user_plant(request):
                 print("sent get_plant_id request to rpi")
 
                 # wait? sleep?
-                time.sleep(6) 
+                time.sleep(10) 
 
                 print("let's check if we have received detection data from rpi")
                 best_match = PlantDetectionData.objects.latest('timestamp').best_match
