@@ -31,7 +31,7 @@ const ManualAutoschedulePage = () => {
 
 
     React.useEffect(() => {
-        fetch("https://172.26.192.48:8443/get-auto-schedule/" + plantId)
+        fetch("https://172.26.192.48:8443/get-autoschedule/" + plantId)
             .then(result => result.json())
             .then(data => {
                 console.log("Auto schedule fetched:", data);
