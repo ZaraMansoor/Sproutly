@@ -348,6 +348,8 @@ def get_webscraped_plant_data(request):
             plant.save()
 
             print("plant!!: ", plant)
+
+            time.sleep(5) # wait for plant save to finish?
             # update the autoschedule to reflect the webscraped data
             user_plant = Plant.objects.get(name=plant_name)
             print("user_plant11: ", user_plant)
