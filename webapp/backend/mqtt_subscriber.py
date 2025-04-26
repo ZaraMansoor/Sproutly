@@ -70,7 +70,6 @@ def on_message(client, userdata, msg):
                 nitrogen = data["nitrogen"],
                 phosphorus = data["phosphorus"],
                 potassium = data["potassium"],
-                # TODO: add more sensors later
             )
 
             # send sensor data to websocket
