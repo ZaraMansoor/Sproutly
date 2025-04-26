@@ -48,6 +48,8 @@ const ManualAutoschedulePage = () => {
                 setWaterAmount(data.waterAmount?.toString() || '');
                 setNutrientsStartTime(data.nutrientsStartTime?.toString() || '');
                 setNutrientsAmount(data.nutrientsAmount?.toString() || '');
+                console.log("minTemp:", minTemp);
+                console.log("waterStartTime:", waterStartTime);
                 setLoading(false);
             })
             .catch(e => console.error("Failed to fetch auto schedule", e));
