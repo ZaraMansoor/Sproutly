@@ -121,14 +121,19 @@ const HomePage = () => {
 
     const [currPlantName, setCurrPlantName] = React.useState('');
 
-    React.useEffect(() => {
+
+    const fetchCurrentPlant = () => {
         fetch("https://172.26.192.48:8443/get-current-plant/")
             .then(result => result.json())
             .then(data => {
                 setCurrPlantName(data.current_plant_name);
             })
             .catch(e => console.error("Failed to fetch current plant", e));
-    }, [selectedCurrPlantId]);
+    };
+
+    React.useEffect(() => {
+        fetchCurrentPlant();
+    }, []);
 
     const [plantHealth, setPlantHealth] = React.useState([]);
 
@@ -325,6 +330,7 @@ const HomePage = () => {
         const updateCurrPlantResult = await updateCurrPlantResponse.json();
         if (updateCurrPlantResult.status === "Success") {
             alert("Successfully updated current plant!");
+            fetchCurrentPlant();
             navigate('/');
             return;
         } else if (updateCurrPlantResult.status === "Error") {
