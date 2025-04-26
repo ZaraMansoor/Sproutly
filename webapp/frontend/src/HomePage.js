@@ -300,6 +300,29 @@ const HomePage = () => {
         }
     }
 
+    const updateCurrPlant = async (e) => {
+        e.preventDefault();
+
+        const updateCurrPlantResponse = await fetch("https://172.26.192.48:8443/update-current-plant/",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ plantId: selectedPlant.id }),
+            }
+        );
+
+        const updateCurrPlantResult = await updateCurrPlantResponse.json();
+        if (updateCurrPlantResult.status === "Success") {
+            alert("Successfully updated current plant!");
+            navigate('/');
+            return;
+        } else if (updateCurrPlantResult.status === "Error") {
+            alert("Failed to update current plant.");
+            navigate('/');
+            return;
+        }
+    }
+
     const renderView = () => {
         if (!selectedPlant) {
             return (
@@ -321,6 +344,25 @@ const HomePage = () => {
                         }
                     });
                 }}>Enable Notifications</button> */}
+
+                <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+                    <Form onSubmit={updateCurrPlant}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Current Plant</Form.Label>
+                            <Form.Select required>
+                                <option value="">Select plant that is currently in your greenhouse</option>
+                                {plants.map((plant) => (
+                                    <option key={plant.id} value={plant.name}>
+                                        {plant.name}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                        <Button variant="primary" type="submit">
+                            Update Current Plant
+                        </Button>
+                    </Form>
+                </div>
 
                 <h2>{selectedPlant.name}</h2>
                 <p>Health Status: {plantHealth || selectedPlant.health_status}</p>

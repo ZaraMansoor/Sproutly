@@ -10,7 +10,7 @@ import paho.mqtt.publish as publish
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from sproutly.models import WebscrapedPlant, Plant, AutoSchedule, PlantDetectionData
+from sproutly.models import WebscrapedPlant, Plant, AutoSchedule, PlantDetectionData, CurrPlant
 from soltech_scraping import webscrape_plant
 import time
 from sproutly.models import SensorData
@@ -471,17 +471,17 @@ def get_detection_result(request):
     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
 
 
-# @csrf_exempt
-# def update_current_plant(request):
-#     if request.method == "POST":
-#         try:
-#             data = json.loads(request.body)
-#             fetched_plant = Plant.objects.get(id=data["plantId"])
-#             if CurrPlant.objects.filter(user_id=1).exists():
-#                 CurrPlant.objects.filter(user_id=1).delete()
-#             new_current_plant = CurrPlant.objects.create(user_id=1, current_plant=fetched_plant)
-#             new_current_plant.save()
-#             return JsonResponse({"status": "Success"}, status=200)
-#         except Exception as e:
-#             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
-#     return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
+@csrf_exempt
+def update_current_plant(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            fetched_plant = Plant.objects.get(id=data["plantId"])
+            if CurrPlant.objects.filter(user_id=1).exists():
+                CurrPlant.objects.filter(user_id=1).delete()
+            new_current_plant = CurrPlant.objects.create(user_id=1, current_plant=fetched_plant)
+            new_current_plant.save()
+            return JsonResponse({"status": "Success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
