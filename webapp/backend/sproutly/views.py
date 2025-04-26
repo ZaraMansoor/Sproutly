@@ -478,10 +478,15 @@ def update_current_plant(request):
         try:
             data = json.loads(request.body)
             fetched_plant = Plant.objects.get(id=data["plantId"])
+            print("here1")
             if CurrPlant.objects.filter(user_id=1).exists():
+                print("here2")
                 CurrPlant.objects.filter(user_id=1).delete()
+                print("here3")
             new_current_plant = CurrPlant.objects.create(user_id=1, current_plant=fetched_plant)
+            print("here4")
             new_current_plant.save()
+            print("here5")
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
