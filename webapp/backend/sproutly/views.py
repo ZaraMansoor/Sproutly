@@ -368,7 +368,7 @@ def get_webscraped_plant_data(request):
             plant_updated.light_intensity = plant.light_intensity
             plant_updated.save()
 
-            return JsonResponse({"status": "Success"}, status=200)
+            return JsonResponse({"status": "Success", "species": user_plant.species}, status=200)
 
         except Exception as e:
             import traceback
