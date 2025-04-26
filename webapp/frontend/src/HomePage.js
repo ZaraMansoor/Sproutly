@@ -128,7 +128,7 @@ const HomePage = () => {
                 setCurrPlantName(data.current_plant_name);
             })
             .catch(e => console.error("Failed to fetch current plant", e));
-    }, []);
+    }, [selectedCurrPlantId]);
 
     const [plantHealth, setPlantHealth] = React.useState([]);
 
