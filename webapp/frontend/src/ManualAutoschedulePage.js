@@ -23,12 +23,6 @@ const ManualAutoschedulePage = () => {
     let navigate = useNavigate();
     let location = useLocation();
     let plantId = location.state.plantId;
-    // let plantId = "";
-    // if (!location.state) {
-    //     plantId = 1;
-    // } else {
-    //     plantId = location.state.plantId;
-    // }
 
 
     React.useEffect(() => {
@@ -48,8 +42,6 @@ const ManualAutoschedulePage = () => {
                 setWaterAmount(data.water_amount?.toString() || '');
                 setNutrientsStartTime(data.nutrients_start_time?.toString() || '');
                 setNutrientsAmount(data.nutrients_amount?.toString() || '');
-                console.log("minTemp:", minTemp);
-                console.log("waterStartTime:", waterStartTime);
                 setLoading(false);
             })
             .catch(e => console.error("Failed to fetch auto schedule", e));

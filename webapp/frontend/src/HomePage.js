@@ -44,7 +44,7 @@ const HomePage = () => {
 
     const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
 
-    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(null);
+    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(1);
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(null);
 
     React.useEffect(() => {
