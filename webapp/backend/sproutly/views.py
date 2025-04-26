@@ -166,6 +166,7 @@ def add_user_plant(request):
                         for common_name in lowercase_common_names:
                             if common_name in lowercase_plant_in_db or lowercase_plant_in_db in common_name:
                                 add_to_database(plant_in_db, user_plant_name, number_of_plants)
+                                print("plant_in_db.name: ", plant_in_db.name)
                                 return JsonResponse({"status": "detected plant found", "species": plant_in_db.name, "number_of_plants": number_of_plants}, status=200)
                     
                 # (2) if doesn't exist, allow manual auto scheduling
