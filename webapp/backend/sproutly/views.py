@@ -477,6 +477,7 @@ def update_current_plant(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
+            print("data!! here: ", data)
             fetched_plant = Plant.objects.get(id=data["plantId"])
             print("here1")
             if CurrPlant.objects.filter(user_id=1).exists():
