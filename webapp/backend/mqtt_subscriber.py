@@ -15,7 +15,7 @@ import time
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
 django.setup()
 
-from sproutly.models import SensorData, Plant, PlantDetectionData
+from sproutly.models import SensorData, Plant, PlantDetectionData, CurrPlant
 
 
 MQTT_SERVER = "broker.emqx.io"
@@ -57,20 +57,26 @@ def on_message(client, userdata, msg):
 
                 # SensorData.objects.order_by('timestamp')[:num_to_delete].delete()
 
-            # save sensor data to mysql db
-            SensorData.objects.create(
-                temperature_c = data["temperature_c"],
-                temperature_f = data["temperature_f"],
-                humidity = data["humidity"],
-                soil_moisture = data["soil_moisture"],
-                lux = data["lux"],
-                ph = data["ph"],
-                soil_temp = data["soil_temp"],
-                conductivity = data["conductivity"],
-                nitrogen = data["nitrogen"],
-                phosphorus = data["phosphorus"],
-                potassium = data["potassium"],
-            )
+            
+            # save sensor data to curr plant db
+            if CurrPlant.objects.filter(user_id=1).exists():
+                curr_plant = CurrPlant.objects.get(user_id=1).current_plant
+                curr_plant_id = curr_plant.id
+
+                SensorData.objects.create(
+                    temperature_c = data["temperature_c"],
+                    temperature_f = data["temperature_f"],
+                    humidity = data["humidity"],
+                    soil_moisture = data["soil_moisture"],
+                    lux = data["lux"],
+                    ph = data["ph"],
+                    soil_temp = data["soil_temp"],
+                    conductivity = data["conductivity"],
+                    nitrogen = data["nitrogen"],
+                    phosphorus = data["phosphorus"],
+                    potassium = data["potassium"],
+                    plant = Plant.objects.get(id=curr_plant_id),
+                )
 
             # send sensor data to websocket
             channel_layer = get_channel_layer()
