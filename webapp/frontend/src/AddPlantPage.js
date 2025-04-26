@@ -77,6 +77,8 @@ const AddPlantPage = () => {
         );
 
         const scrapeResult = await scrapeResponse.json();
+        console.log("Scrape result:", scrapeResult);
+        console.log("scrapeResult.species", scrapeResult.species);
         if (scrapeResult.status === "Success" && userPlantResult.status === "detected plant found") {
             alert("Your plant has been detected as: " + scrapeResult.species + ". Successfully added your new plant!");
             navigate('/');
