@@ -62,7 +62,7 @@ PAGE='''\
 '''
 
 SERVER = None
-video_writer = None
+# video_writer = None
 
 class StreamingOutput:
     def __init__(self):
@@ -167,16 +167,16 @@ def adjust_camera_settings():
 
 # continuously capture JPEG frames and update the streaming output
 def capture_frames():
-    global video_writer
-    last_record_time = datetime.datetime.now()
+    # global video_writer
+    # last_record_time = datetime.datetime.now()
     
-    def create_new_writer():
-        timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        filename = f'videos/stream_{timestamp}.mp4'
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        return cv2.VideoWriter(filename, fourcc, FRAME_RATE, RESOLUTION)
+    # def create_new_writer():
+    #     timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    #     filename = f'videos/stream_{timestamp}.mp4'
+    #     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    #     return cv2.VideoWriter(filename, fourcc, FRAME_RATE, RESOLUTION)
 
-    video_writer = create_new_writer()
+    # video_writer = create_new_writer()
 
     while True:
         adjust_camera_settings()
@@ -185,17 +185,17 @@ def capture_frames():
         image_stream.seek(0)
         img = Image.open(image_stream)
 
-        frame = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-        video_writer.write(frame)
+        # frame = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+        # video_writer.write(frame)
 
         with io.BytesIO() as buf:
             img.save(buf, format='JPEG', quality=JPEG_QUALITY)
             output.update_frame(buf.getvalue())
         
-        if (datetime.datetime.now() - last_record_time).seconds >= 3600:
-            video_writer.release()
-            video_writer = create_new_writer()
-            last_record_time = datetime.datetime.now()
+        # if (datetime.datetime.now() - last_record_time).seconds >= 3600:
+        #     video_writer.release()
+        #     video_writer = create_new_writer()
+        #     last_record_time = datetime.datetime.now()
 
 
 def start_stream():
@@ -230,16 +230,17 @@ def start_stream():
     threading.Thread(target=run_server, daemon=True).start()
 
 def stop_stream():
-    global SERVER, video_writer
+    global SERVER
+    # global video_writer
 
     if SERVER:
         SERVER.shutdown()
         SERVER.server_close()
         SERVER = None
 
-    if video_writer and video_writer.isOpened():
-        video_writer.release()
-        print("Video file saved.")
+    # if video_writer and video_writer.isOpened():
+    #     video_writer.release()
+    #     print("Video file saved.")
 
     picam2.stop()
     print("Stream stopped.")
