@@ -95,7 +95,7 @@ const ManualAutoschedulePage = () => {
                     <Form.Control type="time" onChange={(e) => setWaterStartTime(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Water Amount (mL)</Form.Label>
+                    <Form.Label>Water Amount per 1 Plant (mL)</Form.Label>
                     <Form.Control type="number" onChange={(e) => setWaterAmount(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
