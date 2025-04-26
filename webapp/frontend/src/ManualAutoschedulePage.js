@@ -21,12 +21,35 @@ const ManualAutoschedulePage = () => {
 
     let navigate = useNavigate();
     let location = useLocation();
-    let plantId = "";
-    if (!location.state) {
-        plantId = 1;
-    } else {
-        plantId = location.state.plantId;
-    }
+    let plantId = location.state.plantId;
+    // let plantId = "";
+    // if (!location.state) {
+    //     plantId = 1;
+    // } else {
+    //     plantId = location.state.plantId;
+    // }
+
+
+    React.useEffect(() => {
+        fetch("https://172.26.192.48:8443/get-auto-schedule/" + plantId)
+            .then(result => result.json())
+            .then(data => {
+                console.log("Auto schedule fetched:", data);
+                setMinTemp(data.minTemp);
+                setMaxTemp(data.maxTemp);
+                setMinHumidity(data.minHumidity);
+                setMaxHumidity(data.maxHumidity);
+                setLightStartTime(data.lightStartTime);
+                setLightIntensity(data.lightIntensity);
+                setLightHours(data.lightHours);
+                setWaterFrequency(data.waterFrequency);
+                setWaterStartTime(data.waterStartTime);
+                setWaterAmount(data.waterAmount);
+                setNutrientsStartTime(data.nutrientsStartTime);
+                setNutrientsAmount(data.nutrientsAmount);
+            })
+            .catch(e => console.error("Failed to fetch auto schedule", e));
+    }, []);
       
     
     const submitManualAutoschedule = async (e) => {
@@ -60,51 +83,51 @@ const ManualAutoschedulePage = () => {
             <Form onSubmit={submitManualAutoschedule}>
                 <Form.Group className="mb-3">
                     <Form.Label>Minimum Temperature (°F)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setMinTemp(e.target.value)} required />
+                    <Form.Control type="number" value={minTemp} onChange={(e) => setMinTemp(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Maximum Temperature (°F)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setMaxTemp(e.target.value)} required />
+                    <Form.Control type="number" value={maxTemp} onChange={(e) => setMaxTemp(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Minimum Humidity (%)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setMinHumidity(e.target.value)} required />
+                    <Form.Control type="number" value={minHumidity} onChange={(e) => setMinHumidity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Maximum Humidity (%)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setMaxHumidity(e.target.value)} required />
+                    <Form.Control type="number" value={maxHumidity} onChange={(e) => setMaxHumidity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Light Start Time</Form.Label>
-                    <Form.Control type="time" onChange={(e) => setLightStartTime(e.target.value)} required />
+                    <Form.Control type="time" value={lightStartTime} onChange={(e) => setLightStartTime(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Light Intensity (Choose between 1~4)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setLightIntensity(e.target.value)} required />
+                    <Form.Control type="number" value={lightIntensity} onChange={(e) => setLightIntensity(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Light Duration (Hours)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setLightHours(e.target.value)} required />
+                    <Form.Control type="number" value={lightHours} onChange={(e) => setLightHours(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Water Frequency (Days)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setWaterFrequency(e.target.value)} required />
+                    <Form.Control type="number" value={waterFrequency} onChange={(e) => setWaterFrequency(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Water Start Time</Form.Label>
-                    <Form.Control type="time" onChange={(e) => setWaterStartTime(e.target.value)} required />
+                    <Form.Control type="time" value={waterStartTime} onChange={(e) => setWaterStartTime(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Water Amount per 1 Plant (mL)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setWaterAmount(e.target.value)} required />
+                    <Form.Control type="number" value={waterAmount} onChange={(e) => setWaterAmount(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Nutrients Start Time</Form.Label>
-                    <Form.Control type="time" onChange={(e) => setNutrientsStartTime(e.target.value)} required />
+                    <Form.Control type="time" value={nutrientsStartTime} onChange={(e) => setNutrientsStartTime(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Nutrients Amount (mL per 100mL of water)</Form.Label>
-                    <Form.Control type="number" onChange={(e) => setNutrientsAmount(e.target.value)} required />
+                    <Form.Control type="number" value={nutrientsAmount} onChange={(e) => setNutrientsAmount(e.target.value)} required />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Set up Auto-Schedule
