@@ -96,39 +96,41 @@ const AddPlantPage = () => {
         <div className="monitoring-page container d-flex flex-column vh-100">
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
             
-            <Form onSubmit={submitAddPlant}>
-                <Form.Group className="mb-3">
-                    <Form.Label>Plant Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter plant name" 
-                                onChange={(e) => setPlantName(e.target.value)}
-                                required />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Species</Form.Label>
-                    <Form.Select onChange={(e) => setPlantSpecies(e.target.value)} required>
-                        <option value="">Select plant species</option>
-                        <option key="-1" value="no-species">
-                                I don't know my plant's species
-                        </option>
-                        {webscrapedPlantData.map((species) => (
-                            <option key={species.index} value={species.name}>
-                                {species.name}
+            <div className="d-flex justify-content-center mb-4">
+                <Form onSubmit={submitAddPlant}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Plant Name</Form.Label>
+                        <Form.Control type="text" placeholder="Enter plant name" 
+                                    onChange={(e) => setPlantName(e.target.value)}
+                                    required />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Species</Form.Label>
+                        <Form.Select onChange={(e) => setPlantSpecies(e.target.value)} required>
+                            <option value="">Select plant species</option>
+                            <option key="-1" value="no-species">
+                                    I don't know my plant's species
                             </option>
-                        ))}
-                    </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Number of plants in your greenhouse</Form.Label>
-                    <Form.Select onChange={(e) => setNumberOfPlants(e.target.value)} required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </Form.Select>
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Add Plant
-                </Button>
-            </Form>
+                            {webscrapedPlantData.map((species) => (
+                                <option key={species.index} value={species.name}>
+                                    {species.name}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Number of plants in your greenhouse</Form.Label>
+                        <Form.Select onChange={(e) => setNumberOfPlants(e.target.value)} required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Add Plant
+                    </Button>
+                </Form>
+            </div>
 
             <div className="d-flex justify-content-center mb-4">
                 <Button onClick={() => navigate('/')}>

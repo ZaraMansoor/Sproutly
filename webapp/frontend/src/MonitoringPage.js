@@ -140,7 +140,7 @@ const MonitoringPage = () => {
                 <div className="d-flex align-items-center">
                     <Card className="shadow-sm">
                         <Card.Body>
-                            <h2 className="mb-3">{currPlantName} Live Feed</h2>
+                            <h2 className="mb-3">Live Feed for {currPlantName}</h2>
                             {camera ? (
                                 <img
                                     src={`https://${RPI_IP_ADDRESS}:8444/stream.mjpg`}
