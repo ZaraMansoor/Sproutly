@@ -405,33 +405,53 @@ const HomePage = () => {
                                 console.log("Get recent health status command sent!!!");
                             }}>Get Recent Health Status of {currPlantName}</Button>
 
-                            <Form onSubmit={updateCurrPlant}>
-                                <Form.Group className="mb-3">
-                                    <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
-                                        {plants.map((plant) => (
-                                            <option key={plant.id} value={plant.id}>
-                                                {plant.name}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                </Form.Group>
-                                <Button variant="warning" type="submit">
-                                    Change Current Plant
-                                </Button>
-                            </Form>
+                            <div className="d-flex justify-content-center mb-3">
+                                <Form onSubmit={updateCurrPlant}>
+                                    <Form.Group className="mb-3">
+                                    <Form.Label>Change Current Plant?</Form.Label>
+                                        <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
+                                            {plants.map((plant) => (
+                                                <option key={plant.id} value={plant.id}>
+                                                    {plant.name}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <Button variant="warning" type="submit">
+                                        Submit
+                                    </Button>
+                                </Form>
+                            </div>
 
-                            <p><strong>Current Number of Plants:</strong> {numberOfPlants}</p>
-                            <Form onSubmit={submitNumberOfPlants}>
-                                <Form.Label>Change Number of Plants</Form.Label>
-                                <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </Form.Select>
-                                <Button variant="warning" type="submit">
-                                    Submit
-                                </Button>
-                            </Form>
+                            <div className="d-flex justify-content-center mb-3">
+                                <p><strong>Current Number of Plants:</strong> {numberOfPlants}</p>
+                                <Form onSubmit={submitNumberOfPlants}>
+                                    <Form.Label>Change Number of Plants?</Form.Label>
+                                    <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </Form.Select>
+                                    <Button variant="warning" type="submit">
+                                        Submit
+                                    </Button>
+                                </Form>
+                            </div>
+
+                            <div className="d-flex justify-content-center mb-3">
+                                <Form.Check 
+                                type="switch"
+                                id="custom-switch"
+                                label="Automatic Control Mode"
+                                checked={automaticMode}
+                                onChange={(e) => {
+                                    const automaticState = e.target.checked;
+                                    setAutomaticMode(automaticState);
+                                    sendCommand({command: automaticState ? "automatic" : "manual"});
+                                    automaticOrManual({command: automaticState, plantId: selectedPlant.id});
+                                }}
+                            />
+                            </div>
                         </Card.Body>
                     </Card>
 
@@ -441,24 +461,6 @@ const HomePage = () => {
                 <h2>{selectedPlant.name}</h2>
                 <p>Species: {selectedPlant.species}</p>
 
-
-
-                <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-                    <Form>
-                        <Form.Check 
-                            type="switch"
-                            id="custom-switch"
-                            label="Automatic Control Mode"
-                            checked={automaticMode}
-                            onChange={(e) => {
-                                const automaticState = e.target.checked;
-                                setAutomaticMode(automaticState);
-                                sendCommand({command: automaticState ? "automatic" : "manual"});
-                                automaticOrManual({command: automaticState, plantId: selectedPlant.id});
-                            }}
-                        />
-                    </Form>
-                </div>
 
                 <div className="d-flex flex-wrap gap-3 justify-content-center">
                     <Button variant="active" onClick={() => navigate('/monitoring')}>📷 Live Camera</Button>
