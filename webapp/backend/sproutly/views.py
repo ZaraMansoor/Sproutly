@@ -416,7 +416,7 @@ def change_automatic_or_manual(request):
             print("data[plantId]: ", data["plantId"])
 
 
-            curr_schedule = AutoSchedule.objects.get(id=data["plantId"])
+            curr_schedule = AutoSchedule.objects.get(plant_id=data["plantId"])
             curr_schedule.automatic_mode = data["command"]
             curr_schedule.save()
 
