@@ -467,6 +467,7 @@ const HomePage = () => {
                 <div className="d-flex flex-wrap gap-3 justify-content-center">
                     <Button variant="active" onClick={() => navigate('/monitoring')}>📷 Live Camera</Button>
                     <Button variant="active" onClick={() => navigate('/add-plant')}>➕ Add New Plant</Button>
+                    <Button variant="active" onClick={() => navigate('/plant-info')}>👀 View Plant Info</Button>
                     <Button variant="active" onClick={() => {
                         navigate('/manual-autoschedule', {
                             state: {
