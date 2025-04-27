@@ -16,29 +16,6 @@ import { Slider } from '@mui/material';
 
 const ControlCommandPage = () => {
 
-    const [plants, setPlants] = React.useState([]);
-            
-        React.useEffect(() => {
-            fetch("https://172.26.192.48:8443/get-user-plants/")
-                .then(result => result.json())
-                .then(data => {
-                    setPlants(data);
-                })
-                .catch(e => console.error("Failed to fetch user plants", e));
-        }, []);
-    
-    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
-
-    React.useEffect(() => {
-        if (!selectedPlant) {
-            setSelectedPlant(plants[0]);
-        }
-    }, [plants]);
-
-    const selectPlant = (plant) => {
-        setSelectedPlant(plant);
-    }
-
 
     const [automaticState, setAutomaticState] = React.useState(null);
 
@@ -178,98 +155,86 @@ const ControlCommandPage = () => {
     console.log("automaticState???????:", automaticState, typeof automaticState);
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <Tabs activeKey={selectedPlant ? selectedPlant.id.toString() : null} onSelect={(key) => {
-                const plant = plants.find(p => p.id.toString() === key);
-                if (plant) selectPlant(plant);
-            }} className="flex-grow-1">
-            {plants.map((plant) => (
-            <Tab
-                key={plant.id}
-                eventKey={plant.id.toString()}
-                title={plant.name}
-            />
-            ))}
-            </Tabs>
-          </div>
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-            <Form disabled = {automaticState === true}>
-                <Form.Check
-                    type="switch"
-                    id="water-switch"
-                    label="Water Pump"
-                    checked={waterPump}
-                    onChange={(e) => {
-                        const waterPumpState = e.target.checked;
-                        setWaterPump(waterPumpState);
-                        sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
-                    }}
-                    disabled = {automaticState === true}
-                />
-                <Form.Check
-                    type="switch"
-                    id="mister-switch"
-                    label="Mister"
-                    checked={mister}
-                    onChange={(e) => {
-                        const misterState = e.target.checked;
-                        setMister(misterState);
-                        sendCommand({command: misterState ? "on" : "off", actuator: "mister"});
-                    }}
-                    disabled = {automaticState === true}
-                />
-                <Form.Check
-                    type="switch"
-                    id="lights-switch"
-                    label="Lights"
-                    checked={lights}
-                    onChange={(e) => {
-                        const lightsState = e.target.checked;
-                        setLights(lightsState);
-                        sendCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
-                    }}
-                    disabled = {automaticState === true}
-                />
-                <div className="my-4">
-                    <p>LED Brightness: {lightValue}</p>
-                    <Slider
-                        min={0}
-                        max={4}
-                        step={1}
-                        value={lightValue}
+            <div className="d-flex justify-content-center mb-4">
+                <Form disabled = {automaticState === true}>
+                    <Form.Check
+                        type="switch"
+                        id="water-switch"
+                        label="Water Pump"
+                        checked={waterPump}
                         onChange={(e) => {
-                            const newLightValue = e.target.value;
-                            setLightValue(newLightValue);
-                            sendCommand({ command: newLightValue, actuator: "LED_light" }); 
+                            const waterPumpState = e.target.checked;
+                            setWaterPump(waterPumpState);
+                            sendCommand({command: waterPumpState ? "on" : "off", actuator: "water_pump"});
                         }}
                         disabled = {automaticState === true}
                     />
-                </div>
-                <Form.Check
-                    type="switch"
-                    id="heater-switch"
-                    label="Heater"
-                    checked={heater}
-                    onChange={(e) => {
-                        const heaterState = e.target.checked;
-                        setHeater(heaterState);
-                        sendCommand({command: heaterState ? "on" : "off", actuator: "heater"});
-                    }}
-                    disabled = {automaticState === true}
-                />
-                <Form.Check
-                    type="switch"
-                    id="nutrients-switch"
-                    label="Nutrients Pump"
-                    checked={nutrientsPump}
-                    onChange={(e) => {
-                        const nutrientsPumpState = e.target.checked;
-                        setNutrientsPump(nutrientsPumpState);
-                        sendCommand({command: nutrientsPumpState ? "on" : "off", actuator: "nutrients_pump"});
-                    }}
-                    disabled = {automaticState === true}
-                />
-            </Form>
+                    <Form.Check
+                        type="switch"
+                        id="mister-switch"
+                        label="Mister"
+                        checked={mister}
+                        onChange={(e) => {
+                            const misterState = e.target.checked;
+                            setMister(misterState);
+                            sendCommand({command: misterState ? "on" : "off", actuator: "mister"});
+                        }}
+                        disabled = {automaticState === true}
+                    />
+                    <Form.Check
+                        type="switch"
+                        id="lights-switch"
+                        label="Lights"
+                        checked={lights}
+                        onChange={(e) => {
+                            const lightsState = e.target.checked;
+                            setLights(lightsState);
+                            sendCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
+                        }}
+                        disabled = {automaticState === true}
+                    />
+                    <div className="my-4">
+                        <p>LED Brightness: {lightValue}</p>
+                        <Slider
+                            min={0}
+                            max={4}
+                            step={1}
+                            value={lightValue}
+                            onChange={(e) => {
+                                const newLightValue = e.target.value;
+                                setLightValue(newLightValue);
+                                sendCommand({ command: newLightValue, actuator: "LED_light" }); 
+                            }}
+                            disabled = {automaticState === true}
+                        />
+                    </div>
+                    <Form.Check
+                        type="switch"
+                        id="heater-switch"
+                        label="Heater"
+                        checked={heater}
+                        onChange={(e) => {
+                            const heaterState = e.target.checked;
+                            setHeater(heaterState);
+                            sendCommand({command: heaterState ? "on" : "off", actuator: "heater"});
+                        }}
+                        disabled = {automaticState === true}
+                    />
+                    <Form.Check
+                        type="switch"
+                        id="nutrients-switch"
+                        label="Nutrients Pump"
+                        checked={nutrientsPump}
+                        onChange={(e) => {
+                            const nutrientsPumpState = e.target.checked;
+                            setNutrientsPump(nutrientsPumpState);
+                            sendCommand({command: nutrientsPumpState ? "on" : "off", actuator: "nutrients_pump"});
+                        }}
+                        disabled = {automaticState === true}
+                    />
+                </Form>
+            </div>
 
             <div className="d-flex justify-content-center mb-4">
                 <Button onClick={() => navigate('/')}>
