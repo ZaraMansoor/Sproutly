@@ -142,7 +142,11 @@ const HomePage = () => {
 
 
     React.useEffect(() => {
-        fetch("https://172.26.192.48:8443/get-sensor-data-history/")
+        fetch("https://172.26.192.48:8443/get-sensor-data-history/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plantId: selectedPlant.id })
+        })
             .then(res => res.json())
             .then(data => {
                 console.log("Fetching past sensor data history:", data);
