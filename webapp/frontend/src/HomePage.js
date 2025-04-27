@@ -142,6 +142,11 @@ const HomePage = () => {
 
 
     React.useEffect(() => {
+        if (!selectedPlant) {
+            return;
+        }
+
+        console.log("Selected plant:", selectedPlant);
         fetch("https://172.26.192.48:8443/get-sensor-data-history/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
