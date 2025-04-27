@@ -8,6 +8,8 @@ import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootswatch/dist/brite/bootstrap.min.css';
+
 
 import HomePage from './HomePage';
 import MonitoringPage from './MonitoringPage';

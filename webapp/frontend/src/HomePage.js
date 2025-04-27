@@ -10,6 +10,7 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Tab, Tabs } from 'react-bootstrap';
 import socket from './socket';
