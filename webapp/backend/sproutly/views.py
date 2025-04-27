@@ -380,14 +380,28 @@ def get_webscraped_plant_data(request):
 
 @csrf_exempt
 def get_sensor_data_history(request):
-    print("")
-    data = list(SensorData.objects.all().order_by("timestamp").values())
-    data = data[:1440]
-    
-    for d in data:
-        d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        data = json.loads(request.body)
+        plant_id = data["plantId"]
+        
+        plant_object = Plant.objects.get(id=plant_id)
 
-    return JsonResponse(data, safe=False)
+        data = list(
+            SensorData.objects.filter(plant=plant_object)
+            .order_by("timestamp")
+            .values()
+        )
+
+        data = data[:1440] 
+
+        for d in data:
+            d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
+
+        return JsonResponse(data, safe=False)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"status": "Error", "error": str(e)}, status=500)
 
 
 @csrf_exempt
