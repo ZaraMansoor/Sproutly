@@ -391,9 +391,7 @@ def get_sensor_data_history(request):
             .values()
         )
 
-        print("dataaaaaa: ", data)
         data = data[:1440] 
-        print("after data: ", data)
 
         for d in data:
             d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
