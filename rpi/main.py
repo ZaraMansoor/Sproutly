@@ -340,7 +340,8 @@ def send_plant_health(client):
     
     payload = json.dumps({
       "type": "plant_health",
-      "status": health_status
+      "status": health_status,
+      "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
     
     client.publish(MQTT_TOPIC, payload)

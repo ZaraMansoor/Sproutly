@@ -126,7 +126,9 @@ def on_message(client, userdata, msg):
                 )
                 print("Received Health Data:", data)
 
-                Plant.objects.filter(id=1).update( # TODO: hard coded
+                current_plant_id = CurrPlant.objects.get(user_id=1).current_plant_id
+
+                Plant.objects.filter(id=current_plant_id).update( 
                     health_status=data["status"]
                 )
                 print("Updated Plant Health Status:", data["status"])

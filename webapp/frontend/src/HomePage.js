@@ -161,6 +161,8 @@ const HomePage = () => {
     }, [selectedPlant]);
 
 
+    const [lastDetected, setLastDetected] = React.useState([]);
+
     React.useEffect(() => {
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -171,6 +173,7 @@ const HomePage = () => {
                         body: `Plant ${selectedPlant.name} is healthy! yay :)`
                     });
                     setPlantHealth("Healthy");
+                    setLastDetected(data.time);
                     return;
                 }
                 if (selectedPlant && data.status === "Unhealthy") {
@@ -178,6 +181,7 @@ const HomePage = () => {
                         body: `Plant ${selectedPlant.name} is unhealthy!`
                     });
                     setPlantHealth("Unhealthy");
+                    setLastDetected(data.time);
                     return;
                 }
             }
@@ -391,7 +395,8 @@ const HomePage = () => {
                 </div>
 
                 <h2>{selectedPlant.name}</h2>
-                <p>Health Status: {plantHealth || selectedPlant.health_status}</p>
+                <p>Current Plant {currPlantName}'s Health Status: {plantHealth || selectedPlant.health_status}</p>
+                <p>Last Detected: {lastDetected}</p>
                 <p>Species: {selectedPlant.species}</p>
 
                 {/* TODO: control buttons */}
@@ -428,7 +433,7 @@ const HomePage = () => {
                 <button onClick={() => {
                     sendCommand({command: "get_plant_health_check"});
                     console.log("Get recent health status command sent!!!");
-                }}>Get Recent Health Status</button>
+                }}>Get Recent Health Status of Current Plant {currPlantName}</button>
                 <button onClick={() => navigate('/monitoring')}>Live Camera</button>
                 <button onClick={() => navigate('/add-plant')}>Add Plant</button>
                 <button onClick={() => {
