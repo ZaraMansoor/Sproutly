@@ -12,9 +12,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import { Tab, Tabs } from 'react-bootstrap';
 import socket from './socket';
-import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
@@ -44,18 +42,21 @@ const HomePage = () => {
 
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
-    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(null);
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(null);
 
-
-    const [currView, setCurrView] = React.useState('home'); // default
-
+    const [currPlantName, setCurrPlantName] = React.useState(null);
+    const [currPlantId, setCurrPlantId] = React.useState(null);
+    const [currPlantSpecies, setCurrPlantSpecies] = React.useState(null);
+    const [currPlantImage, setCurrPlantImage] = React.useState(null);
 
     const fetchCurrentPlant = () => {
         fetch("https://172.26.192.48:8443/get-current-plant/")
             .then(result => result.json())
             .then(data => {
                 setCurrPlantName(data.current_plant_name);
+                setCurrPlantId(data.current_plant_id);
+                setCurrPlantSpecies(data.current_plant_species);
+                setCurrPlantImage(data.current_plant_image);
             })
             .catch(e => console.error("Failed to fetch current plant", e));
     };
@@ -73,17 +74,17 @@ const HomePage = () => {
             const data = JSON.parse(event.data);
             console.log("data.type:", data.type);
             if (data.type === "plant_health") {
-                if (selectedPlant && data.status === "Healthy") {
+                if (data.status === "Healthy") {
                     new Notification("Plant Health Alert!", {
-                        body: `Plant ${selectedPlant.name} is healthy! yay :)`
+                        body: `Plant ${currPlantName} is healthy! yay :)`
                     });
                     setPlantHealth("Healthy");
                     setLastDetected(data.time);
                     return;
                 }
-                if (selectedPlant && data.status === "Unhealthy") {
-                    new Notification("Plant Health Alert!", {
-                        body: `Plant ${selectedPlant.name} is unhealthy!`
+                if ( data.status === "Unhealthy") {
+                new Notification("Plant Health Alert!", {
+                        body: `Plant ${currPlantName} is unhealthy!`
                     });
                     setPlantHealth("Unhealthy");
                     setLastDetected(data.time);
@@ -151,7 +152,7 @@ const HomePage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plantId: selectedPlant.id, numberOfPlants: selectedNumberOfPlants }),
+                body: JSON.stringify({ plantId: currPlantId, numberOfPlants: selectedNumberOfPlants }),
             }
         );
 
@@ -175,7 +176,7 @@ const HomePage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plantId: selectedCurrPlantId }),
+                body: JSON.stringify({ plantId: currPlantId }),
             }
         );
 
@@ -193,20 +194,17 @@ const HomePage = () => {
     }
 
     const renderView = () => {
-        if (!selectedPlant) {
-            return (
-                <div>
-                    <h2>Loading...</h2>
-                </div>
-            )
-        }
         return (
             <div>
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
                     <Card className="mb-4">
                         <Card.Body>
                             <h3>Current Plant in Greenhouse: {currPlantName}</h3>
-                            <p><strong>Health Status:</strong> {plantHealth || selectedPlant.health_status}</p>
+                            <p><strong>Species:</strong> {currPlantSpecies}</p>
+                            <div className="text-center mt-4">
+                                <img src={currPlantImage} alt="Plant" width="200" height="200" />
+                            </div>
+                            <p><strong>Health Status:</strong> {plantHealth}</p>
                             <p><strong>Last Detected:</strong> {lastDetected}</p>
                             <Button variant="success" onClick={() => {
                                 sendCommand({command: "get_plant_health_check"});
@@ -218,7 +216,7 @@ const HomePage = () => {
                                 <Form onSubmit={updateCurrPlant}>
                                     <Form.Group className="mb-3">
                                     <Form.Label>Change Current Plant?</Form.Label>
-                                        <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
+                                        <Form.Select required>
                                             {plants.map((plant) => (
                                                 <option key={plant.id} value={plant.id}>
                                                     {plant.name}
@@ -259,7 +257,7 @@ const HomePage = () => {
                                     const automaticState = e.target.checked;
                                     setAutomaticMode(automaticState);
                                     sendCommand({command: automaticState ? "automatic" : "manual"});
-                                    automaticOrManual({command: automaticState, plantId: selectedPlant.id});
+                                    automaticOrManual({command: automaticState, plantId: currPlantId});
                                 }}
                             />
                             </div>
