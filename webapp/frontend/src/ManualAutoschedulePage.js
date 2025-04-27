@@ -91,11 +91,11 @@ const ManualAutoschedulePage = () => {
                 <Form onSubmit={submitManualAutoschedule}>
                     <Form.Group className="mb-3">
                         <Form.Label>Minimum Temperature (°F)</Form.Label>
-                        <Form.Control type="number" value={minTemp} onChange={(e) => setMinTemp(e.target.value)} min={20} max={100} required />
+                        <Form.Control type="number" value={minTemp} onChange={(e) => setMinTemp(e.target.value)} min={45} max={85} required />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Maximum Temperature (°F)</Form.Label>
-                        <Form.Control type="number" value={maxTemp} onChange={(e) => setMaxTemp(e.target.value)} min={40} max={120} required />
+                        <Form.Control type="number" value={maxTemp} onChange={(e) => setMaxTemp(e.target.value)} min={50} max={90} required />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Minimum Humidity (%)</Form.Label>
