@@ -165,13 +165,14 @@ def control_leds(num_leds):
 # ---- Control and MQTT Functions ----
 
 def initialize_csv():
-  with open(log_file_path, mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow([
-      "timestamp",
-      *sensor_data.keys(),
-      *actuators_status.keys()
-    ])
+  if not os.path.exists(log_file_path):
+    with open(log_file_path, mode='w', newline='') as file:
+      writer = csv.writer(file)
+      writer.writerow([
+        "timestamp",
+        *sensor_data.keys(),
+        *actuators_status.keys()
+      ])
 
 def log_data():
   with open(log_file_path, mode='a', newline='') as file:
