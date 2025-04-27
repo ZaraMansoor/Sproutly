@@ -158,7 +158,7 @@ const HomePage = () => {
                 setSensorDataHistory(data);
             })
             .catch(e => console.error("Failed to fetch sensor data history", e));
-    }, []);
+    }, [selectedPlant]);
 
 
     React.useEffect(() => {
