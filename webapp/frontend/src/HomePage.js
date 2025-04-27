@@ -17,6 +17,7 @@ import socket from './socket';
 import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 import {
     Chart as ChartJS,
@@ -393,51 +394,54 @@ const HomePage = () => {
         }
         return (
             <div>
-                {/* <p>If you want to get notifications when your plant is unhealthy, click this to enable notifications on your browser.</p>
-                <button onClick={() => {
-                    Notification.requestPermission().then((result) => {
-                        console.log(result);
-                        if (result === "granted") {
-                            console.log("Notification permission granted");
-                        } else {
-                            console.log("Notification permission denied");
-                        }
-                    });
-                }}>Enable Notifications</button> */}
-
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-                    <h2>Current Plant in the Greenhouse: {currPlantName}</h2>
-                    <Form onSubmit={updateCurrPlant}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Current Plant (Select plant that is currently in your greenhouse)</Form.Label>
-                            <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
-                                {plants.map((plant) => (
-                                    <option key={plant.id} value={plant.id}>
-                                        {plant.name}
-                                    </option>
-                                ))}
-                            </Form.Select>
-                        </Form.Group>
-                        <Button variant="primary" type="submit">
-                            Update Current Plant
-                        </Button>
-                    </Form>
-                </div>
+                    <Card className="mb-4">
+                        <Card.Body>
+                            <h3>Current Plant in Greenhouse: {currPlantName}</h3>
+                            <p><strong>Health Status:</strong> {plantHealth || selectedPlant.health_status}</p>
+                            <p><strong>Last Detected:</strong> {lastDetected}</p>
+                            <Button variant="success" onClick={() => {
+                                sendCommand({command: "get_plant_health_check"});
+                                console.log("Get recent health status command sent!!!");
+                            }}>Get Recent Health Status of {currPlantName}</Button>
 
-            
-                <p>Current Plant {currPlantName}'s Health Status: {plantHealth || selectedPlant.health_status}</p>
-                <p>Last Detected: {lastDetected}</p>
-                <button onClick={() => {
-                    sendCommand({command: "get_plant_health_check"});
-                    console.log("Get recent health status command sent!!!");
-                }}>Get Recent Health Status of Current Plant {currPlantName}</button>
+                            <Form onSubmit={updateCurrPlant}>
+                                <Form.Group className="mb-3">
+                                    <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
+                                        {plants.map((plant) => (
+                                            <option key={plant.id} value={plant.id}>
+                                                {plant.name}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                                <Button variant="warning" type="submit">
+                                    Change Current Plant
+                                </Button>
+                            </Form>
+
+                            <p><strong>Current Number of Plants:</strong> {numberOfPlants}</p>
+                            <Form onSubmit={submitNumberOfPlants}>
+                                <Form.Label>Change Number of Plants</Form.Label>
+                                <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </Form.Select>
+                                <Button variant="warning" type="submit">
+                                    Submit
+                                </Button>
+                            </Form>
+                        </Card.Body>
+                    </Card>
+
+                </div>
 
 
                 <h2>{selectedPlant.name}</h2>
                 <p>Species: {selectedPlant.species}</p>
 
 
-                {/* TODO: control buttons */}
 
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
                     <Form>
@@ -455,34 +459,26 @@ const HomePage = () => {
                         />
                     </Form>
                 </div>
-                <p>Current Number of Plants: {numberOfPlants}</p>
-                <Form onSubmit={submitNumberOfPlants}>
-                    <Form.Label>Change Number of Plants</Form.Label>
-                    <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </Form.Select>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
-                <button onClick={() => navigate('/monitoring')}>Live Camera</button>
-                <button onClick={() => navigate('/add-plant')}>Add Plant</button>
-                <button onClick={() => {
-                    navigate('/manual-autoschedule', {
-                        state: {
-                            plantId: selectedPlant.id,
-                            numberOfPlants: numberOfPlants
-                        }
-                    })
-                    console.log("Setup auto control clicked!! plantId and numberOfPlants: ", selectedPlant.id, numberOfPlants);
-                }}>Set Up Auto Control</button>
-                <button onClick={() => navigate('/control-command')}>Turn On/Off Actuators</button>
 
-                <button onClick={deletePlant}>Delete Plant</button>
+                <div className="d-flex flex-wrap gap-3 justify-content-center">
+                    <Button variant="active" onClick={() => navigate('/monitoring')}>📷 Live Camera</Button>
+                    <Button variant="active" onClick={() => navigate('/add-plant')}>➕ Add New Plant</Button>
+                    <Button variant="active" onClick={() => {
+                        navigate('/manual-autoschedule', {
+                            state: {
+                                plantId: selectedPlant.id,
+                                numberOfPlants: numberOfPlants
+                            }
+                        })
+                        console.log("Setup auto control clicked!! plantId and numberOfPlants: ", selectedPlant.id, numberOfPlants);
+                    }}>⏱️ Set Auto-schedule</Button>
+                    <Button variant="active" onClick={() => navigate('/control-command')}>🔌 Actuators</Button>
+                    <Button variant="danger" onClick={deletePlant}>🗑️ Delete Plant</Button>
+                </div>
                 
-                <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
+                <div className="text-center mt-4">
+                    <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
+                </div>
 
                 <SensorChart label="Temperature (°C)" dataKey="temperature_c" color="red" />
                 <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
@@ -514,7 +510,7 @@ const HomePage = () => {
 
     return (
         <div className="home-page">
-          <h1 className="mb-4">Sproutly</h1>
+          <h1 className="mb-4">Sproutly Dashboard</h1>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <Tabs activeKey={selectedPlant ? selectedPlant.id.toString() : null} onSelect={(key) => {
                 const plant = plants.find(p => p.id.toString() === key);
