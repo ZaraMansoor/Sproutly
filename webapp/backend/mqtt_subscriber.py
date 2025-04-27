@@ -78,6 +78,9 @@ def on_message(client, userdata, msg):
                     plant = Plant.objects.get(id=curr_plant_id),
                 )
 
+
+                print("Saved Sensor Data. plant:", Plant.objects.get(id=curr_plant_id))
+
             # send sensor data to websocket
             channel_layer = get_channel_layer()
 

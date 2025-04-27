@@ -384,13 +384,16 @@ def get_sensor_data_history(request):
         data = json.loads(request.body)
         plant_id = data["plantId"]
 
+        print("plant_id: ", plant_id)
         data = list(
             SensorData.objects.filter(plant_id=plant_id)
             .order_by("timestamp")
             .values()
         )
 
+        print("dataaaaaa: ", data)
         data = data[:1440] 
+        print("after data: ", data)
 
         for d in data:
             d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
