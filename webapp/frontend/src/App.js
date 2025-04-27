@@ -17,6 +17,7 @@ import AddPlantPage from './AddPlantPage';
 import ControlCommandPage from './ControlCommandPage';
 import ManualAutoschedulePage from './ManualAutoschedulePage';
 import DetectionResultPage from './DetectionResultPage';
+import PlantInfoPage from './PlantInfoPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/detection-result" element={<DetectionResultPage />} />
             <Route path="/manual-autoschedule" element={<ManualAutoschedulePage />} />
             <Route path="/control-command" element={<ControlCommandPage />} />
+            <Route path="/plant-info" element={<PlantInfoPage />} />
           </Routes>
         </div>
       </div>
