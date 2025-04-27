@@ -15,28 +15,21 @@ import { Form } from 'react-bootstrap';
 
 const MonitoringPage = () => {
 
-    const [plants, setPlants] = React.useState([]);
-        
+
+    const [currPlantName, setCurrPlantName] = React.useState(null);
+
+    const fetchCurrentPlant = () => {
+            fetch("https://172.26.192.48:8443/get-current-plant/")
+                .then(result => result.json())
+                .then(data => {
+                    setCurrPlantName(data.current_plant_name);
+                })
+                .catch(e => console.error("Failed to fetch current plant", e));
+        };
+    
     React.useEffect(() => {
-        fetch("https://172.26.192.48:8443/get-user-plants/")
-            .then(result => result.json())
-            .then(data => {
-                setPlants(data);
-            })
-            .catch(e => console.error("Failed to fetch user plants", e));
+        fetchCurrentPlant();
     }, []);
-
-    const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
-
-    React.useEffect(() => {
-        if (!selectedPlant) {
-            setSelectedPlant(plants[0]);
-        }
-    }, [plants]);
-
-    const selectPlant = (plant) => {
-        setSelectedPlant(plant);
-    }
 
 
     const sendCameraCommand = async (cameraCommandData) => {
@@ -141,27 +134,13 @@ const MonitoringPage = () => {
                 />
             </Form>
           </div>
-          <div className="d-flex justify-content-between align-items-center mb-4">
 
-            <Tabs activeKey={selectedPlant ? selectedPlant.id.toString() : null} onSelect={(key) => {
-                const plant = plants.find(p => p.id.toString() === key);
-                if (plant) selectPlant(plant);
-            }} className="flex-grow-1">
-            {plants.map((plant) => (
-            <Tab
-                key={plant.id}
-                eventKey={plant.id.toString()}
-                title={plant.name}
-            />
-            ))}
-            </Tabs>
-          </div>
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-                {selectedPlant && (
+                {currPlantName && (
                 <div className="d-flex align-items-center">
                     <Card className="shadow-sm">
                         <Card.Body>
-                            <h2 className="mb-3">{selectedPlant.name} Live Feed</h2>
+                            <h2 className="mb-3">{currPlantName} Live Feed</h2>
                             {camera ? (
                                 <img
                                     src={`https://${RPI_IP_ADDRESS}:8444/stream.mjpg`}
@@ -170,7 +149,7 @@ const MonitoringPage = () => {
                                     height="480"
                                 />
                             ) : (
-                                <p>Camera is off</p>
+                                <div style={{width: "640px", height: "480px"}}>Camera is Off</div>
                             )}
                         </Card.Body>
                     </Card>
