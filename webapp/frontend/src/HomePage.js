@@ -353,6 +353,34 @@ const HomePage = () => {
         }
     }
 
+
+    const deletePlant = async (e) => {
+        e.preventDefault();
+
+        if (window.confirm("Are you sure you want to delete this plant?")) {
+            const deletePlantResponse = await fetch("https://172.26.192.48:8443/delete-plant/",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ plantId: selectedPlant.id }),
+                }
+            );
+    
+            const deletePlantResult = await deletePlantResponse.json();
+            if (deletePlantResult.status === "Success") {
+                alert("Successfully deleted plant!");
+                navigate('/');
+                return;
+            } else if (deletePlantResult.status === "Error") {
+                alert("Failed to delete plant.");
+                navigate('/');
+                return;
+            }
+        } else {
+            return;
+        }
+    }
+
     const renderView = () => {
         if (!selectedPlant) {
             return (
@@ -394,10 +422,18 @@ const HomePage = () => {
                     </Form>
                 </div>
 
-                <h2>{selectedPlant.name}</h2>
+            
                 <p>Current Plant {currPlantName}'s Health Status: {plantHealth || selectedPlant.health_status}</p>
                 <p>Last Detected: {lastDetected}</p>
+                <button onClick={() => {
+                    sendCommand({command: "get_plant_health_check"});
+                    console.log("Get recent health status command sent!!!");
+                }}>Get Recent Health Status of Current Plant {currPlantName}</button>
+
+
+                <h2>{selectedPlant.name}</h2>
                 <p>Species: {selectedPlant.species}</p>
+
 
                 {/* TODO: control buttons */}
 
@@ -429,11 +465,6 @@ const HomePage = () => {
                         Submit
                     </Button>
                 </Form>
-
-                <button onClick={() => {
-                    sendCommand({command: "get_plant_health_check"});
-                    console.log("Get recent health status command sent!!!");
-                }}>Get Recent Health Status of Current Plant {currPlantName}</button>
                 <button onClick={() => navigate('/monitoring')}>Live Camera</button>
                 <button onClick={() => navigate('/add-plant')}>Add Plant</button>
                 <button onClick={() => {
@@ -446,6 +477,8 @@ const HomePage = () => {
                     console.log("Setup auto control clicked!! plantId and numberOfPlants: ", selectedPlant.id, numberOfPlants);
                 }}>Set Up Auto Control</button>
                 <button onClick={() => navigate('/control-command')}>Turn On/Off Actuators</button>
+
+                <button onClick={deletePlant}>Delete Plant</button>
                 
                 <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
 

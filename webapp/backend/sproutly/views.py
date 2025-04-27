@@ -517,3 +517,17 @@ def get_current_plant(request):
             return JsonResponse({"status": "Error", "error": "No current plant"}, status=500)
     except Exception as e:
         return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    
+
+
+@csrf_exempt
+def delete_plant(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            fetched_plant = Plant.objects.get(id=data["plantId"])
+            fetched_plant.delete()
+            return JsonResponse({"status": "Success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "Error", "error": str(e)}, status=500)
+    return JsonResponse({"status": "Error","error": "Invalid request"}, status=400)
