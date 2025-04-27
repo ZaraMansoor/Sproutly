@@ -383,11 +383,9 @@ def get_sensor_data_history(request):
     try:
         data = json.loads(request.body)
         plant_id = data["plantId"]
-        
-        plant_object = Plant.objects.get(id=plant_id)
 
         data = list(
-            SensorData.objects.filter(plant=plant_object)
+            SensorData.objects.filter(plant_id=plant_id)
             .order_by("timestamp")
             .values()
         )
