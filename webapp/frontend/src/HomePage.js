@@ -370,6 +370,7 @@ const HomePage = () => {
             if (deletePlantResult.status === "Success") {
                 alert("Successfully deleted plant!");
                 navigate('/');
+                window.location.reload();
                 return;
             } else if (deletePlantResult.status === "Error") {
                 alert("Failed to delete plant.");
