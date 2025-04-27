@@ -51,6 +51,15 @@ const ManualAutoschedulePage = () => {
     const submitManualAutoschedule = async (e) => {
         e.preventDefault();
 
+        if (parseFloat(minTemp) > parseFloat(maxTemp)) {
+            alert("Minimum temperature must be less than maximum temperature.");
+            return;
+        }
+        if (parseFloat(minHumidity) > parseFloat(maxHumidity)) {
+            alert("Minimum humidity must be less than maximum humidity.");
+            return;
+        }
+
         const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightStartTime, lightIntensity, lightHours, waterFrequency, waterStartTime, waterAmount, nutrientsStartTime, nutrientsAmount };
         
         
