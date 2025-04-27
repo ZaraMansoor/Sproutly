@@ -20,7 +20,7 @@ print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
 print(f"device: {DEVICE}")
 
 BATCH_SIZE = 32
-OUTPUT_DIR = 'results/fusion_id_all_unfreeze_5'
+OUTPUT_DIR = 'results/fusion_id_all_unfreeze_10'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # load image model
@@ -42,6 +42,7 @@ print("Successfully Loaded Sensor Model")
 
 # feature extraction
 def extract_fused_features(dataloader):
+    print("Extracting Features...")
     fused_feats = []
     all_labels = []
     with torch.no_grad():
@@ -92,9 +93,10 @@ def get_datasets():
         _, _, _, _, plant_ids = dataset[idx]
         if str(plant_ids) in ['Snake Plant Healthy 2', 'African Violet Unhealthy 3', 
                               'Peperomia Unhealthy 2', 'African Violet Healthy 2', 
-                              'Peperomia Healthy 2', 'Hedera Ivy Healthy 1']:
+                              'Peperomia Healthy 2', 'Hedera Ivy Healthy 2']:
             test_indices.append(idx)
         else:
+            # test_indices.append(idx)
             train_indices.append(idx)
 
     print(f"Train size: {len(train_indices)}, Test size: {len(test_indices)}")
@@ -227,7 +229,7 @@ def train(X_train, y_train, X_test, y_test):
         print(f"Metrics saved to {OUTPUT_DIR}")
 
 
-def fine_tune_models(image_model, sensor_model, dataloader, epochs=15, lr=1e-4):
+def fine_tune_models(image_model, sensor_model, dataloader, epochs=20, lr=1e-4):
     print("Starting Fine-tuning of Image and Sensor Models Separately...")
 
     # set models to train
@@ -272,10 +274,6 @@ def fine_tune_models(image_model, sensor_model, dataloader, epochs=15, lr=1e-4):
             running_loss_img += img_loss.item()
             running_loss_sensor += sensor_loss.item()
 
-        if epoch == 0:
-            print(f"img_preds.shape: {img_preds.shape}")
-            print(f"sensor_preds.shape: {sensor_preds.squeeze().shape}")
-
         print(f"Epoch [{epoch+1}/{epochs}], Image Loss: {running_loss_img/len(dataloader):.6f}, Sensor Loss: {running_loss_sensor/len(dataloader):.6f}")
 
     print("Finished Fine-tuning Models.")
@@ -299,7 +297,7 @@ if __name__ == "__main__":
     train_loader, test_loader = get_datasets()
 
     # fine-tune
-    fine_tune_models(image_encoder, sensor_encoder, train_loader, epochs=15, lr=1e-4)
+    fine_tune_models(image_encoder, sensor_encoder, train_loader, epochs=20, lr=1e-4)
 
     # extract features
     train_feats, train_labels, test_feats, test_labels = build_fused_datasets(train_loader, test_loader)

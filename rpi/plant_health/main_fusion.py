@@ -8,10 +8,10 @@ import torch.nn as nn
 from plant_health.sensor import SensorModel
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model_path = "plant_health/results/fusion.pkl"
+model_path = "plant_health/results/xgb_model.pkl"
 
 # load image model
-image_model_pth = 'plant_health/results/resnet.pth'
+image_model_pth = 'plant_health/results/image_model.pth'
 image_model = models.resnet18(weights=None)
 num_features = image_model.fc.in_features
 image_model.fc = nn.Linear(num_features, 2)
@@ -21,7 +21,7 @@ image_encoder.eval()
 print("Successfully Loaded Image Model")
 
 # load sensor model
-sensor_model_pth = 'plant_health/results/sensor.pth'
+sensor_model_pth = 'plant_health/results/sensor_model.pth'
 sensor_encoder = SensorModel(input_dim=8).to(DEVICE)
 sensor_encoder.load_state_dict(torch.load(sensor_model_pth, map_location=DEVICE))
 sensor_encoder.eval()
