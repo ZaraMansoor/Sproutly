@@ -418,18 +418,6 @@ const PlantInfoPage = () => {
                         </Card>
                     </Col>
                 </Row>
-
-                <SensorChart label="Temperature (°C)" dataKey="temperature_c" color="red" />
-                <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
-                <SensorChart label="Humidity (%)" dataKey="humidity" color="green" />
-                <SensorChart label="Soil Moisture (%)" dataKey="soil_moisture" color="purple" />
-                <SensorChart label="Light (lux)" dataKey="lux" color="yellow" />
-                <SensorChart label="pH" dataKey="ph" color="orange" />
-                <SensorChart label="Soil Temperature (°C)" dataKey="soil_temp" color="pink" />
-                <SensorChart label="Conductivity (uS/cm)" dataKey="conductivity" color="brown" />
-                <SensorChart label="Nitrogen (mg/kg)" dataKey="nitrogen" color="teal" />
-                <SensorChart label="Phosphorus (mg/kg)" dataKey="phosphorus" color="maroon" />
-                <SensorChart label="Potassium (mg/kg)" dataKey="potassium" color="olive" />
             </div>
         );
     }
@@ -442,7 +430,7 @@ const PlantInfoPage = () => {
             <i className="bi bi-info-circle-fill me-2 text-primary"></i>
             Plant Dashboard
         </h1>
-            <div className="d-flex flex-wrap gap-3 justify-content-center">
+            <div className="d-flex flex-wrap gap-3 justify-content-center mb-4">
                 <Button variant="success" className="me-2" onClick={() => navigate('/add-plant')}>
                     <i className="bi bi-plus-circle me-2"></i>
                     ➕ Add New Plant
