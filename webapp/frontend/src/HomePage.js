@@ -58,6 +58,21 @@ const HomePage = () => {
 
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
+    React.useEffect(() => {
+
+        fetch("https://172.26.192.48:8443/get-number-of-plants/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plantId: currPlantId })
+        })
+        .then(result => result.json())
+        .then(data => {
+            setNumberOfPlants(data.number_of_plants);
+        }) 
+        .catch(e => console.error("Failed to fetch number of plants", e));
+    }, []);
+
+
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
     const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(1);
 
