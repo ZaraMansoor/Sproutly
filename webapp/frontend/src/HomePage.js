@@ -292,7 +292,8 @@ const HomePage = () => {
                             navigate('/manual-autoschedule', {
                                 state: {
                                     plantId: currPlantId,
-                                    numberOfPlants: numberOfPlants
+                                    numberOfPlants: numberOfPlants,
+                                    plantSpecies: currPlantSpecies
                                 }
                             })
                             console.log("Setup auto control clicked!! plantId and numberOfPlants: ", currPlantId, numberOfPlants);
