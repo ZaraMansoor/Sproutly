@@ -13,7 +13,7 @@ import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Tab, Tabs } from 'react-bootstrap';
 import { Slider } from '@mui/material';
-import { Container, Nav, Navbar, Alert, Badge } from 'react-bootstrap';
+import { Container, Nav, Navbar, Alert, Badge, Card, Row, Col } from 'react-bootstrap';
 
 
 const Header = () => {
