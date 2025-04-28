@@ -33,6 +33,8 @@ import {
 
 
   const Header = () => {
+    const navigate = useNavigate();
+    
     return (
       <Navbar bg="primary" variant="dark" expand="lg" className="mb-4">
         <Container>
