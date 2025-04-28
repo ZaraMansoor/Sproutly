@@ -249,13 +249,13 @@ const PlantInfoPage = () => {
         }
         return (
             <div>
-                <h2>{selectedPlant.name}</h2>
-                <p>Species: {selectedPlant.species}</p>
-
                 <div className="d-flex flex-wrap gap-3 justify-content-center">
                     <Button variant="active" onClick={() => navigate('/add-plant')}>➕ Add New Plant</Button>
                     <Button variant="danger" onClick={deletePlant}>🗑️ Delete Plant</Button>
                 </div>
+                
+                <h2>{selectedPlant.name}</h2>
+                <p>Species: {selectedPlant.species}</p>
                 
                 <div className="text-center mt-4">
                     <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
@@ -272,18 +272,6 @@ const PlantInfoPage = () => {
                 <SensorChart label="Nitrogen (mg/kg)" dataKey="nitrogen" color="teal" />
                 <SensorChart label="Phosphorus (mg/kg)" dataKey="phosphorus" color="maroon" />
                 <SensorChart label="Potassium (mg/kg)" dataKey="potassium" color="olive" />
-
-                <h2>Ideal Plant Care Conditions for {selectedPlant.name}</h2>
-                <p>Scientific Name: {plantInfo.scientific_name}</p>
-                <p>Light: {plantInfo.light_description}</p>
-                <p>Light Intensity: {plantInfo.light_intensity}</p>
-                <p>Water: {plantInfo.water_description}</p>
-                <p>Minimum Temperature: {plantInfo.temp_min} °F</p>
-                <p>Maximum Temperature: {plantInfo.temp_max} °F</p>
-                <p>Minimum Humidity: {plantInfo.humidity_min} %</p>
-                <p>Maximum Humidity: {plantInfo.humidity_max} %</p>
-                <p>Minimum pH: {plantInfo.ph_min}</p>
-                <p>Maximum pH: {plantInfo.ph_max}</p>
             </div>
         );
     }
