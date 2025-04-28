@@ -252,17 +252,20 @@ const ControlCommandPage = () => {
                                 <div className="d-flex justify-content-center align-items-center mb-2" style={{ gap: "5px" }}>
                                     <span>LED Brightness:</span>
                                     <span><strong>{lightValue}</strong></span>
+                                </div>
+                                <div className="px-4">
                                     <Slider
-                                        min={0}
-                                        max={4}
-                                        step={1}
-                                        value={lightValue}
-                                        onChange={(e) => {
-                                            const newLightValue = e.target.value;
-                                            setLightValue(newLightValue);
-                                            sendCommand({ command: newLightValue, actuator: "LED_light" }); 
-                                        }}
-                                        disabled = {automaticState === true}
+                                    min={0}
+                                    max={4}
+                                    step={1}
+                                    value={lightValue}
+                                    onChange={(e) => {
+                                        const newLightValue = e.target.value;
+                                        setLightValue(newLightValue);
+                                        sendCommand({ command: newLightValue, actuator: "LED_light" }); 
+                                    }}
+                                    disabled={automaticState === true}
+                                    style={{ width: "100%" }}
                                     />
                                 </div>
                                 <Form.Check
