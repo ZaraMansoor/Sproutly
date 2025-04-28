@@ -85,9 +85,6 @@ const ManualAutoschedulePage = () => {
     const [plantInfo, setPlantInfo] = React.useState([]);
     
     React.useEffect(() => {
-        if (!selectedPlant) {
-            return;
-        }
 
         fetch("https://172.26.192.48:8443/get-plant-info/", {
             method: "POST",
