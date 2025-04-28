@@ -16,7 +16,7 @@ import socket from './socket';
 import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar, Alert } from 'react-bootstrap';
 
 import {
     Chart as ChartJS,
@@ -264,24 +264,57 @@ const HomePage = () => {
             <div>
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
                     <Card className="mb-4">
-                        <Card.Body>
-                            <h3>Current Plant in Greenhouse: {currPlantName}</h3>
-                            <p><strong>Species:</strong> {currPlantSpecies}</p>
+                        <Card.Header className="bg-secondary text-black">
+                                <h5 className="mb-0">Current Plant</h5>
+                        </Card.Header>
+                        <Card.Body className="text-center">
                             <div className="text-center mt-4">
                                 <img src={currPlantImage} alt="Plant" width="200" height="200" />
                             </div>
-                            <p><strong>Health Status:</strong> {plantHealth || currPlantHealth}</p>
-                            <p><strong>Last Detected:</strong> {lastDetected || currPlantLastDetected}</p>
+                            <h3>{currPlantName}</h3>
+                            <p className="text-muted mb-3">
+                                <i className="bi bi-tags me-2">
+                                    {currentPlantSpecies}
+                                </i>
+                            </p>
+
+                            <div className="d-flex justify-content-center mb-3">
+                                <Badge 
+                                    bg={
+                                        (plantHealth || currPlantHealth) === "Healthy" 
+                                            ? "success" 
+                                            : "warning"
+                                    }
+                                    className="d-flex align-items-center px-3 py-2"
+                                >
+                                    <div className="me-2 rounded-circle bg-white" 
+                                            style={{
+                                                width: "10px", 
+                                                height: "10px",
+                                                opacity: "0.7"
+                                            }}
+                                    />
+                                    {plantHealth || currPlantHealth || 'Unknown'}
+                                </Badge>
+                            </div>
+                            <p className="small text-muted mb-4">
+                                <i className="bi bi-clock-history me-1"></i>
+                                Last checked: {lastDetected || currPlantLastDetected}
+                            </p>
+
                             <Button variant="success" onClick={() => {
                                 listenForHealthCheck();
                                 sendCommand({command: "get_plant_health_check"});
                                 console.log("Get recent health status command sent!!!");
-                            }}>Get Recent Health Status of {currPlantName}</Button>
+                            }} className="mb-4 w-100">
+                                <i className="bi bi-heart-pulse me-2"></i>
+                                Check Health Status
+                            </Button>
 
                             <div className="d-flex justify-content-center mb-4">
                                 <Form onSubmit={updateCurrPlant}>
                                     <Form.Group className="mb-3">
-                                    <Form.Label>Change Current Plant?</Form.Label>
+                                    <Form.Label>Change Current Plant</Form.Label>
                                         <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
                                             {plants.map((plant) => (
                                                 <option key={plant.id} value={plant.id}>
@@ -290,30 +323,32 @@ const HomePage = () => {
                                             ))}
                                         </Form.Select>
                                     </Form.Group>
-                                    <Button variant="warning" type="submit">
-                                        Submit
+                                    <Button variant="primary" type="submit" size="sm" className="w-100">
+                                        <i className="bi bi-check-circle me-2"></i>
+                                        Update
                                     </Button>
                                 </Form>
                             </div>
+                        </Card.Body>
+                    </Card>
+                </div>
 
+                <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+                    <Card className="shadow-sm h-100">
+                        <Card.Header className="bg-secondary text-black">
+                            <h5 className="mb-0">Plant Controls</h5>
+                        </Card.Header>
+                        <Card.Body>
+                            <Alert variant="info" className="d-flex align-items-center mb-4">
+                                <i className="bi bi-info-circle-fill fs-4 me-3"></i>
+                                <div>
+                                    <strong>Plant Mode:</strong> Currently in {automaticMode ? "Automatic" : "Manual"} mode.
+                                    {automaticMode
+                                        ? ' Your plant is being automatically cared based on the auto-schedule.'
+                                        : ' You can manually control your plant by turning on/off the Actuators. '}
+                                </div>
+                            </Alert>
                             <div className="d-flex justify-content-center mb-4">
-                                <p><strong>Current Number of Plants:</strong> {numberOfPlants}</p>
-                                <Form onSubmit={submitNumberOfPlants}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Change Number of Plants?</Form.Label>
-                                        <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Button variant="warning" type="submit">
-                                        Submit
-                                    </Button>
-                                </Form>
-                            </div>
-
-                            <div className="d-flex justify-content-center mb-3">
                                 <Form.Check 
                                 type="switch"
                                 id="custom-switch"
@@ -325,11 +360,33 @@ const HomePage = () => {
                                     sendCommand({command: automaticState ? "automatic" : "manual"});
                                     automaticOrManual({command: automaticState, plantId: currPlantId});
                                 }}
+                                className="fs-5"
                             />
                             </div>
+
+                            <div className="d-flex justify-content-center mb-4">
+                                <p><strong>Current Number of Plants:</strong> {numberOfPlants}</p>
+                                <Form onSubmit={submitNumberOfPlants}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Number of Plants in Greenhouse</Form.Label>
+                                        <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required className="me-2">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <Button variant="outline-primary" type="submit">
+                                        Update
+                                    </Button>
+                                    <Form.Text className="text-muted">
+                                        Current Setting: {numberOfPlants} plant(s)
+                                    </Form.Text>
+                                </Form>
+                            </div>
+
+                            
                         </Card.Body>
                     </Card>
-                </div>
 
                 <div className="d-flex flex-wrap gap-3 justify-content-center">
                     <Button variant="active" onClick={() => {
@@ -343,6 +400,7 @@ const HomePage = () => {
                             console.log("Setup auto control clicked!! plantId and numberOfPlants: ", currPlantId, numberOfPlants);
                         }}>⏱️ Set Up Auto-schedule</Button>
                 </div>
+            </div>
             </div>
         );
     }
