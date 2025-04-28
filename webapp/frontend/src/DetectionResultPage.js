@@ -55,8 +55,8 @@ const DetectionResultPage = () => {
                         size="lg"
                         onClick={() => navigate('/manual-autoschedule', { 
                             state: {
-                                plantId: location.state?.plantId, 
-                                numberOfPlants: location.state?.numberOfPlants 
+                                plantId: location.state.plantId, 
+                                numberOfPlants: location.state.numberOfPlants 
                             } 
                         })}
                     >

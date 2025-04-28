@@ -64,6 +64,7 @@ const ManualAutoschedulePage = () => {
 
         const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightStartTime, lightIntensity, lightHours, waterFrequency, waterStartTime, waterAmount, nutrientsStartTime, nutrientsAmount };
         
+        console.log("number of plants", location.state.numberOfPlants);
         
         const response = await fetch("https://172.26.192.48:8443/manual-autoschedule/",
             {
