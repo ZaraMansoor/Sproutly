@@ -58,23 +58,6 @@ const HomePage = () => {
 
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
-    React.useEffect(() => {
-        if (!currPlantId) {
-            return;
-        }
-
-        fetch("https://172.26.192.48:8443/get-number-of-plants/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ plantId: currPlantId })
-        })
-        .then(result => result.json())
-        .then(data => {
-            setNumberOfPlants(data.number_of_plants);
-        }) 
-        .catch(e => console.error("Failed to fetch number of plants", e));
-    }, [currPlantId]);
-
 
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
     const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(1);
@@ -85,6 +68,7 @@ const HomePage = () => {
     const [currPlantImage, setCurrPlantImage] = React.useState(null);
     const [currPlantHealth, setCurrPlantHealth] = React.useState(null);
     const [currPlantLastDetected, setCurrPlantLastDetected] = React.useState(null);
+
 
     const fetchCurrentPlant = () => {
         fetch("https://172.26.192.48:8443/get-current-plant/")
@@ -103,6 +87,24 @@ const HomePage = () => {
     React.useEffect(() => {
         fetchCurrentPlant();
     }, []);
+
+
+    React.useEffect(() => {
+        if (!currPlantId) {
+            return;
+        }
+
+        fetch("https://172.26.192.48:8443/get-number-of-plants/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plantId: currPlantId })
+        })
+        .then(result => result.json())
+        .then(data => {
+            setNumberOfPlants(data.number_of_plants);
+        }) 
+        .catch(e => console.error("Failed to fetch number of plants", e));
+    }, [currPlantId]);
 
     const [plantHealth, setPlantHealth] = React.useState(null);
 
