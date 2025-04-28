@@ -66,8 +66,6 @@ const ControlCommandPage = () => {
     const [lightValue, setLightValue] = React.useState(0);
 
 
-    // TODO: have to test
-
     const websocketRef = React.useRef(null);
 
     React.useEffect(() => {
@@ -153,7 +151,6 @@ const ControlCommandPage = () => {
         }
     }
 
-    // TODO: have to test
     React.useEffect(() => {
         const getInitialActuatorStatus = async () => {
             try {

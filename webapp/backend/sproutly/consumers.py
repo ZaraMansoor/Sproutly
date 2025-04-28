@@ -46,7 +46,6 @@ class SensorConsumer(AsyncWebsocketConsumer):
             print("Error sending plant detection:", e)
 
 
-# TODO: have to test
 class ActuatorConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         print("WebSocket attempted!")

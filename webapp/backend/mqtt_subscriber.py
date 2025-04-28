@@ -38,7 +38,6 @@ def on_message(client, userdata, msg):
 
 
         try: # sensor data received
-            # TODO: have to test
             if "heater" in data:
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)(
@@ -51,7 +50,7 @@ def on_message(client, userdata, msg):
                 print("received actuators status:", data)
 
             # check if sensor data > 1440, if so, delete old data
-            # TODO: can be changed later? 1440 is based on 24 hours
+            # can be changed later? 1440 is based on 24 hours
             # if SensorData.objects.count() > 1440:
             #     num_to_delete = SensorData.objects.count() - 1440
 
@@ -107,9 +106,6 @@ def on_message(client, userdata, msg):
                 print("Received Plant Detection Data:", data)
 
                 PlantDetectionData.objects.create(
-                    # plant = Plant.objects.get(id=data["plant_id"]),
-                    # TODO: change this later
-                    # plant = Plant.objects.get(id=1),
                     best_match = data["best_match"],
                     common_names = data["common_names"],
                 )
