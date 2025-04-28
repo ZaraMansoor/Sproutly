@@ -59,7 +59,7 @@ const HomePage = () => {
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
-    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(plants[0].id);
+    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(1);
 
     const [currPlantName, setCurrPlantName] = React.useState(null);
     const [currPlantId, setCurrPlantId] = React.useState(null);
