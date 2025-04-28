@@ -86,9 +86,10 @@ const HomePage = () => {
     const [lastDetected, setLastDetected] = React.useState([]);
 
     const listenForHealthCheck = () => {
-        socket.onmessage = (event) => {
+        const handler = (event) => {
             const data = JSON.parse(event.data);
             console.log("data.type:", data.type);
+
             if (data.type === "plant_health") {
                 if (data.status === "Healthy") {
                     new Notification("Plant Health Alert!", {
@@ -96,20 +97,19 @@ const HomePage = () => {
                     });
                     setPlantHealth("Healthy");
                     setLastDetected(data.time);
-                    return;
                 }
-                if ( data.status === "Unhealthy") {
+                if (data.status === "Unhealthy") {
                 new Notification("Plant Health Alert!", {
                         body: `Plant ${currPlantName} is unhealthy!`
                     });
                     setPlantHealth("Unhealthy");
                     setLastDetected(data.time);
-                    return;
                 }
+                socket.onmessage = null;
             }
         };
+        socket.onmessage = handler;
     };
-    
     
 
 
