@@ -226,12 +226,12 @@ const PlantInfoPage = () => {
             const deletePlantResult = await deletePlantResponse.json();
             if (deletePlantResult.status === "Success") {
                 alert("Successfully deleted plant!");
-                navigate('/');
+                navigate('/plant-info');
                 window.location.reload();
                 return;
             } else if (deletePlantResult.status === "Error") {
                 alert("Failed to delete plant.");
-                navigate('/');
+                navigate('/plant-info');
                 return;
             }
         } else {
@@ -253,7 +253,6 @@ const PlantInfoPage = () => {
                     <Button variant="active" onClick={() => navigate('/add-plant')}>➕ Add New Plant</Button>
                     <Button variant="danger" onClick={deletePlant}>🗑️ Delete Plant</Button>
                 </div>
-                
                 <h2>{selectedPlant.name}</h2>
                 <p>Species: {selectedPlant.species}</p>
                 

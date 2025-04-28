@@ -3,7 +3,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 
 const ManualAutoschedulePage = () => {
 
@@ -113,16 +113,23 @@ const ManualAutoschedulePage = () => {
                     <div className="col-md-4 mb-4">
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Ideal Care Conditions</h5>
-                                <p><strong>Minimum Temperature:</strong> {plantInfo.temp_min}°F</p>
-                                <p><strong>Maximum Temperature:</strong> {plantInfo.temp_max}°F</p>
-                                <p><strong>Minimum Humidity:</strong> {plantInfo.humidity_min}%</p>
-                                <p><strong>Maximum Humidity:</strong> {plantInfo.humidity_max}%</p>
-                                <p><strong>Light Intensity:</strong> {plantInfo.light_intensity} lux</p>
-                                <p><strong>Info about Lighting:</strong> {plantInfo.light_description} hours</p>
-                                <p><strong>Info about Watering:</strong> {plantInfo.water_description}</p>
-                                <p><strong>Minimum pH:</strong> {plantInfo.ph_min}</p>
-                                <p><strong>Maximum pH:</strong> {plantInfo.ph_max}</p>
+                                {plantInfo ? (
+                                    <>
+                                        <h5 className="card-title">Ideal Care Conditions</h5>
+                                        <p><strong>Minimum Temperature:</strong> {plantInfo.temp_min}°F</p>
+                                        <p><strong>Maximum Temperature:</strong> {plantInfo.temp_max}°F</p>
+                                        <p><strong>Minimum Humidity:</strong> {plantInfo.humidity_min}%</p>
+                                        <p><strong>Maximum Humidity:</strong> {plantInfo.humidity_max}%</p>
+                                        <p><strong>Light Intensity:</strong> {plantInfo.light_intensity} lux</p>
+                                        <p><strong>Info about Lighting:</strong> {plantInfo.light_description} hours</p>
+                                        <p><strong>Info about Watering:</strong> {plantInfo.water_description}</p>
+                                        <p><strong>Minimum pH:</strong> {plantInfo.ph_min}</p>
+                                        <p><strong>Maximum pH:</strong> {plantInfo.ph_max}</p>
+                                    </>
+                                ) : (
+                                    <Alert variant="info">No specific care information available for this plant.</Alert>
+                                )}
+                                
                             </div>
                         </div>
                     </div>
