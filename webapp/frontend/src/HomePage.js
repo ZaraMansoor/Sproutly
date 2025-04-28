@@ -40,6 +40,22 @@ import {
 
 const HomePage = () => {
 
+    const [plants, setPlants] = React.useState([]);
+        
+    React.useEffect(() => {
+        fetch("https://172.26.192.48:8443/get-user-plants/")
+            .then(result => result.json())
+            .then(data => {
+                setPlants(data);
+                if (data.length === 0) {
+                    alert("Please add a plant first!");
+                    navigate('/add-plant');
+                    return;
+                }
+            })
+            .catch(e => console.error("Failed to fetch user plants", e));
+    }, []);
+
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(null);
