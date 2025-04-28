@@ -295,7 +295,7 @@ const HomePage = () => {
                                     numberOfPlants: numberOfPlants
                                 }
                             })
-                            console.log("Setup auto control clicked!! plantId and numberOfPlants: ", selectedPlant.id, numberOfPlants);
+                            console.log("Setup auto control clicked!! plantId and numberOfPlants: ", currPlantId, numberOfPlants);
                         }}>⏱️ Set Auto-schedule</Button>
                     <Button variant="active" onClick={() => navigate('/plant-info')}>👀 View Plant Details</Button>
                     <Button variant="active" onClick={() => navigate('/control-command')}>🔌 Actuators</Button>
