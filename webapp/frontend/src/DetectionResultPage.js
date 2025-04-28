@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { Card, Alert } from 'react-bootstrap';
 
 const DetectionResultPage = () => {
     
