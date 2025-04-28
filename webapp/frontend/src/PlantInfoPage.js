@@ -43,10 +43,10 @@ import {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link href="/" active>Home</Nav.Link>
-              <Nav.Link href="/plant-info">Plants</Nav.Link>
-              <Nav.Link href="/monitoring">Camera</Nav.Link>
-              <Nav.Link href="/control-command">Controls</Nav.Link>
+              <Nav.Link onClick={() => navigate('/')} active>🌱 Home</Nav.Link>
+              <Nav.Link onClick={() => navigate('/plant-info')}>👀 View Plants Details</Nav.Link>
+              <Nav.Link onClick={() => navigate('/monitoring')}>📷 Live Camera</Nav.Link>
+              <Nav.Link onClick={() => navigate('/control-command')}>🔌 Actuators</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
