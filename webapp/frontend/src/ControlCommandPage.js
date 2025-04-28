@@ -14,6 +14,31 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Form, Tab, Tabs } from 'react-bootstrap';
 import { Slider } from '@mui/material';
 
+
+const Header = () => {
+    const navigate = useNavigate();
+
+    return (
+      <Navbar bg="primary" variant="light" expand="lg" className="mb-4">
+        <Container>
+          <Navbar.Brand href="/">
+            <i className="bi bi-flower1 me-2"></i> 
+            Sproutly
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              <Nav.Link onClick={() => navigate('/')} active>🌱 Home</Nav.Link>
+              <Nav.Link onClick={() => navigate('/plant-info')}>👀 View Plants Details</Nav.Link>
+              <Nav.Link onClick={() => navigate('/monitoring')}>📷 Live Camera</Nav.Link>
+              <Nav.Link onClick={() => navigate('/control-command')}>🔌 Actuators</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    );
+  };
+  
 const ControlCommandPage = () => {
 
 
@@ -155,6 +180,7 @@ const ControlCommandPage = () => {
     console.log("automaticState???????:", automaticState, typeof automaticState);
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
+            <Header />
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
             <div className="d-flex justify-content-center mb-4">
                 <Form disabled = {automaticState === true}>
@@ -234,13 +260,6 @@ const ControlCommandPage = () => {
                         disabled = {automaticState === true}
                     />
                 </Form>
-            </div>
-
-            <div className="d-flex justify-content-center mb-4">
-                <Button onClick={() => navigate('/')}>
-                    <i className="bi bi-arrow-left"></i>
-                    Back to Home
-                </Button>
             </div>
 
           </div>

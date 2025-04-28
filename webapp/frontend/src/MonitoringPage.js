@@ -16,6 +16,30 @@ import { Form } from 'react-bootstrap';
 const MonitoringPage = () => {
 
 
+    const Header = () => {
+        const navigate = useNavigate();
+    
+        return (
+          <Navbar bg="primary" variant="light" expand="lg" className="mb-4">
+            <Container>
+              <Navbar.Brand href="/">
+                <i className="bi bi-flower1 me-2"></i> 
+                Sproutly
+              </Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="ms-auto">
+                  <Nav.Link onClick={() => navigate('/')} active>🌱 Home</Nav.Link>
+                  <Nav.Link onClick={() => navigate('/plant-info')}>👀 View Plants Details</Nav.Link>
+                  <Nav.Link onClick={() => navigate('/monitoring')}>📷 Live Camera</Nav.Link>
+                  <Nav.Link onClick={() => navigate('/control-command')}>🔌 Actuators</Nav.Link>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+        );
+      };
+
     const [currPlantName, setCurrPlantName] = React.useState(null);
 
     const fetchCurrentPlant = () => {
@@ -136,6 +160,7 @@ const MonitoringPage = () => {
           </div>
 
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+                <Header />
                 {currPlantName && (
                 <div className="d-flex align-items-center">
                     <Card className="shadow-sm">
