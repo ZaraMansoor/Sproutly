@@ -16,7 +16,7 @@ import socket from './socket';
 import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
-import { Container, Nav, Navbar, Alert } from 'react-bootstrap';
+import { Container, Nav, Navbar, Alert, Badge } from 'react-bootstrap';
 
 import {
     Chart as ChartJS,
@@ -274,7 +274,7 @@ const HomePage = () => {
                             <h3>{currPlantName}</h3>
                             <p className="text-muted mb-3">
                                 <i className="bi bi-tags me-2">
-                                    {currentPlantSpecies}
+                                    {currPlantSpecies}
                                 </i>
                             </p>
 
