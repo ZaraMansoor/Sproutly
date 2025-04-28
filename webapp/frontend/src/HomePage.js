@@ -59,6 +59,9 @@ const HomePage = () => {
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
     React.useEffect(() => {
+        if (!currPlantId) {
+            return;
+        }
 
         fetch("https://172.26.192.48:8443/get-number-of-plants/", {
             method: "POST",
