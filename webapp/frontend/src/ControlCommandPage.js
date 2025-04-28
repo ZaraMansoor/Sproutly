@@ -249,8 +249,9 @@ const ControlCommandPage = () => {
                                     }}
                                     disabled = {automaticState === true}
                                 />
-                                <div className="my-4">
-                                    <p>LED Brightness: {lightValue}</p>
+                                <div className="d-flex justify-content-center align-items-center mb-2" style={{ gap: "5px" }}>
+                                    <span>LED Brightness:</span>
+                                    <span><strong>{lightValue}</strong></span>
                                     <Slider
                                         min={0}
                                         max={4}
