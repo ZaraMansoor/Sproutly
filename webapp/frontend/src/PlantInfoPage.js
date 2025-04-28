@@ -4,7 +4,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import { Tab, Tabs } from 'react-bootstrap';
+import { Card, Tab, Tabs } from 'react-bootstrap';
 import socket from './socket';
 import { Line } from 'react-chartjs-2';
 import { Button } from 'react-bootstrap';
@@ -61,6 +61,8 @@ const PlantInfoPage = () => {
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
     const [selectedPlant, setSelectedPlant] = React.useState(null);  // default
+
+    const [activeTab, setActiveTab] = React.useState('overview');
 
     React.useEffect(() => {
         if (!selectedPlant) {
@@ -274,16 +276,147 @@ const PlantInfoPage = () => {
         }
         return (
             <div>
-                <div className="d-flex flex-wrap gap-3 justify-content-center">
-                    <Button variant="active" onClick={() => navigate('/add-plant')}>➕ Add New Plant</Button>
-                    <Button variant="danger" onClick={deletePlant}>🗑️ Delete Plant</Button>
-                </div>
-                <h2>{selectedPlant.name}</h2>
-                <p>Species: {selectedPlant.species}</p>
-                
-                <div className="text-center mt-4">
-                    <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
-                </div>
+                <Row>
+                    <Col lg={4} className="mb-4">
+                        <Card className="shadow-sm h-100">
+                            <Card.Header className="bg-secondary text-black">
+                                <h5 className="mb-0">{selectedPlant.name}</h5>
+                            </Card.Header>
+
+                            <Card.Body className="text-center">
+                                <div className="mb-3">
+                                    <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
+                                    <h5 className="fw-bold">{selectedPlant.species}</h5>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
+                    <Col lg={8}>
+                        <Card className="shadow-sm mb-4">
+                            <Card.Header className="bg-secondary text-black">
+                                <h5 className="mb-0">Sensor Readings</h5>
+                            </Card.Header>
+                            <Card.Body>
+                            <Tabs
+                                activeKey={activeTab}
+                                onSelect={(k) => setActiveTab(k)}
+                                className="mb-4"
+                                >
+                                <Tab 
+                                    eventKey="overview" 
+                                    title={
+                                    <span>
+                                        <i className="bi bi-grid-3x3-gap me-2"></i>
+                                        Overview
+                                    </span>
+                                    }
+                                >
+                                    <Row>
+                                    <Col md={6}>
+                                        <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <SensorChart label="Humidity (%)" dataKey="humidity" color="green" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <SensorChart label="Soil Moisture (%)" dataKey="soil_moisture" color="purple" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <SensorChart label="Light (lux)" dataKey="lux" color="yellow" />
+                                    </Col>
+                                    </Row>
+                                </Tab>
+                                
+                                <Tab 
+                                    eventKey="temperature" 
+                                    title={
+                                    <span>
+                                        <i className="bi bi-thermometer-half me-2"></i>
+                                        Temperature
+                                    </span>
+                                    }
+                                >
+                                    <Row>
+                                    <Col md={12}>
+                                        <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
+                                    </Col>
+                                    <Col md={12}>
+                                        <SensorChart label="Temperature (°C)" dataKey="temperature_c" color="red" />
+                                    </Col>
+                                    <Col md={12}>
+                                        <SensorChart label="Soil Temperature (°C)" dataKey="soil_temp" color="pink" />
+                                    </Col>
+                                    </Row>
+                                </Tab>
+                                
+                                <Tab 
+                                    eventKey="moisture" 
+                                    title={
+                                    <span>
+                                        <i className="bi bi-droplet-half me-2"></i>
+                                        Moisture
+                                    </span>
+                                    }
+                                >
+                                    <Row>
+                                    <Col md={12}>
+                                        <SensorChart label="Humidity (%)" dataKey="humidity" color="green" />
+                                    </Col>
+                                    <Col md={12}>
+                                        <SensorChart label="Soil Moisture (%)" dataKey="soil_moisture" color="purple" />
+                                    </Col>
+                                    </Row>
+                                </Tab>
+                                
+                                <Tab 
+                                    eventKey="nutrients" 
+                                    title={
+                                    <span>
+                                        <i className="bi bi-flask me-2"></i>
+                                        Nutrients
+                                    </span>
+                                    }
+                                >
+                                    <Row>
+                                    <Col md={12}>
+                                        <SensorChart label="pH" dataKey="ph" color="orange" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <SensorChart label="Nitrogen (mg/kg)" dataKey="nitrogen" color="teal" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <SensorChart label="Phosphorus (mg/kg)" dataKey="phosphorus" color="maroon" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <SensorChart label="Potassium (mg/kg)" dataKey="potassium" color="olive" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <SensorChart label="Conductivity (uS/cm)" dataKey="conductivity" color="brown" />
+                                    </Col>
+                                    </Row>
+                                </Tab>
+                                
+                                <Tab 
+                                    eventKey="light" 
+                                    title={
+                                    <span>
+                                        <i className="bi bi-brightness-high me-2"></i>
+                                        Light
+                                    </span>
+                                    }
+                                >
+                                    <Row>
+                                    <Col md={12}>
+                                        <SensorChart label="Light (lux)" dataKey="lux" color="yellow" />
+                                    </Col>
+                                    </Row>
+                                </Tab>
+                                </Tabs>
+                        </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
 
                 <SensorChart label="Temperature (°C)" dataKey="temperature_c" color="red" />
                 <SensorChart label="Temperature (°F)" dataKey="temperature_f" color="blue" />
@@ -304,7 +437,21 @@ const PlantInfoPage = () => {
     return (
         <div className="home-page">
           <Header />
-          <h1 className="mb-4">Sproutly Dashboard</h1>
+          <h1 className="mb-4">
+            <i className="bi bi-info-circle-fill me-2 text-primary"></i>
+            Plant Dashboard
+        </h1>
+            <div className="d-flex flex-wrap gap-3 justify-content-center">
+                <Button variant="success" className="me-2" onClick={() => navigate('/add-plant')}>
+                    <i className="bi bi-plus-circle me-2"></i>
+                    ➕ Add New Plant
+                </Button>
+                <Button variant="danger" onClick={deletePlant}>
+                    <i className="bi bi-trash me-2"></i>
+                    🗑️ Delete Plant
+                </Button>
+            </div>
+
           <div className="d-flex justify-content-between align-items-center mb-3">
             <Tabs activeKey={selectedPlant ? selectedPlant.id.toString() : null} onSelect={(key) => {
                 const plant = plants.find(p => p.id.toString() === key);
@@ -314,7 +461,11 @@ const PlantInfoPage = () => {
             <Tab
                 key={plant.id}
                 eventKey={plant.id.toString()}
-                title={plant.name}
+                title={
+                    <span>
+                        <i className="bi bi-flower1 me-2"></i>
+                        {plant.name}
+                    </span>}
             />
             ))}
             </Tabs>

@@ -364,8 +364,8 @@ const HomePage = () => {
                             />
                             </div>
                             
-                            {automaticMode && (
-                                <div className="d-flex flex-wrap gap-3 justify-content-center">
+                            {automaticMode ? (
+                                <div className="d-flex flex-wrap gap-3 justify-content-center mb-4">
                                 <Button variant="active" onClick={() => {
                                         navigate('/manual-autoschedule', {
                                             state: {
@@ -375,9 +375,14 @@ const HomePage = () => {
                                             }
                                         })
                                         console.log("Setup auto control clicked!! plantId and numberOfPlants: ", currPlantId, numberOfPlants);
-                                    }}>⏱️ Set Up Auto-schedule</Button>
+                                    }}>⏱️ Set Up Auto-schedule</Button></div>) : (
+                                <div className="d-flex flex-wrap gap-3 justify-content-center mb-4">
+                                        <Button variant="active" onClick={() => {
+                                        navigate('/manual-control')
+                                    }}>🔌 Manual Control</Button>
                                 </div>
                             )}
+                            
 
                             <div className="d-flex justify-content-center mb-4">
                                 <Form onSubmit={submitNumberOfPlants}>
