@@ -251,6 +251,7 @@ const HomePage = () => {
             alert("Successfully updated current plant!");
             fetchCurrentPlant();
             navigate('/');
+            window.location.reload();
             return;
         } else if (updateCurrPlantResult.status === "Error") {
             alert("Failed to update current plant.");
