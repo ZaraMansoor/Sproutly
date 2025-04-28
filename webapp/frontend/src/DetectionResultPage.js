@@ -26,22 +26,49 @@ const DetectionResultPage = () => {
 
 
     return (
-        <div className="monitoring-page container d-flex flex-column vh-100">
-          <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-            <h3>Your plant has been detected as <b>{bestMatch}</b>. Common names are: {commonNames.join(", ")}. However, you'll need to manually set up an autoschedule for your plant.</h3>
-            
-            <div className="d-flex justify-content-center mb-4">
-                <Button onClick={() => navigate('/manual-autoschedule', { 
-                    state: {
-                        plantId: location.state.plantId, numberOfPlants: location.state.numberOfPlants 
-                    } 
-                })}>
-                    <i className="bi bi-arrow-left"></i>
-                    Proceed to Manual Autoschedule
-                </Button>
-            </div>
-
-          </div>
+        <div className="container d-flex flex-column justify-content-center align-items-center vh-100">
+            <Card className="shadow-sm mb-4 w-100 max-w-md">
+                <Card.Body className="text-center">
+                    <Card.Title className="mb-4">Plant Detection Results</Card.Title>
+                    
+                    <Alert variant="success">
+                        <p className="mb-0">
+                            Your plant has been detected as <strong>{bestMatch}</strong>
+                        </p>
+                    </Alert>
+                    
+                    <div className="mt-4">
+                        <h5>Common Names:</h5>
+                        <p>{commonNames.join(", ")}</p>
+                    </div>
+                    
+                    <div className="mt-4">
+                        <p className="text-muted">
+                            You'll need to set up an auto-schedule with the ideal growing conditions.
+                        </p>
+                    </div>
+                </Card.Body>
+                <Card.Footer className="bg-transparent border-0 text-center pb-4">
+                    <Button 
+                        variant="primary" 
+                        size="lg"
+                        onClick={() => navigate('/manual-autoschedule', { 
+                            state: {
+                                plantId: location.state?.plantId, 
+                                numberOfPlants: location.state?.numberOfPlants 
+                            } 
+                        })}
+                    >
+                        Set Up Auto-Schedule
+                    </Button>
+                    
+                    <div className="mt-2">
+                        <Button variant="outline-secondary" onClick={() => navigate('/')}>
+                            <i className="bi bi-arrow-left"></i> Return Home
+                        </Button>
+                    </div>
+                </Card.Footer>
+            </Card>
         </div>
       );
 };
