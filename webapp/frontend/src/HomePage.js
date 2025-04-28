@@ -73,7 +73,7 @@ const HomePage = () => {
             setNumberOfPlants(data.number_of_plants);
         }) 
         .catch(e => console.error("Failed to fetch number of plants", e));
-    }, []);
+    }, [currPlantId]);
 
 
     const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
