@@ -148,8 +148,8 @@ def add_user_plant(request):
                 # TODO: comment out for TESTING
                 # best_match = "Aloe Plant"
                 # common_names = ['Whale Fin Plant', 'Sansevieria Masoniana']
-                best_match = "hihi" # TODO: comment out for TESTING
-                common_names = ["something"] # TODO: comment out for TESTING
+                # best_match = "hihi" # TODO: comment out for TESTING
+                # common_names = ["something"] # TODO: comment out for TESTING
                 lowercase_best_match = lowercase_species(best_match)
                 lowercase_common_names = [lowercase_species(name) for name in common_names]
 
