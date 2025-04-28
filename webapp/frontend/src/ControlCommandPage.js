@@ -263,6 +263,13 @@ const ControlCommandPage = () => {
                 </Form>
             </div>
 
+            <div className="d-flex justify-content-center mb-4">
+                <Button onClick={() => navigate('/')}>
+                    <i className="bi bi-arrow-left"></i>
+                    Back to Home
+                </Button>
+            </div>
+
           </div>
         </div>
       );

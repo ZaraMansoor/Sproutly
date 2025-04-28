@@ -226,7 +226,7 @@ const PlantInfoPage = () => {
                 },
                 title: { 
                     display: true, 
-                    text: `${label} for the Last 24 Hours`, 
+                    text: `${label}`, 
                 }
             }
         };

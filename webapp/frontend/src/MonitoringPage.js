@@ -134,34 +134,33 @@ const MonitoringPage = () => {
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
           <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-            <Form>
-                <Form.Check 
-                    type="switch"
-                    id="custom-switch"
-                    label="Camera Switch"
-                    checked={camera}
-                    onChange={(e) => {
-                        const cameraState = e.target.checked;
-                        setCamera(cameraState);
-                        sendCameraCommand({command: cameraState ? "on" : "off", actuator: "live_stream"});
-                    }}
-                />
-                <Form.Check
-                    type="switch"
-                    id="lights-switch"
-                    label="Lights"
-                    checked={lights}
-                    onChange={(e) => {
-                        const lightsState = e.target.checked;
-                        setLights(lightsState);
-                        sendCameraCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
-                    }}
-                />
-            </Form>
-          </div>
-
-          <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
                 <Header />
+                <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
+                    <Form>
+                        <Form.Check 
+                            type="switch"
+                            id="custom-switch"
+                            label="Camera Switch"
+                            checked={camera}
+                            onChange={(e) => {
+                                const cameraState = e.target.checked;
+                                setCamera(cameraState);
+                                sendCameraCommand({command: cameraState ? "on" : "off", actuator: "live_stream"});
+                            }}
+                        />
+                        <Form.Check
+                            type="switch"
+                            id="lights-switch"
+                            label="Lights"
+                            checked={lights}
+                            onChange={(e) => {
+                                const lightsState = e.target.checked;
+                                setLights(lightsState);
+                                sendCameraCommand({command: lightsState ? "on" : "off", actuator: "white_light"});
+                            }}
+                        />
+                    </Form>
+                </div>
                 {currPlantName && (
                 <div className="d-flex align-items-center">
                     <Card className="shadow-sm">

@@ -332,7 +332,6 @@ const HomePage = () => {
                 </div>
 
                 <div className="d-flex flex-wrap gap-3 justify-content-center">
-                    <Button variant="active" onClick={() => navigate('/monitoring')}>📷 Live Camera</Button>
                     <Button variant="active" onClick={() => {
                             navigate('/manual-autoschedule', {
                                 state: {
@@ -343,8 +342,6 @@ const HomePage = () => {
                             })
                             console.log("Setup auto control clicked!! plantId and numberOfPlants: ", currPlantId, numberOfPlants);
                         }}>⏱️ Set Up Auto-schedule</Button>
-                    <Button variant="active" onClick={() => navigate('/plant-info')}>👀 View Plant Details</Button>
-                    <Button variant="active" onClick={() => navigate('/control-command')}>🔌 Actuators</Button>
                 </div>
             </div>
         );

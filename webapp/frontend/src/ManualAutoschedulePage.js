@@ -6,6 +6,32 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Form, Alert } from 'react-bootstrap';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 
+
+const Header = () => {
+    const navigate = useNavigate();
+
+    return (
+        <Navbar bg="primary" variant="light" expand="lg" className="mb-4">
+        <Container>
+            <Navbar.Brand href="/">
+            <i className="bi bi-flower1 me-2"></i> 
+            Sproutly
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+                <Nav.Link onClick={() => navigate('/')} active>🌱 Home</Nav.Link>
+                <Nav.Link onClick={() => navigate('/plant-info')}>👀 View Plants Details</Nav.Link>
+                <Nav.Link onClick={() => navigate('/monitoring')}>📷 Live Camera</Nav.Link>
+                <Nav.Link onClick={() => navigate('/control-command')}>🔌 Actuators</Nav.Link>
+            </Nav>
+            </Navbar.Collapse>
+        </Container>
+        </Navbar>
+    );
+    };
+
+      
 const ManualAutoschedulePage = () => {
 
     const [loading, setLoading] = React.useState(true);
@@ -109,7 +135,7 @@ const ManualAutoschedulePage = () => {
             <div>Loading...</div>
           ) : (
             <div className="min-vh-100">
-                
+                <Header />
                 <div className="row">
                     <div className="col-md-4 mb-4">
                         <div className="card">
@@ -190,14 +216,6 @@ const ManualAutoschedulePage = () => {
                             </Button>
                         </Form>
                     </div>
-                </div>
-
-
-                <div className="d-flex justify-content-center mb-4">
-                    <Button onClick={() => navigate('/')}>
-                        <i className="bi bi-arrow-left"></i>
-                        Back to Home
-                    </Button>
                 </div>
 
             </div>
