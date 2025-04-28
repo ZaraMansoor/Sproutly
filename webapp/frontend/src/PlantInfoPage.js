@@ -8,6 +8,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import socket from './socket';
 import { Line } from 'react-chartjs-2';
 import { Button } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
 import {
     Chart as ChartJS,
