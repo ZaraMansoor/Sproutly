@@ -265,7 +265,32 @@ const ControlCommandPage = () => {
                                         sendCommand({ command: newLightValue, actuator: "LED_light" }); 
                                     }}
                                     disabled={automaticState === true}
-                                    style={{ width: "100%" }}
+                                    sx={{
+                                        width: 200,
+                                        color: '#1976d2',
+                                        '& .MuiSlider-track': {
+                                          height: 8,
+                                          borderRadius: 4,
+                                        },
+                                        '& .MuiSlider-rail': {
+                                          height: 8,
+                                          opacity: 1,
+                                          backgroundColor: '#ddd',
+                                          borderRadius: 4,
+                                        },
+                                        '& .MuiSlider-thumb': {
+                                          height: 24,
+                                          width: 24,
+                                          backgroundColor: '#1976d2',
+                                          border: '2px solid currentColor',
+                                          '&:hover': {
+                                            boxShadow: '0 0 0 8px rgba(25, 118, 210, 0.16)',
+                                          },
+                                          '&.Mui-active': {
+                                            boxShadow: '0 0 0 14px rgba(25, 118, 210, 0.16)',
+                                          },
+                                        },
+                                      }}
                                     />
                                 </div>
                                 <Form.Check
