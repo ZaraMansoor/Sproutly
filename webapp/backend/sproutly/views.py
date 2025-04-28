@@ -434,9 +434,9 @@ def get_automatic_or_manual(request):
     if request.method == "GET":
         try:
             print("entered 3333")
-            curr_plant = Plant.objects.get(id=CurrPlant.objects.get(user_id=1).current_plant)
-            print("curr_plant???: ", curr_plant)
-            print("curr_plant.id: ", curr_plant.id)
+            curr_plant_id = Plant.objects.get(id=CurrPlant.objects.get(user_id=1).current_plant_id)
+            print("curr_plant_id???: ", curr_plant_id)
+            print("curr_plant_id.id: ", curr_plant_id.id)
             curr_schedule = AutoSchedule.objects.get(id=curr_plant.id)
             print("curr_schedule.automatic_mode222222: ", curr_schedule.automatic_mode)
             return JsonResponse({"automatic_or_manual": curr_schedule.automatic_mode}, status=200)
