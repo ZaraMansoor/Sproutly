@@ -133,9 +133,9 @@ const AddPlantPage = () => {
             </div>
 
             <div className="d-flex justify-content-center mb-4">
-                <Button onClick={() => navigate('/')}>
+                <Button onClick={() => navigate('/plant-info')}>
                     <i className="bi bi-arrow-left"></i>
-                    Back to Home
+                    Back to Plant Details Page
                 </Button>
             </div>
 

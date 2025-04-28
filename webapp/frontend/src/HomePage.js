@@ -206,7 +206,6 @@ const HomePage = () => {
             alert("Successfully updated current plant!");
             fetchCurrentPlant();
             navigate('/');
-            window.location.reload();
             return;
         } else if (updateCurrPlantResult.status === "Error") {
             alert("Failed to update current plant.");
@@ -289,6 +288,15 @@ const HomePage = () => {
 
                 <div className="d-flex flex-wrap gap-3 justify-content-center">
                     <Button variant="active" onClick={() => navigate('/monitoring')}>📷 Live Camera</Button>
+                    <Button variant="active" onClick={() => {
+                            navigate('/manual-autoschedule', {
+                                state: {
+                                    plantId: currPlantId,
+                                    numberOfPlants: numberOfPlants
+                                }
+                            })
+                            console.log("Setup auto control clicked!! plantId and numberOfPlants: ", selectedPlant.id, numberOfPlants);
+                        }}>⏱️ Set Auto-schedule</Button>
                     <Button variant="active" onClick={() => navigate('/plant-info')}>👀 View Plant Details</Button>
                     <Button variant="active" onClick={() => navigate('/control-command')}>🔌 Actuators</Button>
                 </div>

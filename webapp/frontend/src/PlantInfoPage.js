@@ -254,15 +254,6 @@ const PlantInfoPage = () => {
 
                 <div className="d-flex flex-wrap gap-3 justify-content-center">
                     <Button variant="active" onClick={() => navigate('/add-plant')}>➕ Add New Plant</Button>
-                    <Button variant="active" onClick={() => {
-                        navigate('/manual-autoschedule', {
-                            state: {
-                                plantId: selectedPlant.id,
-                                numberOfPlants: numberOfPlants
-                            }
-                        })
-                        console.log("Setup auto control clicked!! plantId and numberOfPlants: ", selectedPlant.id, numberOfPlants);
-                    }}>⏱️ Set Auto-schedule</Button>
                     <Button variant="danger" onClick={deletePlant}>🗑️ Delete Plant</Button>
                 </div>
                 
@@ -316,6 +307,13 @@ const PlantInfoPage = () => {
             </Tabs>
           </div>
           {renderView()}
+          <div className="d-flex justify-content-center mb-4">
+            <Button onClick={() => navigate('/')}>
+                <i className="bi bi-arrow-left"></i>
+                Back to Home
+            </Button>
+          </div>
+
         </div>
       );
 };
