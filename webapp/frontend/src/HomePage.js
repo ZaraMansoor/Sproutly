@@ -378,7 +378,7 @@ const HomePage = () => {
                                     }}>⏱️ Set Up Auto-schedule</Button></div>) : (
                                 <div className="d-flex flex-wrap gap-3 justify-content-center mb-4">
                                         <Button variant="active" onClick={() => {
-                                        navigate('/manual-control')
+                                        navigate('/control-command')
                                     }}>🔌 Manual Control</Button>
                                 </div>
                             )}
