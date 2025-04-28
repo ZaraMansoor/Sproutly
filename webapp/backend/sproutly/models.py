@@ -8,6 +8,7 @@ class Plant(models.Model): # user's plant
     species = models.CharField(max_length=100)
     image_url = models.URLField(blank=True, null=True, default='https://soltech.com/cdn/shop/files/Schefflera_2048x.jpg?v=1685990757')
     health_status = models.CharField(max_length=100, blank=True, null=True)
+    last_detected = models.DateTimeField(auto_now_add=True, null=True, blank=True) # last health status detected time
 
     def __str__(self):
         return f'Plant(name={self.name}, species={self.species}, health_status="{self.health_status}")'

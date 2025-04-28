@@ -510,11 +510,7 @@ def get_current_plant(request):
     try:
         if CurrPlant.objects.filter(user_id=1).exists():
             current_plant = CurrPlant.objects.get(user_id=1).current_plant
-            print("current_plant_name: ", current_plant.name)
-            print("current_plant_id: ", current_plant.id)
-            print("current_plant_image: ", current_plant.image_url)
-            print("current_plant_species: ", current_plant.species)
-            return JsonResponse({"current_plant_name": current_plant.name, "current_plant_species": current_plant.species, "current_plant_id": current_plant.id, "current_plant_image": current_plant.image_url}, status=200)
+            return JsonResponse({"current_plant_name": current_plant.name, "current_plant_species": current_plant.species, "current_plant_id": current_plant.id, "current_plant_image": current_plant.image_url, "current_plant_health_status": current_plant.health_status, "current_plant_last_detected": current_plant.last_detected}, status=200)
         else:
             return JsonResponse({"status": "Error", "error": "No current plant"}, status=500)
     except Exception as e:

@@ -129,7 +129,8 @@ def on_message(client, userdata, msg):
                 current_plant_id = CurrPlant.objects.get(user_id=1).current_plant_id
 
                 Plant.objects.filter(id=current_plant_id).update( 
-                    health_status=data["status"]
+                    health_status=data["status"],
+                    last_detected=data["time"]
                 )
                 print("Updated Plant Health Status:", data["status"])
 

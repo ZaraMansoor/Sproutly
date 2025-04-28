@@ -64,6 +64,8 @@ const HomePage = () => {
     const [currPlantId, setCurrPlantId] = React.useState(null);
     const [currPlantSpecies, setCurrPlantSpecies] = React.useState(null);
     const [currPlantImage, setCurrPlantImage] = React.useState(null);
+    const [currPlantHealth, setCurrPlantHealth] = React.useState(null);
+    const [currPlantLastDetected, setCurrPlantLastDetected] = React.useState(null);
 
     const fetchCurrentPlant = () => {
         fetch("https://172.26.192.48:8443/get-current-plant/")
@@ -73,6 +75,8 @@ const HomePage = () => {
                 setCurrPlantId(data.current_plant_id);
                 setCurrPlantSpecies(data.current_plant_species);
                 setCurrPlantImage(data.current_plant_image);
+                setCurrPlantHealth(data.current_plant_health);
+                setCurrPlantLastDetected(data.current_plant_last_detected);
             })
             .catch(e => console.error("Failed to fetch current plant", e));
     };
@@ -81,9 +85,9 @@ const HomePage = () => {
         fetchCurrentPlant();
     }, []);
 
-    const [plantHealth, setPlantHealth] = React.useState([]);
+    const [plantHealth, setPlantHealth] = React.useState(null);
 
-    const [lastDetected, setLastDetected] = React.useState([]);
+    const [lastDetected, setLastDetected] = React.useState(null);
 
     const listenForHealthCheck = () => {
         const handler = (event) => {
@@ -220,8 +224,8 @@ const HomePage = () => {
                             <div className="text-center mt-4">
                                 <img src={currPlantImage} alt="Plant" width="200" height="200" />
                             </div>
-                            <p><strong>Health Status:</strong> {plantHealth}</p>
-                            <p><strong>Last Detected:</strong> {lastDetected}</p>
+                            <p><strong>Health Status:</strong> {plantHealth || currPlantHealth}</p>
+                            <p><strong>Last Detected:</strong> {lastDetected || currPlantLastDetected}</p>
                             <Button variant="success" onClick={() => {
                                 listenForHealthCheck();
                                 sendCommand({command: "get_plant_health_check"});
