@@ -418,7 +418,9 @@ def change_automatic_or_manual(request):
 
             curr_schedule = AutoSchedule.objects.get(plant_id=data["plantId"])
             curr_schedule.automatic_mode = data["command"]
+            print("curr_schedule.automatic_mode: ", curr_schedule.automatic_mode)
             curr_schedule.save()
+            print("saved!!")
 
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
@@ -433,6 +435,7 @@ def get_automatic_or_manual(request):
         try:
             curr_plant_id = Plant.objects.get(id=CurrPlant.objects.get(user_id=1).current_plant_id)
             curr_schedule = AutoSchedule.objects.get(id=curr_plant_id)
+            print("curr_schedule.automatic_mode222222: ", curr_schedule.automatic_mode)
             return JsonResponse({"automatic_or_manual": curr_schedule.automatic_mode}, status=200)
         except Exception as e:
             return JsonResponse({"status": "Error", "error": str(e)}, status=500)
