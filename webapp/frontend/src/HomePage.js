@@ -223,9 +223,9 @@ const HomePage = () => {
                             <p><strong>Health Status:</strong> {plantHealth}</p>
                             <p><strong>Last Detected:</strong> {lastDetected}</p>
                             <Button variant="success" onClick={() => {
+                                listenForHealthCheck();
                                 sendCommand({command: "get_plant_health_check"});
                                 console.log("Get recent health status command sent!!!");
-                                listenForHealthCheck();
                             }}>Get Recent Health Status of {currPlantName}</Button>
 
                             <div className="d-flex justify-content-center mb-4">
