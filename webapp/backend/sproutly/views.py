@@ -437,7 +437,7 @@ def get_automatic_or_manual(request):
             curr_plant_id = Plant.objects.get(id=CurrPlant.objects.get(user_id=1).current_plant_id)
             print("curr_plant_id???: ", curr_plant_id)
             print("curr_plant_id.id: ", curr_plant_id.id)
-            curr_schedule = AutoSchedule.objects.get(id=curr_plant_id.id)
+            curr_schedule = AutoSchedule.objects.get(plant_id=curr_plant_id.id)
             print("curr_schedule.automatic_mode222222: ", curr_schedule.automatic_mode)
             return JsonResponse({"automatic_or_manual": curr_schedule.automatic_mode}, status=200)
         except Exception as e:
