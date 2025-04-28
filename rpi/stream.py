@@ -26,7 +26,7 @@ import datetime
 # adjustable settings
 RESOLUTION = (3280, 2464)
 FRAME_RATE = 30
-JPEG_QUALITY = 100 # (1 - 100)
+JPEG_QUALITY = 80 # (1 - 100)
 
 # define daytime (bright light) settings
 DAY_SETTINGS = {
