@@ -30,6 +30,29 @@ import {
     Legend
   );
 
+
+  const Header = () => {
+    return (
+      <Navbar bg="primary" variant="dark" expand="lg" className="mb-4">
+        <Container>
+          <Navbar.Brand href="/">
+            <i className="bi bi-flower1 me-2"></i> 
+            Sproutly
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              <Nav.Link href="/" active>Home</Nav.Link>
+              <Nav.Link href="/plant-info">Plants</Nav.Link>
+              <Nav.Link href="/monitoring">Camera</Nav.Link>
+              <Nav.Link href="/control-command">Controls</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    );
+  };
+
 const PlantInfoPage = () => {
 
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
@@ -226,12 +249,11 @@ const PlantInfoPage = () => {
             const deletePlantResult = await deletePlantResponse.json();
             if (deletePlantResult.status === "Success") {
                 alert("Successfully deleted plant!");
-                navigate('/plant-info');
-                window.location.reload();
+                navigate('/');
                 return;
             } else if (deletePlantResult.status === "Error") {
                 alert("Failed to delete plant.");
-                navigate('/plant-info');
+                navigate('/');
                 return;
             }
         } else {
@@ -278,6 +300,7 @@ const PlantInfoPage = () => {
 
     return (
         <div className="home-page">
+          <Header />
           <h1 className="mb-4">Sproutly Dashboard</h1>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <Tabs activeKey={selectedPlant ? selectedPlant.id.toString() : null} onSelect={(key) => {
@@ -294,12 +317,6 @@ const PlantInfoPage = () => {
             </Tabs>
           </div>
           {renderView()}
-          <div className="d-flex justify-content-center mb-4">
-            <Button onClick={() => navigate('/')}>
-                <i className="bi bi-arrow-left"></i>
-                Back to Home
-            </Button>
-          </div>
 
         </div>
       );
