@@ -249,12 +249,15 @@ const ControlCommandPage = () => {
                                     }}
                                     disabled = {automaticState === true}
                                 />
+                                <div 
+                                className="d-flex flex-column align-items-center"
+                                style={{ maxWidth: '250px', margin: '0 auto' }}
+                                >
                                 <div className="d-flex justify-content-center align-items-center mb-2" style={{ gap: "5px" }}>
                                     <span>LED Brightness:</span>
-                                    <span><strong>{lightValue}</strong></span>
+                                    <strong>{lightValue}</strong>
                                 </div>
-                                <div className="px-4">
-                                    <Slider
+                                <Slider
                                     min={0}
                                     max={4}
                                     step={1}
@@ -262,36 +265,14 @@ const ControlCommandPage = () => {
                                     onChange={(e) => {
                                         const newLightValue = e.target.value;
                                         setLightValue(newLightValue);
-                                        sendCommand({ command: newLightValue, actuator: "LED_light" }); 
+                                        sendCommand({ command: newLightValue, actuator: "LED_light" });
                                     }}
                                     disabled={automaticState === true}
                                     sx={{
-                                        width: 200,
-                                        color: '#1976d2',
-                                        '& .MuiSlider-track': {
-                                          height: 8,
-                                          borderRadius: 4,
-                                        },
-                                        '& .MuiSlider-rail': {
-                                          height: 8,
-                                          opacity: 1,
-                                          backgroundColor: '#ddd',
-                                          borderRadius: 4,
-                                        },
-                                        '& .MuiSlider-thumb': {
-                                          height: 24,
-                                          width: 24,
-                                          backgroundColor: '#1976d2',
-                                          border: '2px solid currentColor',
-                                          '&:hover': {
-                                            boxShadow: '0 0 0 8px rgba(25, 118, 210, 0.16)',
-                                          },
-                                          '&.Mui-active': {
-                                            boxShadow: '0 0 0 14px rgba(25, 118, 210, 0.16)',
-                                          },
-                                        },
-                                      }}
-                                    />
+                                        width: '100%',
+                                        maxWidth: 200,
+                                    }}
+                                />
                                 </div>
                                 <Form.Check
                                     type="switch"
