@@ -16,6 +16,7 @@ import socket from './socket';
 import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
 import {
     Chart as ChartJS,

@@ -12,6 +12,7 @@ import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Card, Tab, Tabs, Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
 const MonitoringPage = () => {
 

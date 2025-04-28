@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/brite/bootstrap.min.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Form, Alert } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
 const ManualAutoschedulePage = () => {
 
