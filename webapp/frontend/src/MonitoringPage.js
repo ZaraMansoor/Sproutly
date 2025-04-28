@@ -140,7 +140,7 @@ const MonitoringPage = () => {
                         <Form.Check 
                             type="switch"
                             id="custom-switch"
-                            label="Camera Switch"
+                            label="Camera"
                             checked={camera}
                             onChange={(e) => {
                                 const cameraState = e.target.checked;
