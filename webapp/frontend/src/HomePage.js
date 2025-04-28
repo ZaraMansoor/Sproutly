@@ -363,6 +363,21 @@ const HomePage = () => {
                                 className="fs-5"
                             />
                             </div>
+                            
+                            {automaticMode && (
+                                <div className="d-flex flex-wrap gap-3 justify-content-center">
+                                <Button variant="active" onClick={() => {
+                                        navigate('/manual-autoschedule', {
+                                            state: {
+                                                plantId: currPlantId,
+                                                numberOfPlants: numberOfPlants,
+                                                plantSpecies: currPlantSpecies
+                                            }
+                                        })
+                                        console.log("Setup auto control clicked!! plantId and numberOfPlants: ", currPlantId, numberOfPlants);
+                                    }}>⏱️ Set Up Auto-schedule</Button>
+                                </div>
+                            )}
 
                             <div className="d-flex justify-content-center mb-4">
                                 <Form onSubmit={submitNumberOfPlants}>
@@ -386,19 +401,6 @@ const HomePage = () => {
                             
                         </Card.Body>
                     </Card>
-
-                <div className="d-flex flex-wrap gap-3 justify-content-center">
-                    <Button variant="active" onClick={() => {
-                            navigate('/manual-autoschedule', {
-                                state: {
-                                    plantId: currPlantId,
-                                    numberOfPlants: numberOfPlants,
-                                    plantSpecies: currPlantSpecies
-                                }
-                            })
-                            console.log("Setup auto control clicked!! plantId and numberOfPlants: ", currPlantId, numberOfPlants);
-                        }}>⏱️ Set Up Auto-schedule</Button>
-                </div>
             </div>
             </div>
         );

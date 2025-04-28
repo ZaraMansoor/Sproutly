@@ -188,7 +188,7 @@ const ControlCommandPage = () => {
                 <p className="lead text-muted">Turn on/off actuators</p>
             </div>
             <Card className="shadow-sm mb-4">
-                <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+                <Card.Header className="bg-primary text-black d-flex justify-content-between align-items-center">
                     <h5 className="mb-0">Control Mode</h5>
                     <Badge bg={automaticState ? "success" : "warning"} pill>
                         {automaticState ? "Automatic" : "Manual"}
