@@ -365,7 +365,6 @@ const HomePage = () => {
                             </div>
 
                             <div className="d-flex justify-content-center mb-4">
-                                <p><strong>Current Number of Plants:</strong> {numberOfPlants}</p>
                                 <Form onSubmit={submitNumberOfPlants}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Number of Plants in Greenhouse</Form.Label>
