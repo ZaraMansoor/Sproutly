@@ -58,7 +58,8 @@ const HomePage = () => {
 
     const [numberOfPlants, setNumberOfPlants] = React.useState(null);
 
-    const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(null);
+    const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
+    const [selectedCurrPlantId, setSelectedCurrPlantId] = React.useState(plants[0].id);
 
     const [currPlantName, setCurrPlantName] = React.useState(null);
     const [currPlantId, setCurrPlantId] = React.useState(null);
@@ -75,7 +76,7 @@ const HomePage = () => {
                 setCurrPlantId(data.current_plant_id);
                 setCurrPlantSpecies(data.current_plant_species);
                 setCurrPlantImage(data.current_plant_image);
-                setCurrPlantHealth(data.current_plant_health);
+                setCurrPlantHealth(data.current_plant_health_status);
                 setCurrPlantLastDetected(data.current_plant_last_detected);
             })
             .catch(e => console.error("Failed to fetch current plant", e));
@@ -163,10 +164,10 @@ const HomePage = () => {
     const submitNumberOfPlants = async (e) => {
         e.preventDefault();
 
-        if (!numberOfPlants) {
-            alert("error with number of plants");
-            return;
-        }
+        // if (!numberOfPlants) {
+        //     alert("error with number of plants");
+        //     return;
+        // }
 
         const numberOfPlantsResponse = await fetch("https://172.26.192.48:8443/change-number-of-plants/",
             {
@@ -196,7 +197,7 @@ const HomePage = () => {
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plantId: currPlantId }),
+                body: JSON.stringify({ plantId: selectedCurrPlantId }),
             }
         );
 
@@ -205,6 +206,7 @@ const HomePage = () => {
             alert("Successfully updated current plant!");
             fetchCurrentPlant();
             navigate('/');
+            window.location.reload();
             return;
         } else if (updateCurrPlantResult.status === "Error") {
             alert("Failed to update current plant.");
@@ -236,7 +238,7 @@ const HomePage = () => {
                                 <Form onSubmit={updateCurrPlant}>
                                     <Form.Group className="mb-3">
                                     <Form.Label>Change Current Plant?</Form.Label>
-                                        <Form.Select required>
+                                        <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
                                             {plants.map((plant) => (
                                                 <option key={plant.id} value={plant.id}>
                                                     {plant.name}
