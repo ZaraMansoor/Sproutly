@@ -24,7 +24,7 @@ import cv2
 import datetime
 
 # adjustable settings
-RESOLUTION = (3280, 2464)
+RESOLUTION = (1920, 1080)
 FRAME_RATE = 30
 JPEG_QUALITY = 80 # (1 - 100)
 
