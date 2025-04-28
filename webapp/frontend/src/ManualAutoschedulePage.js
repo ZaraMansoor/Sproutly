@@ -47,7 +47,7 @@ const ManualAutoschedulePage = () => {
                 setLoading(false);
             })
             .catch(e => console.error("Failed to fetch auto schedule", e));
-    }, []);
+    }, [plantId]);
       
     
     const submitManualAutoschedule = async (e) => {
@@ -65,7 +65,7 @@ const ManualAutoschedulePage = () => {
         const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightStartTime, lightIntensity, lightHours, waterFrequency, waterStartTime, waterAmount, nutrientsStartTime, nutrientsAmount };
         
         console.log("number of plants", location.state.numberOfPlants);
-        
+
         const response = await fetch("https://172.26.192.48:8443/manual-autoschedule/",
             {
                 method: "POST",
@@ -107,7 +107,7 @@ const ManualAutoschedulePage = () => {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            <div className="container mt-4">
+            <div className="min-vh-100">
                 
                 <div className="row">
                     <div className="col-md-4 mb-4">
