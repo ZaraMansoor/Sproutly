@@ -213,7 +213,7 @@ const HomePage = () => {
     const renderView = () => {
         return (
             <div>
-                <div className="d-flex justify-content-center align-items-start gap-4 mb-4" style={{ minHeight: "400px" }}>
+                <div className="d-flex justify-content-center align-items-center gap-4 mb-4" style={{ minHeight: "400px" }}>
                     <Card className="mb-0">
                         <Card.Header className="bg-secondary text-black">
                                 <h5 className="mb-0">Current Plant</h5>
@@ -264,7 +264,7 @@ const HomePage = () => {
                         </Card.Body>
                     </Card>
 
-                    <div className="d-flex align-items-center" style={{ minHeight: "100%" }}>
+                    <div className="d-flex align-items-center" style={{ height: "100%" }}>
                         <Form onSubmit={updateCurrPlant}>
                             <Form.Group className="mb-3">
                             <Form.Label>Change Current Plant</Form.Label>
