@@ -95,7 +95,7 @@ else:
   print("Failed to connect to soil sensor.")
 
 # automatic control
-automatic = False
+automatic = True
 running = True
 
 # Actuators
