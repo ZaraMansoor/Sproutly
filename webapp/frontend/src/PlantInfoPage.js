@@ -278,27 +278,11 @@ const PlantInfoPage = () => {
         return (
             <div>
                 <Row>
-                    <Col lg={4} className="mb-4">
-                        <Card className="shadow-sm h-100">
-                            <Card.Header className="bg-secondary text-black">
-                                <h5 className="mb-0">{selectedPlant.name}</h5>
-                            </Card.Header>
-
-                            <Card.Body className="text-center">
-                                <div className="mb-3">
-                                    <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />
-                                    <h5 className="fw-bold">{selectedPlant.species}</h5>
-                                </div>
-                            </Card.Body>
-                        </Card>
+                    <Col lg={4} className="mb-6">
+                        <img src={selectedPlant.image_url} alt="Plant" width="200" height="200" />                                
                     </Col>
 
                     <Col lg={8}>
-                        <Card className="shadow-sm mb-4">
-                            <Card.Header className="bg-secondary text-black">
-                                <h5 className="mb-0">Sensor Readings</h5>
-                            </Card.Header>
-                            <Card.Body>
                             <Tabs
                                 activeKey={activeTab}
                                 onSelect={(k) => setActiveTab(k)}
@@ -414,8 +398,6 @@ const PlantInfoPage = () => {
                                     </Row>
                                 </Tab>
                                 </Tabs>
-                        </Card.Body>
-                        </Card>
                     </Col>
                 </Row>
             </div>

@@ -91,7 +91,6 @@ const ManualAutoschedulePage = () => {
 
         const scheduleSelected = { minTemp, maxTemp, minHumidity, maxHumidity, lightStartTime, lightIntensity, lightHours, waterFrequency, waterStartTime, waterAmount, nutrientsStartTime, nutrientsAmount };
         
-        console.log("number of plants", location.state.numberOfPlants);
 
         const response = await fetch("https://172.26.192.48:8443/manual-autoschedule/",
             {
@@ -265,28 +264,25 @@ const ManualAutoschedulePage = () => {
                                 Set up Auto-Schedule
                             </Button>
                         </Form>
+
+                        <Form onSubmit={submitNumberOfPlants} className="mt-4">
+                            <Form.Group className="mb-3">
+                                <Form.Label>Number of Plants in Greenhouse</Form.Label>
+                                <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required className="me-2">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </Form.Select>
+                            </Form.Group>
+                            <Button variant="outline-primary" type="submit">
+                                Update
+                            </Button>
+                            <Form.Text className="text-muted d-block mt-2">
+                                Current Setting: {numberOfPlants} plant(s)
+                            </Form.Text>
+                        </Form>
                     </div>
                 </div>
-
-                <div className="d-flex justify-content-center mb-4">
-                    <Form onSubmit={submitNumberOfPlants}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Number of Plants in Greenhouse</Form.Label>
-                            <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required className="me-2">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Button variant="outline-primary" type="submit">
-                            Update
-                        </Button>
-                        <Form.Text className="text-muted">
-                            Current Setting: {numberOfPlants} plant(s)
-                        </Form.Text>
-                    </Form>
-                </div>
-
 
                 <div className="d-flex justify-content-center mb-4">
                     <Button onClick={() => navigate('/')}>
