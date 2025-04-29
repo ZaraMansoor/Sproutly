@@ -311,27 +311,27 @@ const HomePage = () => {
                                 <i className="bi bi-heart-pulse me-2"></i>
                                 Check Health Status
                             </Button>
-
-                            <div className="d-flex justify-content-center mb-4">
-                                <Form onSubmit={updateCurrPlant}>
-                                    <Form.Group className="mb-3">
-                                    <Form.Label>Change Current Plant</Form.Label>
-                                        <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
-                                            {plants.map((plant) => (
-                                                <option key={plant.id} value={plant.id}>
-                                                    {plant.name}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Button variant="primary" type="submit" size="sm" className="w-100">
-                                        <i className="bi bi-check-circle me-2"></i>
-                                        Update
-                                    </Button>
-                                </Form>
-                            </div>
                         </Card.Body>
                     </Card>
+
+                    <div className="d-flex justify-content-center mb-4">
+                        <Form onSubmit={updateCurrPlant}>
+                            <Form.Group className="mb-3">
+                            <Form.Label>Change Current Plant</Form.Label>
+                                <Form.Select onChange={(e) => setSelectedCurrPlantId(e.target.value)} required>
+                                    {plants.map((plant) => (
+                                        <option key={plant.id} value={plant.id}>
+                                            {plant.name}
+                                        </option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+                            <Button variant="primary" type="submit" size="sm" className="w-100">
+                                <i className="bi bi-check-circle me-2"></i>
+                                Update
+                            </Button>
+                        </Form>
+                    </div>
                 </div>
 
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
