@@ -128,9 +128,26 @@ const ManualAutoschedulePage = () => {
         .catch(e => console.error("Failed to fetch plant info", e));
     }, []);
 
-    
-    const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
 
+    const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
+    const [numberOfPlants, setNumberOfPlants] = React.useState(null);
+
+    React.useEffect(() => {
+        if (!plantId) {
+            return;
+        }
+
+        fetch("https://172.26.192.48:8443/get-number-of-plants/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plantId: plantId })
+        })
+        .then(result => result.json())
+        .then(data => {
+            setNumberOfPlants(data.number_of_plants);
+        }) 
+        .catch(e => console.error("Failed to fetch number of plants", e));
+    }, []);
 
     const submitNumberOfPlants = async (e) => {
         e.preventDefault();
