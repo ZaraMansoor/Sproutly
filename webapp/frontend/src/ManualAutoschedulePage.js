@@ -128,6 +128,39 @@ const ManualAutoschedulePage = () => {
         .catch(e => console.error("Failed to fetch plant info", e));
     }, []);
 
+    
+    const [selectedNumberOfPlants, setSelectedNumberOfPlants] = React.useState(1);
+
+
+    const submitNumberOfPlants = async (e) => {
+        e.preventDefault();
+
+        // if (!numberOfPlants) {
+        //     alert("error with number of plants");
+        //     return;
+        // }
+
+        const numberOfPlantsResponse = await fetch("https://172.26.192.48:8443/change-number-of-plants/",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ plantId: plantId, numberOfPlants: selectedNumberOfPlants }),
+            }
+        );
+
+        const numberOfPlantsResult = await numberOfPlantsResponse.json();
+        if (numberOfPlantsResult.status === "Success") {
+            alert("Successfully changed number of plants!");
+            setNumberOfPlants(selectedNumberOfPlants);
+            navigate('/');
+            return;
+        } else if (numberOfPlantsResult.status === "Error") {
+            alert("Failed to change number of plants.");
+            navigate('/');
+            return;
+        }
+    }
+
 
     return (
         <div className="monitoring-page container d-flex flex-column vh-100">
@@ -217,6 +250,26 @@ const ManualAutoschedulePage = () => {
                         </Form>
                     </div>
                 </div>
+
+                <div className="d-flex justify-content-center mb-4">
+                    <Form onSubmit={submitNumberOfPlants}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Number of Plants in Greenhouse</Form.Label>
+                            <Form.Select onChange={(e) => setSelectedNumberOfPlants(e.target.value)} required className="me-2">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Button variant="outline-primary" type="submit">
+                            Update
+                        </Button>
+                        <Form.Text className="text-muted">
+                            Current Setting: {numberOfPlants} plant(s)
+                        </Form.Text>
+                    </Form>
+                </div>
+
 
                 <div className="d-flex justify-content-center mb-4">
                     <Button onClick={() => navigate('/')}>
