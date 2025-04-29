@@ -213,8 +213,8 @@ const HomePage = () => {
     const renderView = () => {
         return (
             <div>
-                <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
-                    <Card className="mb-4">
+                <div className="d-flex justify-content-center align-items-start gap-4 mb-4">
+                    <Card className="mb-0">
                         <Card.Header className="bg-secondary text-black">
                                 <h5 className="mb-0">Current Plant</h5>
                         </Card.Header>
@@ -264,7 +264,7 @@ const HomePage = () => {
                         </Card.Body>
                     </Card>
 
-                    <div className="d-flex justify-content-center mb-4">
+                    <div style={{ minWidth: "250px" }}>
                         <Form onSubmit={updateCurrPlant}>
                             <Form.Group className="mb-3">
                             <Form.Label>Change Current Plant</Form.Label>
@@ -286,9 +286,6 @@ const HomePage = () => {
 
                 <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center">
                     <Card className="shadow-sm h-100">
-                        <Card.Header className="bg-secondary text-black">
-                            <h5 className="mb-0">Plant Controls</h5>
-                        </Card.Header>
                         <Card.Body>
                             <Alert variant="info" className="d-flex align-items-center mb-4">
                                 <i className="bi bi-info-circle-fill fs-4 me-3"></i>
