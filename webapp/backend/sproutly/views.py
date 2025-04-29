@@ -15,6 +15,7 @@ from soltech_scraping import webscrape_plant
 import time
 from sproutly.models import SensorData
 import re
+from django.utils.timezone import localtime
 
 MQTT_SERVER = "broker.emqx.io"
 MQTT_PORT = 1883
@@ -398,7 +399,7 @@ def get_sensor_data_history(request):
         data = sorted(data, key=lambda x: x["timestamp"])
 
         for d in data:
-            d["timestamp"] = d["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
+            d["timestamp"] = localtime(d["timestamp"]).strftime("%Y-%m-%d %H:%M:%S")
 
         return JsonResponse(data, safe=False)
     except Exception as e:
