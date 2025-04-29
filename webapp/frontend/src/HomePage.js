@@ -213,7 +213,7 @@ const HomePage = () => {
     const renderView = () => {
         return (
             <div>
-                <div className="d-flex justify-content-center align-items-start gap-4 mb-4" style={{ minHeight: "100%" }}>
+                <div className="d-flex justify-content-center align-items-start gap-4 mb-4" style={{ minHeight: "400px" }}>
                     <Card className="mb-0">
                         <Card.Header className="bg-secondary text-black">
                                 <h5 className="mb-0">Current Plant</h5>
