@@ -61,7 +61,8 @@ streaming = True
 last_sensor_send_time = datetime.now() - timedelta(minutes=1)
 
 # check plant health once a day
-last_health_check_time = datetime.now() - timedelta(days=1) + timedelta(seconds=3)
+# last_health_check_time = datetime.now() - timedelta(days=1) + timedelta(seconds=3)
+last_health_check_time = datetime.now()
 
 # reset serial buffer data every 2.3 seconds
 last_reset_time = datetime.now() - timedelta(seconds=2.3)
