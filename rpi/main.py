@@ -58,7 +58,7 @@ stream.start_stream()
 streaming = True
 
 # check sensor data once a minute
-last_sensor_send_time = datetime.now() - timedelta(minutes=1)
+last_sensor_send_time = datetime.now()
 
 # check plant health once a day
 # last_health_check_time = datetime.now() - timedelta(days=1) + timedelta(seconds=3)
