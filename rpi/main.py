@@ -471,7 +471,6 @@ def control_loop():
   nutrients_pump_started = False
   nutrients_pump_start_time = None
   while running:
-    print("running ")
     try: 
       # get dht11 sensor data
       try:
@@ -535,7 +534,9 @@ def control_loop():
         print("Auto mode - processing sensors and relays...")
         # auto control running
         plant_id = 1 # hardcoded
+        print("getting schedule")
         schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
+        print("got schedule")
         # schedule = {
         #   "number_of_plants": 3,
         #   "min_temp": 60,
