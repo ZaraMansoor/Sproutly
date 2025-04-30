@@ -471,6 +471,7 @@ def control_loop():
   nutrients_pump_started = False
   nutrients_pump_start_time = None
   while running:
+    print("running ")
     try: 
       # get dht11 sensor data
       try:
