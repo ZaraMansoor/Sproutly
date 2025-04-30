@@ -343,7 +343,7 @@ def send_plant_health(client, reset_status=False):
       assert 0 <= last_led_state <= 4
       control_leds(last_led_state)
     timeee=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"time: {timeee}")
+    print(f"time: {timeee}, {type(timeee)}")
     payload = json.dumps({
       "type": "plant_health",
       "status": health_status,
