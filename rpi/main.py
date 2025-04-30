@@ -58,11 +58,11 @@ stream.start_stream()
 streaming = True
 
 # check sensor data once a minute
-last_sensor_send_time = datetime.now()
+last_sensor_send_time = datetime.now() - timedelta(seconds=10)
 
 # check plant health once a day
-# last_health_check_time = datetime.now() - timedelta(days=1) + timedelta(seconds=3)
-last_health_check_time = datetime.now()
+last_health_check_time = datetime.now() - timedelta(days=1) + timedelta(seconds=3)
+# last_health_check_time = datetime.now()
 
 # reset serial buffer data every 2.3 seconds
 last_reset_time = datetime.now() - timedelta(seconds=2.3)
@@ -301,44 +301,47 @@ def send_sensor_data(client, sensor_data):
 
 
 health_status = None
-def send_plant_health(client):
+def send_plant_health(client, reset_status=False):
   global last_health_check_time
   global streaming
   global health_status
   try:
-    # turn white light on and wait for 2 seconds for camera to adjust
-    control_leds(0)
-    white_light_relay.on()
-    time.sleep(2)
-
-    if streaming:
-      # get frame from stream
-      frame = stream.get_latest_frame()
-      image = Image.open(io.BytesIO(frame))
+    if reset_status:
+      health_status = None
     else:
-      # capture image
-      picam2.start()
-      image = picam2.capture_array('main')
-      image = Image.fromarray(image)
-      image = image.convert('RGB')
-      picam2.stop()
+      # turn white light on and wait for 2 seconds for camera to adjust
+      control_leds(0)
+      white_light_relay.on()
+      time.sleep(2)
 
-    ordered_data = [
-      sensor_data["soil_moisture"],
-      sensor_data["temperature_c"],
-      sensor_data["humidity"],
-      sensor_data["lux"],
-      sensor_data["ph"],
-      sensor_data["nitrogen"],
-      sensor_data["phosphorus"],
-      sensor_data["potassium"],
-    ]
-    health_status = health_check(image, ordered_data)
+      if streaming:
+        # get frame from stream
+        frame = stream.get_latest_frame()
+        image = Image.open(io.BytesIO(frame))
+      else:
+        # capture image
+        picam2.start()
+        image = picam2.capture_array('main')
+        image = Image.fromarray(image)
+        image = image.convert('RGB')
+        picam2.stop()
 
-    # turn white light off
-    white_light_relay.off()
-    assert 0 <= last_led_state <= 4
-    control_leds(last_led_state)
+      ordered_data = [
+        sensor_data["soil_moisture"],
+        sensor_data["temperature_c"],
+        sensor_data["humidity"],
+        sensor_data["lux"],
+        sensor_data["ph"],
+        sensor_data["nitrogen"],
+        sensor_data["phosphorus"],
+        sensor_data["potassium"],
+      ]
+      health_status = health_check(image, ordered_data)
+
+      # turn white light off
+      white_light_relay.off()
+      assert 0 <= last_led_state <= 4
+      control_leds(last_led_state)
     
     payload = json.dumps({
       "type": "plant_health",
@@ -446,8 +449,8 @@ def send_LED_actuator_status(actuators_status, health_status):
     "health": "healthy" if health_status == "Healthy" else "unhealthy"
   }
 
-  for cmd in status_map.values():
-    ser2.write(f"{cmd}\n".encode('utf-8'))
+  # for cmd in status_map.values():
+  #   ser2.write(f"{cmd}\n".encode('utf-8'))
 
 sensor_data = {
   "temperature_c": 0,
@@ -520,7 +523,7 @@ def control_loop():
       # check if 24 hours have passed since last health check
       if datetime.now() - last_health_check_time >= timedelta(days=1):
         print("Sending health data")
-        send_plant_health(client)
+        send_plant_health(client, reset_status=True)
         print("Sent health data")
       
       # check if 2.3 seconds have passed since serial buffer reset
