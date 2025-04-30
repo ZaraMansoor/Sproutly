@@ -553,7 +553,7 @@ def control_loop():
 
         # }
         curr_time = datetime.now().time()
-
+        print("got curr time")
         # Heater
         if sensor_data['temperature_f'] < schedule["min_temp"]:
           heater_relay.on()
@@ -561,7 +561,7 @@ def control_loop():
         elif sensor_data['temperature_f'] > schedule["max_temp"]:
           heater_relay.off()
           actuators_status["heater"] = "off"
-
+        print("heater done")
         # Mister
         if sensor_data['humidity'] < schedule["min_humidity"]:
           if actuators_status["mister"] == "off":
@@ -571,7 +571,7 @@ def control_loop():
           if actuators_status["mister"] == "on":
             mister_relay.off()
           actuators_status["mister"] = "off"
-
+        print("mister done")
         # Lights
         light_start_time = datetime.strptime(schedule["light_start_time"], "%H:%M:%S").time()
         light_end_time = (datetime.combine(datetime.today(), light_start_time) + timedelta(hours=schedule["light_hours"])).time()
@@ -582,7 +582,7 @@ def control_loop():
         else:
           control_leds(0)
           actuators_status["LED_light"] = 0
-
+        print("lights done")
         # Water and Nutrients
         water_duration = (100 / 250) * schedule["water_amount"] * schedule["number_of_plants"]
         nutrients_duration = (100 / 250) * schedule["nutrients_amount"] * (schedule["water_amount"] / 100) * schedule["number_of_plants"]
@@ -608,8 +608,9 @@ def control_loop():
           nutrients_pump_relay.off()
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
-
+        print("water and nutrients done")
         send_LED_actuator_status(actuators_status, health_status)
+        print("sent status")
       else:
         print("Manual mode - waiting for controls")
 
