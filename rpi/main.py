@@ -609,7 +609,7 @@ def control_loop():
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
         print("water and nutrients done")
-        send_LED_actuator_status(actuators_status, health_status)
+        # send_LED_actuator_status(actuators_status, health_status)
         print("sent status")
       else:
         print("Manual mode - waiting for controls")
