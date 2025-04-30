@@ -538,7 +538,10 @@ def control_loop():
       if automatic:
         print("Auto mode - processing sensors and relays...")
         # auto control running
-        plant_id = 1 # hardcoded
+        # plant_id = 1 # hardcoded
+        curr_plant = requests.get(f"https://172.26.192.48:8443/get-current-plant/", verify=False).json()
+        plant_id = curr_plant["current_plant_id"]
+        print(f"Current plant id: {plant_id}")
         schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
         # schedule = {
         #   "number_of_plants": 3,
