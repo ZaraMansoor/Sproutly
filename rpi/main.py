@@ -580,7 +580,11 @@ def control_loop():
         light_start_time = datetime.strptime(schedule["light_start_time"], "%H:%M:%S").time()
         light_end_time = (datetime.combine(datetime.today(), light_start_time) + timedelta(hours=schedule["light_hours"])).time()
 
-        if light_start_time <= curr_time <= light_end_time:
+        if light_start_time < light_end_time:
+          light_on = light_start_time <= curr_time <= light_end_time
+        else:
+          light_on = curr_time >= light_start_time or curr_time <= light_end_time
+        if light_on:
           control_leds(schedule["light_intensity"])
           actuators_status["LED_light"] = schedule["light_intensity"]
           send_LED_actuator_status(actuators_status, health_status)
