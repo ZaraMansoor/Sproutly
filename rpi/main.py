@@ -81,7 +81,7 @@ ser2.reset_input_buffer()
 
 # 7-in-1 soil sensor 
 soil_client = ModbusSerialClient(
-  port="/dev/ttyUSB0",                   # Serial port for rpi
+  port="/dev/ttyUSB1",                   # Serial port for rpi
   baudrate=9600,                         # Baudrate for communication
   bytesize=8,                            # Number of bits per byte
   parity="N",                            # No parity
@@ -534,9 +534,7 @@ def control_loop():
         print("Auto mode - processing sensors and relays...")
         # auto control running
         plant_id = 1 # hardcoded
-        print("getting schedule")
         schedule = requests.get(f"https://172.26.192.48:8443/get-autoschedule/{plant_id}/", verify=False).json()
-        print("got schedule")
         # schedule = {
         #   "number_of_plants": 3,
         #   "min_temp": 60,
@@ -553,25 +551,26 @@ def control_loop():
 
         # }
         curr_time = datetime.now().time()
-        print("got curr time")
         # Heater
         if sensor_data['temperature_f'] < schedule["min_temp"]:
           heater_relay.on()
           actuators_status["heater"] = "on"
+          send_LED_actuator_status(actuators_status, health_status)
         elif sensor_data['temperature_f'] > schedule["max_temp"]:
           heater_relay.off()
           actuators_status["heater"] = "off"
-        print("heater done")
+          send_LED_actuator_status(actuators_status, health_status)
         # Mister
         if sensor_data['humidity'] < schedule["min_humidity"]:
           if actuators_status["mister"] == "off":
             mister_relay.on()
-          actuators_status["mister"] = "on"
+            actuators_status["mister"] = "on"
+            send_LED_actuator_status(actuators_status, health_status)
         elif sensor_data['humidity'] > schedule["max_humidity"]:
           if actuators_status["mister"] == "on":
             mister_relay.off()
-          actuators_status["mister"] = "off"
-        print("mister done")
+            actuators_status["mister"] = "off"
+            send_LED_actuator_status(actuators_status, health_status)
         # Lights
         light_start_time = datetime.strptime(schedule["light_start_time"], "%H:%M:%S").time()
         light_end_time = (datetime.combine(datetime.today(), light_start_time) + timedelta(hours=schedule["light_hours"])).time()
@@ -579,10 +578,11 @@ def control_loop():
         if light_start_time <= curr_time <= light_end_time:
           control_leds(schedule["light_intensity"])
           actuators_status["LED_light"] = schedule["light_intensity"]
+          send_LED_actuator_status(actuators_status, health_status)
         else:
           control_leds(0)
           actuators_status["LED_light"] = 0
-        print("lights done")
+          send_LED_actuator_status(actuators_status, health_status)
         # Water and Nutrients
         water_duration = (100 / 250) * schedule["water_amount"] * schedule["number_of_plants"]
         nutrients_duration = (100 / 250) * schedule["nutrients_amount"] * (schedule["water_amount"] / 100) * schedule["number_of_plants"]
@@ -592,25 +592,27 @@ def control_loop():
           actuators_status["water_pump"] = "on"
           water_pump_start_time = datetime.now()
           water_pump_started = True
+          send_LED_actuator_status(actuators_status, health_status)
 
         if curr_time.strftime("%H:%M:%S") == schedule["nutrients_start_time"]:
           nutrients_pump_relay.on()
           actuators_status["nutrients_pump"] = "on"
           nutrients_pump_start_time = datetime.now()
           nutrients_pump_started = True
+          send_LED_actuator_status(actuators_status, health_status)
           
         if water_pump_started and (datetime.now() - water_pump_start_time).total_seconds() >= water_duration:
           water_pump_relay.off()
           actuators_status["water_pump"] = "off"
           water_pump_started = False
+          send_LED_actuator_status(actuators_status, health_status)
 
         if nutrients_pump_started and (datetime.now() - nutrients_pump_start_time).total_seconds() >= nutrients_duration:
           nutrients_pump_relay.off()
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
-        print("water and nutrients done")
-        # send_LED_actuator_status(actuators_status, health_status)
-        print("sent status")
+          send_LED_actuator_status(actuators_status, health_status)
+        
       else:
         print("Manual mode - waiting for controls")
 
