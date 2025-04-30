@@ -126,7 +126,7 @@ def on_message(client, userdata, msg):
 
                 Plant.objects.filter(id=current_plant_id).update( 
                     health_status=data["status"],
-                    last_detected=data["time"]
+                    last_detected=str(data["time"])
                 )
                 print("Updated Plant Health Status:", data["status"])
 
