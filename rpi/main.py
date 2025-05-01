@@ -82,7 +82,7 @@ ser2.reset_input_buffer()
 
 # 7-in-1 soil sensor 
 soil_client = ModbusSerialClient(
-  port="/dev/ttyUSB1",                   # Serial port for rpi
+  port="/dev/ttyUSB0",                   # Serial port for rpi
   baudrate=9600,                         # Baudrate for communication
   bytesize=8,                            # Number of bits per byte
   parity="N",                            # No parity
@@ -589,12 +589,18 @@ def control_loop():
           light_on = curr_time >= light_start_time or curr_time <= light_end_time
         if light_on:
           control_leds(schedule["light_intensity"])
-          actuators_status["LED_light"] = schedule["light_intensity"]
-          send_LED_actuator_status(actuators_status, health_status)
+          if (actuators_status["LED_light"] == 0):
+            actuators_status["LED_light"] = schedule["light_intensity"]
+            send_LED_actuator_status(actuators_status, health_status)
+          else:
+            actuators_status["LED_light"] = schedule["light_intensity"]
         else:
           control_leds(0)
-          actuators_status["LED_light"] = 0
-          send_LED_actuator_status(actuators_status, health_status)
+          if (actuators_status["LED_light"] > 0):
+            actuators_status["LED_light"] = 0
+            send_LED_actuator_status(actuators_status, health_status)
+          else:
+            actuators_status["LED_light"] = 0
         # Water and Nutrients
         water_duration = (100 / 250) * schedule["water_amount"] * schedule["number_of_plants"]
         nutrients_duration = (100 / 250) * schedule["nutrients_amount"] * (schedule["water_amount"] / 100) * schedule["number_of_plants"]
