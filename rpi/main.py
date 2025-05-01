@@ -450,8 +450,8 @@ def send_LED_actuator_status(actuators_status, health_status):
     "health": "healthy" if health_status == "Healthy" else "unhealthy"
   }
 
-  for cmd in status_map.values():
-    ser2.write(f"{cmd}\n".encode('utf-8'))
+  # for cmd in status_map.values():
+  #   ser2.write(f"{cmd}\n".encode('utf-8'))
 
 sensor_data = {
   "temperature_c": 0,
