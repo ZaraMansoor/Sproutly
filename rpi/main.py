@@ -563,22 +563,22 @@ def control_loop():
         if sensor_data['temperature_f'] < schedule["min_temp"]:
           heater_relay.on()
           actuators_status["heater"] = "on"
-          send_LED_actuator_status(actuators_status, health_status)
+          # send_LED_actuator_status(actuators_status, health_status)
         elif sensor_data['temperature_f'] > schedule["max_temp"]:
           heater_relay.off()
           actuators_status["heater"] = "off"
-          send_LED_actuator_status(actuators_status, health_status)
+          # send_LED_actuator_status(actuators_status, health_status)
         # Mister
         if sensor_data['humidity'] < schedule["min_humidity"]:
           if actuators_status["mister"] == "off":
             mister_relay.on()
             actuators_status["mister"] = "on"
-            send_LED_actuator_status(actuators_status, health_status)
+            # send_LED_actuator_status(actuators_status, health_status)
         elif sensor_data['humidity'] > schedule["max_humidity"]:
           if actuators_status["mister"] == "on":
             mister_relay.off()
             actuators_status["mister"] = "off"
-            send_LED_actuator_status(actuators_status, health_status)
+            # send_LED_actuator_status(actuators_status, health_status)
         # Lights
         light_start_time = datetime.strptime(schedule["light_start_time"], "%H:%M:%S").time()
         light_end_time = (datetime.combine(datetime.today(), light_start_time) + timedelta(hours=schedule["light_hours"])).time()
@@ -591,14 +591,14 @@ def control_loop():
           control_leds(schedule["light_intensity"])
           if (actuators_status["LED_light"] == 0):
             actuators_status["LED_light"] = schedule["light_intensity"]
-            send_LED_actuator_status(actuators_status, health_status)
+            # send_LED_actuator_status(actuators_status, health_status)
           else:
             actuators_status["LED_light"] = schedule["light_intensity"]
         else:
           control_leds(0)
           if (actuators_status["LED_light"] > 0):
             actuators_status["LED_light"] = 0
-            send_LED_actuator_status(actuators_status, health_status)
+            # send_LED_actuator_status(actuators_status, health_status)
           else:
             actuators_status["LED_light"] = 0
         # Water and Nutrients
@@ -610,26 +610,26 @@ def control_loop():
           actuators_status["water_pump"] = "on"
           water_pump_start_time = datetime.now()
           water_pump_started = True
-          send_LED_actuator_status(actuators_status, health_status)
+          # send_LED_actuator_status(actuators_status, health_status)
 
         if curr_time.strftime("%H:%M:%S") == schedule["nutrients_start_time"]:
           nutrients_pump_relay.on()
           actuators_status["nutrients_pump"] = "on"
           nutrients_pump_start_time = datetime.now()
           nutrients_pump_started = True
-          send_LED_actuator_status(actuators_status, health_status)
+          # send_LED_actuator_status(actuators_status, health_status)
           
         if water_pump_started and (datetime.now() - water_pump_start_time).total_seconds() >= water_duration:
           water_pump_relay.off()
           actuators_status["water_pump"] = "off"
           water_pump_started = False
-          send_LED_actuator_status(actuators_status, health_status)
+          # send_LED_actuator_status(actuators_status, health_status)
 
         if nutrients_pump_started and (datetime.now() - nutrients_pump_start_time).total_seconds() >= nutrients_duration:
           nutrients_pump_relay.off()
           actuators_status["nutrients_pump"] = "off"
           nutrients_pump_started = False
-          send_LED_actuator_status(actuators_status, health_status)
+          # send_LED_actuator_status(actuators_status, health_status)
         
       else:
         print("Manual mode - waiting for controls")
